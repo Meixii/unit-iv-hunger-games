@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { PageNavigationWrapper } from "@/components/page-navigation-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
             <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
               <div className="mx-auto max-w-4xl">
                 {children}
+                <PageNavigationWrapper />
               </div>
             </div>
           </SidebarInset>

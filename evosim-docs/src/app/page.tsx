@@ -36,6 +36,8 @@ export default function Home() {
           </div>
         </div>
 
+        <Separator />
+
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Project Objectives</h2>
           
@@ -60,6 +62,8 @@ export default function Home() {
             </ul>
           </div>
         </div>
+
+        <Separator />
 
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Project Scope</h2>
@@ -91,6 +95,8 @@ export default function Home() {
           </div>
         </div>
 
+        <Separator />
+
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Project Limitations</h2>
           <div className="space-y-3 text-sm text-muted-foreground">
@@ -120,6 +126,8 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <Separator />
 
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Quick Start</h2>
