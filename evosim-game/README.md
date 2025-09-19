@@ -48,7 +48,9 @@ evosim-game/
 ├── world_generator.py           # World generation logic and utilities
 ├── animal_creator.py            # Animal creation and customization system
 ├── demo/                        # Demonstration scripts
-│   └── demo_mountain_borders.py # Mountain border feature demonstration
+│   ├── demo_mountain_borders.py # Mountain border feature demonstration
+│   ├── demo_phase1_complete.py  # Complete Phase 1 demonstration
+│   └── demo_interactive.py      # Interactive hands-on demo
 ├── example/                     # Example usage scripts
 │   ├── example_usage.py         # Constants usage examples
 │   ├── example_data_usage.py    # Data structures usage examples
@@ -176,6 +178,28 @@ The comprehensive test suite includes:
 - **Edge Case Tests** - Boundary condition testing
 - **Performance Tests** - Execution time validation
 - **Error Handling Tests** - Invalid input validation
+
+## Demo Applications
+
+The project includes comprehensive demonstration applications:
+
+### Complete Phase 1 Demo
+- **`demo/demo_phase1_complete.py`** - Comprehensive showcase of all Phase 1 components
+- **Features**: Constants, data structures, world generation, animal creation, testing
+- **Usage**: `python demo/demo_phase1_complete.py`
+- **Output**: Full demonstration with visualizations and performance metrics
+
+### Interactive Demo
+- **`demo/demo_interactive.py`** - Hands-on interactive exploration
+- **Features**: Custom world creation, animal customization, training system testing
+- **Usage**: `python demo/demo_interactive.py`
+- **Output**: Menu-driven interface for exploring all features
+
+### Mountain Borders Demo
+- **`demo/demo_mountain_borders.py`** - Specific feature demonstration
+- **Features**: Mountain border generation and effects
+- **Usage**: `python demo/demo_mountain_borders.py`
+- **Output**: Visual comparison of worlds with and without borders
 
 ## Constants File Features
 

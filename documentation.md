@@ -3,6 +3,7 @@
 **Project:** Evolve or Perish: AI-Driven Animal Survival in a Neural Network Battle Royale  
 **Date:** September 19, 2025  
 **Objective:** To outline the core mechanics, calculations, parameters, map design, and events for the simulation.
+**Link:** [Google Docs](https://docs.google.com/document/d/1qrMfD3UcS5KcEVAf6wdcfgbe8y7ELfNu2IIqW7OwYTg/edit?tab=t.0#heading=h.10am4qwgcy2r)
 
 ## Section I: Terminologies
 
