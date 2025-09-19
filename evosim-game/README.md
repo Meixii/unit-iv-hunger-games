@@ -38,6 +38,54 @@ A Python implementation of the EvoSim simulation project, featuring evolutionary
 - **Description:** Comprehensive test suite ensuring 80%+ code coverage and reliability
 - **Coverage:** All foundational classes with edge cases, integration, and performance tests
 
+### Phase 2: Simulation Engine & Event Handling
+
+#### ✅ Task 2.1: Main Simulation Controller
+- **Status:** COMPLETED
+- **File:** `simulation_controller.py`
+- **Description:** Implemented main simulation controller that orchestrates the entire simulation
+
+#### ✅ Task 2.2: Game Loop Implementation
+- **Status:** COMPLETED
+- **File:** `simulation_controller.py`
+- **Description:** Implemented week-based generational simulation with event scheduling and win/loss detection
+- **Features:** Generation execution, weekly cycles, event ordering, win/loss detection, comprehensive logging
+- **Tests:** `test/test_game_loop.py` - 19 comprehensive tests covering all game loop functionality
+- **Demo:** `demo/demo_game_loop.py` - Interactive demonstration of game loop features
+- **Coverage:** All requirements from Section IV.A (Simulation Flow) of documentation.md
+
+#### ✅ Task 2.3: Action Resolution System
+- **Status:** COMPLETED
+- **File:** `action_resolution/` (modular implementation)
+- **Description:** Implemented 4-phase action resolution system with conflict handling and priority-based execution
+- **Features:**
+  - Decision Phase: Collect actions from all animals using simple rule-based logic
+  - Status & Environmental Phase: Apply passive changes (hunger, thirst, health loss from debuffs)
+  - Action Execution Phase: Execute actions by priority (stationary first, then movement)
+  - Cleanup Phase: Apply new effects and remove expired ones
+  - Conflict Resolution: Agility-based movement conflict resolution
+  - Animal Encounters: Basic combat mechanics when animals move into occupied tiles
+  - Resource Consumption: Animals can eat and drink from available resources
+- **Architecture:** Modular design with separate engines for each phase
+- **Tests:** `test/test_action_resolution.py`
+- **Demo:** `demo/demo_action_resolution.py`
+
+#### ✅ Task 2.4: Event & Disaster Engine
+- **Status:** COMPLETED
+- **File:** `event_engine/` (modular implementation)
+- **Description:** Comprehensive event system providing dynamic gameplay elements
+- **Features:**
+  - Triggered Events: Condition-based events (overpopulation, resource scarcity, disease outbreaks, extinction threats)
+  - Random Events: Probability-based events (resource discovery, healing springs, weather changes, predator migration)
+  - Disaster Events: Large-scale area-effect events (earthquakes, wildfires, floods, volcanic eruptions, blizzards, meteors, tsunamis)
+  - Event Scheduling: Coordinated event timing and frequency management
+  - Event Configuration: Flexible system for adjusting probabilities and enabling/disabling event types
+  - Comprehensive Tracking: Detailed event statistics and logging
+  - Modular Architecture: Easy to extend with new event types
+- **Architecture:** Modular design with separate engines for each event type
+- **Tests:** Integrated with game loop tests
+- **Demo:** `demo/demo_event_engine.py`
+
 ## Project Structure
 
 ```
@@ -47,10 +95,31 @@ evosim-game/
 ├── data_structures.py           # Core data classes and structures
 ├── world_generator.py           # World generation logic and utilities
 ├── animal_creator.py            # Animal creation and customization system
+├── simulation_controller.py     # Main simulation controller and orchestration
+├── action_resolution/           # Modular action resolution system
+│   ├── __init__.py             # Package initialization
+│   ├── action_data.py          # Action data structures and enums
+│   ├── action_resolver.py      # Main action resolution orchestrator
+│   ├── decision_engine.py      # Phase 1: Decision collection
+│   ├── status_engine.py        # Phase 2: Status & environmental effects
+│   ├── execution_engine.py     # Phase 3: Action execution with conflicts
+│   └── cleanup_engine.py       # Phase 4: Effect management
+├── event_engine/                # Modular event & disaster system
+│   ├── __init__.py             # Package initialization
+│   ├── event_data.py           # Event data structures and base classes
+│   ├── event_engine.py         # Main event engine interface
+│   ├── event_scheduler.py      # Event scheduling and coordination
+│   ├── triggered_events.py     # Condition-based events
+│   ├── random_events.py        # Probability-based events
+│   └── disaster_events.py      # Large-scale disaster events
 ├── demo/                        # Demonstration scripts
 │   ├── demo_mountain_borders.py # Mountain border feature demonstration
 │   ├── demo_phase1_complete.py  # Complete Phase 1 demonstration
-│   └── demo_interactive.py      # Interactive hands-on demo
+│   ├── demo_interactive.py      # Interactive hands-on demo
+│   ├── demo_simulation_controller.py # Simulation controller demonstration
+│   ├── demo_game_loop.py        # Game loop implementation demonstration
+│   ├── demo_action_resolution.py # Action resolution system demonstration
+│   └── demo_event_engine.py     # Event & disaster engine demonstration
 ├── example/                     # Example usage scripts
 │   ├── example_usage.py         # Constants usage examples
 │   ├── example_data_usage.py    # Data structures usage examples
@@ -61,6 +130,9 @@ evosim-game/
     ├── test_data_structures.py  # Test script for data structures validation
     ├── test_world_generator.py  # Test script for world generation validation
     ├── test_animal_creator.py   # Test script for animal creation validation
+    ├── test_simulation_controller.py # Test script for simulation controller validation
+    ├── test_game_loop.py        # Test script for game loop functionality validation
+    ├── test_action_resolution.py # Test script for action resolution system validation
     ├── test_edge_cases.py       # Edge case and boundary condition tests
     └── test_runner.py           # Comprehensive test runner with coverage analysis
 ```
@@ -120,6 +192,39 @@ The `world_generator.py` file includes:
 - **Resource Counting**: Tracks all placed resources
 - **Spawn Location Counting**: Ensures adequate space for animals
 - **Error Reporting**: Detailed validation error messages
+
+## Simulation Controller Features
+
+The `simulation_controller.py` file includes:
+
+### Core Controller System
+- **SimulationController**: Main class for orchestrating the entire simulation
+- **SimulationConfig**: Configurable parameters for simulation behavior
+- **State Management**: Complete simulation state tracking and validation
+
+### World and Population Management
+- **World Initialization**: Generate and validate simulation worlds
+- **Population Initialization**: Create and place animals in the world
+- **Location Management**: Ensure proper animal placement and tile occupancy
+- **Statistics Tracking**: Monitor terrain and category distributions
+
+### Simulation Control
+- **Start/Stop/Pause/Resume**: Complete simulation lifecycle management
+- **State Validation**: Comprehensive simulation state validation
+- **Error Handling**: Robust error handling and recovery
+- **Status Monitoring**: Real-time simulation status and statistics
+
+### Logging and Debugging
+- **Configurable Logging**: Adjustable log levels and output
+- **State Logging**: Detailed simulation state information
+- **Performance Tracking**: Simulation timing and duration tracking
+- **Debug Information**: Comprehensive debugging capabilities
+
+### Configuration and Customization
+- **Flexible Configuration**: Customizable simulation parameters
+- **Random Seed Support**: Reproducible simulation results
+- **World Configuration**: Integration with world generation settings
+- **Population Customization**: Configurable population sizes and distributions
 
 ## Animal Creator Features
 
@@ -239,6 +344,71 @@ The `constants.py` file includes:
 - Data integrity verification
 
 ## Usage
+
+### Basic Simulation Controller Usage
+
+```python
+from simulation_controller import create_simulation_controller
+
+# Create a simulation controller
+controller = create_simulation_controller(
+    max_weeks=20,
+    max_generations=10,
+    population_size=20,
+    random_seed=42,
+    enable_logging=True
+)
+
+# Initialize world and population
+world = controller.initialize_world()
+animals = controller.initialize_population()
+
+# Start simulation
+controller.start_simulation()
+
+# Monitor status
+status = controller.get_simulation_status()
+print(f"Living animals: {status['living_animals']}")
+
+# Stop simulation
+controller.stop_simulation()
+```
+
+### Advanced Configuration
+
+```python
+from simulation_controller import SimulationController, SimulationConfig
+from world_generator import GenerationConfig
+
+# Create custom configuration
+config = SimulationConfig(
+    max_weeks=50,
+    max_generations=5,
+    population_size=100,
+    enable_logging=True,
+    log_level="DEBUG",
+    random_seed=123
+)
+
+# Create controller with custom config
+controller = SimulationController(config)
+
+# Initialize with custom world settings
+world_config = GenerationConfig(width=30, height=30, enable_mountain_borders=True)
+world = controller.initialize_world(world_config)
+
+# Initialize population
+animals = controller.initialize_population(50)
+
+# Validate simulation state
+if controller.validate_simulation_state():
+    controller.start_simulation()
+    print("Simulation started successfully!")
+else:
+    print("Simulation state validation failed!")
+```
+
+### Constants Usage
 
 ```python
 import constants

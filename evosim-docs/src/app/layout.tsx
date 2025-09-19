@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { PageNavigationWrapper } from "@/components/page-navigation-wrapper";
+import { RightSidebar } from "@/components/right-sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,9 +35,12 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarInset>
             <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-              <div className="mx-auto max-w-4xl">
-                {children}
-                <PageNavigationWrapper />
+              <div className="flex gap-8 max-w-7xl mx-auto">
+                <div className="flex-1 min-w-0">
+                  {children}
+                  <PageNavigationWrapper />
+                </div>
+                <RightSidebar />
               </div>
             </div>
           </SidebarInset>

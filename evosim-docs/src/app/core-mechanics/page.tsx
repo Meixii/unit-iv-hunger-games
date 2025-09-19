@@ -4,7 +4,7 @@ export default function CoreMechanicsPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">Core Mechanics</h1>
+        <h1 id="core-mechanics" className="text-4xl font-bold tracking-tight">Core Mechanics</h1>
         <p className="text-lg text-muted-foreground">
           This section details the fundamental systems of the simulation, such as the simulation loop, action resolution, and resource/combat mechanics.
         </p>
@@ -14,7 +14,7 @@ export default function CoreMechanicsPage() {
 
         <div className="space-y-6">
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold">Simulation Flow</h3>
+            <h3 id="simulation-flow" className="text-2xl font-semibold">Simulation Flow</h3>
             <p>This defines the high-level sequence of the entire simulation from start to finish.</p>
             
             <div className="space-y-4">
@@ -51,7 +51,7 @@ export default function CoreMechanicsPage() {
           <Separator />
 
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold">Turn & Action Resolution</h3>
+            <h3 id="turn-action-resolution" className="text-2xl font-semibold">Turn & Action Resolution</h3>
             <p>To ensure fairness, each Movement Event is resolved in distinct phases, preventing animals that act earlier from having an unfair advantage.</p>
             
             <div className="space-y-4">
@@ -87,7 +87,7 @@ export default function CoreMechanicsPage() {
           <Separator />
 
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold">Resource Dynamics</h3>
+            <h3 id="resource-dynamics" className="text-2xl font-semibold">Resource Dynamics</h3>
             <ul className="space-y-2 ml-4">
               <li><strong>Spawning:</strong> Resources are placed on the map during World Generation. When a resource is fully consumed, it has a small chance to respawn in a valid location after a set number of weeks, preventing the map from becoming permanently barren.</li>
               <li><strong>Consumption:</strong> Resources have a set number of "uses." For example, a Plant resource might have 2 uses, restoring 40 Hunger each time before it disappears.</li>
@@ -97,7 +97,7 @@ export default function CoreMechanicsPage() {
           <Separator />
 
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold">Combat Mechanics</h3>
+            <h3 id="combat-mechanics" className="text-2xl font-semibold">Combat Mechanics</h3>
             
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">Initiation</h4>

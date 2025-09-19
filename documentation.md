@@ -759,10 +759,10 @@ Fitness Score: (Time Survived * W['Time']) + (Resources Gathered / 40 * W['Resou
 
 **Reference:** Section VII: Preparations Stage.
 
-#### Task 4.2: Simulation Visualization/Renderer
-**Description:** Provide real-time game-world visualization.
+#### Task 4.2: Simulation Visualization/Renderer (Grid GUI)
+**Description:** Provide a real-time grid-based GUI renderer (desktop) for the world.
 
-**Action Items:** Print grid with symbols for each terrain/resource/animal; display population/round count; consider color/ASCII enhancement.
+**Action Items:** Implement a grid view showing terrain/resources/animals with colors/icons; add controls for Next Week/Next Step, Auto-run, and Speed; integrate with `SimulationController`.
 
 **Reference:** Section VI: Map and Objectives.
 
@@ -781,7 +781,7 @@ Fitness Score: (Time Survived * W['Time']) + (Resources Gathered / 40 * W['Resou
 **Reference:** All sections.
 
 ### Phase Overlaps & Parallelization
-Tasks in each phase build on each other but UI/prototyping tasks (4.1–4.3) can begin after Phase 2 stable baseline is available.
+Tasks in each phase build on each other but UI/prototyping tasks (4.1–4.3) can begin after Phase 2 stable baseline is available. The Grid GUI (4.2) can be prototyped in parallel once action resolution and events are stable.
 
 Encourage periodic reviews and changelogs after each phase for easier debugging and progress tracking.
 

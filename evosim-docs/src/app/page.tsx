@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">Evolve or Perish</h1>
+        <h1 id="evolve-or-perish" className="text-4xl font-bold tracking-tight">Evolve or Perish</h1>
         <p className="text-xl text-muted-foreground">
           An Animal Survival Simulation Using an Evolutionary Algorithm to Train a Multi-Layer Perceptron
         </p>
@@ -39,7 +39,7 @@ export default function Home() {
         <Separator />
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Project Objectives</h2>
+          <h2 id="project-objectives" className="text-2xl font-semibold">Project Objectives</h2>
           
           <div className="border rounded-lg p-6">
             <h3 className="text-xl font-semibold mb-3">General Objective</h3>
@@ -66,7 +66,7 @@ export default function Home() {
         <Separator />
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Project Scope</h2>
+          <h2 id="project-scope" className="text-2xl font-semibold">Project Scope</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="border rounded-lg p-4">
               <h3 className="font-semibold mb-2">1. Multi-Layer Perceptron Architecture</h3>
@@ -98,7 +98,7 @@ export default function Home() {
         <Separator />
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Project Limitations</h2>
+          <h2 id="project-limitations" className="text-2xl font-semibold">Project Limitations</h2>
           <div className="space-y-3 text-sm text-muted-foreground">
             <div className="border rounded p-4">
               <h3 className="font-semibold text-orange-600 mb-2">MLP Architecture Constraints</h3>
@@ -130,7 +130,7 @@ export default function Home() {
         <Separator />
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Quick Start</h2>
+          <h2 id="quick-start" className="text-2xl font-semibold">Quick Start</h2>
           <div className="bg-muted p-4 rounded-lg">
             <p className="text-sm">
               Explore the documentation using the sidebar navigation to learn about core concepts, 

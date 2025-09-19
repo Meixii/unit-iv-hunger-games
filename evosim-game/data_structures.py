@@ -190,7 +190,7 @@ class Animal:
     category: AnimalCategory
     traits: Dict[str, int]
     status: Dict[str, float]
-    passive: str
+    passive: Optional[str] = None
     active_effects: List[Effect] = field(default_factory=list)
     location: Tuple[int, int] = (0, 0)
     fitness_score_components: Dict[str, float] = field(default_factory=dict)
@@ -198,7 +198,20 @@ class Animal:
     
     def __post_init__(self):
         """Validate animal data after initialization."""
-        # Validate traits
+        # Normalize and validate traits (accept long or short keys)
+        long_to_short = {
+            'Strength': 'STR',
+            'Agility': 'AGI',
+            'Intelligence': 'INT',
+            'Endurance': 'END',
+            'Perception': 'PER',
+        }
+        normalized_traits: Dict[str, int] = {}
+        for key, value in list(self.traits.items()):
+            short_key = long_to_short.get(key, key)
+            normalized_traits[short_key] = value
+        self.traits = normalized_traits
+
         required_traits = constants.TRAIT_NAMES
         for trait in required_traits:
             if trait not in self.traits:
@@ -206,7 +219,10 @@ class Animal:
             if not isinstance(self.traits[trait], int) or self.traits[trait] < 1:
                 raise ValueError(f"Trait {trait} must be a positive integer, got {self.traits[trait]}")
         
-        # Validate status
+        # Ensure default Instinct if missing; then validate status
+        if 'Instinct' not in self.status:
+            self.status['Instinct'] = 0.0
+
         required_status = constants.STATUS_NAMES
         for status in required_status:
             if status not in self.status:
@@ -218,6 +234,15 @@ class Animal:
         if self.category not in AnimalCategory:
             raise ValueError(f"Invalid animal category: {self.category}")
         
+        # Derive passive from category if not provided
+        if not self.passive:
+            category_to_passive = {
+                AnimalCategory.HERBIVORE: "Efficient Grazer",
+                AnimalCategory.CARNIVORE: "Ambush Predator",
+                AnimalCategory.OMNIVORE: "Iron Stomach",
+            }
+            self.passive = category_to_passive.get(self.category, "")
+
         # Validate location
         if len(self.location) != 2:
             raise ValueError(f"Location must be a tuple of 2 integers, got {self.location}")

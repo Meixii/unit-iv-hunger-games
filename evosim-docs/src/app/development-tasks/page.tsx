@@ -238,13 +238,14 @@ export default function DevelopmentTasksPage() {
               </div>
 
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold">Task 4.2: Simulation Visualization/Renderer</h4>
-                <p className="text-sm text-muted-foreground mb-2">Provide real-time game-world visualization.</p>
+                <h4 className="font-semibold">Task 4.2: Simulation Visualization/Renderer (Grid GUI)</h4>
+                <p className="text-sm text-muted-foreground mb-2">Provide a real-time grid-based GUI renderer.</p>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Action Items:</p>
                   <ul className="text-sm text-muted-foreground ml-4 space-y-1">
-                    <li>• Print grid with symbols for each terrain/resource/animal; display population/round count</li>
-                    <li>• Consider color/ASCII enhancement</li>
+                    <li>• Draw world grid with terrain colors and overlays for resources/animals</li>
+                    <li>• Controls: Next Week, Next Step (phases), Auto-run toggle, Speed slider</li>
+                    <li>• Integrate with SimulationController state and stepping</li>
                   </ul>
                 </div>
               </div>
@@ -277,7 +278,7 @@ export default function DevelopmentTasksPage() {
             <h3 className="text-2xl font-semibold">Phase Overlaps & Parallelization</h3>
             <div className="border rounded-lg p-4">
               <p className="text-sm text-muted-foreground">
-                Tasks in each phase build on each other but UI/prototyping tasks (4.1–4.3) can begin after Phase 2 stable baseline is available.
+                Tasks in each phase build on each other but UI/prototyping tasks (4.1–4.3) can begin after Phase 2 stable baseline is available. The Grid GUI can be prototyped once action resolution/events are stable.
               </p>
               <p className="text-sm text-muted-foreground mt-2">
                 Encourage periodic reviews and changelogs after each phase for easier debugging and progress tracking.

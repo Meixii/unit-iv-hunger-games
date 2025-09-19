@@ -133,7 +133,7 @@ export default function PhasesPage() {
                   <h4 className="text-xl font-semibold">User Interface Phase</h4>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Create user interfaces and visualization tools. This phase makes the simulation accessible and provides insights into the evolutionary process.
+                  Create user interfaces and visualization tools. This phase includes a desktop Grid GUI for real-time simulation visualization in addition to the CLI.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
