@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import random
 import constants
+from mlp import MLPNetwork
 
 
 # =============================================================================
@@ -386,7 +387,7 @@ def create_random_animal(animal_id: str, category: AnimalCategory) -> Animal:
         AnimalCategory.OMNIVORE: "Iron Stomach"
     }
     
-    return Animal(
+    animal = Animal(
         animal_id=animal_id,
         category=category,
         traits=traits,
@@ -394,6 +395,10 @@ def create_random_animal(animal_id: str, category: AnimalCategory) -> Animal:
         passive=passive_abilities[category],
         location=(0, 0)  # Will be set during world generation
     )
+
+    # Attach a freshly initialized MLP brain (no behavioral integration yet)
+    animal.mlp_network = MLPNetwork()
+    return animal
 
 
 def create_effect(effect_type: EffectType, duration: int = None) -> Effect:

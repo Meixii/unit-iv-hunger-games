@@ -86,6 +86,43 @@ A Python implementation of the EvoSim simulation project, featuring evolutionary
 - **Tests:** Integrated with game loop tests
 - **Demo:** `demo/demo_event_engine.py`
 
+#### ✅ Task 2.5: Simulation Engine Testing
+- **Status:** COMPLETED
+- **Files:** `test/test_action_resolution.py`, `test/test_simulation_controller.py`
+- **Description:** End-to-end weekly cycles with integration across action resolution and events
+- **Demos:** Movement and event cycles validated during multi-generation runs
+
+### Phase 3: Artificial Intelligence & Evolution
+
+#### ✅ Task 3.1: MLP ("Brain") Implementation
+- **Status:** COMPLETED
+- **File:** `mlp.py`
+- **Description:** Pure-Python MLP (41→16→12→8) with ReLU/Softmax and parameter utilities
+- **Tests:** `test/test_mlp.py`
+
+#### ✅ Task 3.2: Sensory Input System
+- **Status:** COMPLETED
+- **File:** `sensory.py`
+- **Description:** 41-node input vector (5 internal + 3x3×4 local features)
+- **Tests:** `test/test_sensory.py`
+
+#### ✅ Task 3.3: Fitness Function Integration
+- **Status:** COMPLETED
+- **Files:** `fitness.py`, updates in `status_engine.py` and `execution_engine.py`
+- **Description:** Tracks Time, Resource, Kill, Distance, Event; contributes to `Animal.get_fitness_score()`
+- **Tests:** `test/test_fitness.py`
+
+#### ✅ Task 3.4: Evolutionary Algorithm
+- **Status:** COMPLETED
+- **File:** `evolution.py`
+- **Description:** Elitism + tournament selection, one-point crossover, gaussian mutation
+- **Tests:** `test/test_evolution.py`
+
+#### ✅ Task 3.5: AI/Evolution Testing & Data Logging
+- **Status:** COMPLETED
+- **Files:** `logging_utils.py`, `demo/demo_logging.py`
+- **Description:** CSV population summaries for per-generation analysis (fitness components, traits, status)
+
 ## Project Structure
 
 ```
@@ -119,7 +156,9 @@ evosim-game/
 │   ├── demo_simulation_controller.py # Simulation controller demonstration
 │   ├── demo_game_loop.py        # Game loop implementation demonstration
 │   ├── demo_action_resolution.py # Action resolution system demonstration
-│   └── demo_event_engine.py     # Event & disaster engine demonstration
+│   ├── demo_event_engine.py     # Event & disaster engine demonstration
+│   ├── demo_generations.py      # Multi-generation evolution demo
+│   └── demo_logging.py          # Multi-generation run with CSV logging
 ├── example/                     # Example usage scripts
 │   ├── example_usage.py         # Constants usage examples
 │   ├── example_data_usage.py    # Data structures usage examples

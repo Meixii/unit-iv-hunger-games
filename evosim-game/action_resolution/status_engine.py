@@ -14,6 +14,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_structures import Animal, Simulation, EffectType
+from fitness import increment_time
 
 
 class StatusEngine:
@@ -49,6 +50,8 @@ class StatusEngine:
         
         for animal in living_animals:
             try:
+                # Count time survived (per action resolution cycle)
+                increment_time(animal, 1)
                 # Apply hunger depletion
                 current_hunger = animal.status.get('Hunger', 100)
                 new_hunger = max(0, current_hunger - 3)  # Lose 3 hunger per turn

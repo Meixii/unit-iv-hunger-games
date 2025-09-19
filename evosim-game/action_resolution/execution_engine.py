@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_structures import Animal, Simulation, ActionType, AnimalCategory, TerrainType
 from .action_data import AnimalAction
+from fitness import add_distance, add_resource_units, add_kill
 
 
 class ExecutionEngine:
@@ -181,6 +182,8 @@ class ExecutionEngine:
         # Apply hunger restoration
         current_hunger = animal.status.get('Hunger', 100)
         animal.status['Hunger'] = min(100, current_hunger + hunger_restored)
+        # Fitness: count food units consumed as resource
+        add_resource_units(animal, float(hunger_restored))
         
         # Consume the resource
         if hasattr(food_resource, 'uses'):
@@ -242,6 +245,8 @@ class ExecutionEngine:
         thirst_restored = 50
         current_thirst = animal.status.get('Thirst', 100)
         animal.status['Thirst'] = min(100, current_thirst + thirst_restored)
+        # Fitness: count water units as resource
+        add_resource_units(animal, float(thirst_restored))
         
         # Water resources typically don't get depleted as quickly
         if random.random() < 0.1:  # 10% chance to deplete water
@@ -305,6 +310,8 @@ class ExecutionEngine:
                 self.logger.info(f"Animal {target.animal_id} killed by {animal.animal_id}")
                 self.simulation.remove_animal(target)
                 tile.occupant = animal  # Attacker takes the tile
+                # Fitness: kill credit
+                add_kill(animal, 1)
             
             self.logger.debug(f"Animal {animal.animal_id} attacked {target.animal_id} for {damage} damage")
         else:
@@ -441,6 +448,8 @@ class ExecutionEngine:
             
             # Update locations
             animal.location = (target_x, target_y)
+            # Fitness: distance traveled
+            add_distance(animal, 1.0)
             
             # Update tile occupants
             if current_tile:

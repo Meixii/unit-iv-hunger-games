@@ -14,6 +14,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_structures import Animal, Simulation, ActionType, AnimalCategory
+from sensory import build_input_vector
 from .action_data import AnimalAction
 
 
@@ -21,9 +22,9 @@ class DecisionEngine:
     """
     Handles the Decision Phase of action resolution.
     
-    In this phase, every living animal's decision system (currently rule-based,
-    will be MLP in the future) outputs a chosen action. All decisions are stored
-    without being executed yet.
+    In this phase, every living animal's decision system outputs a chosen action.
+    Prefers MLP when available, with a simple rule-based fallback. All decisions
+    are stored without being executed yet.
     """
     
     def __init__(self, simulation: Simulation, logger: logging.Logger):
@@ -34,16 +35,18 @@ class DecisionEngine:
     def execute_decision_phase(self, living_animals: List[Animal]) -> List[AnimalAction]:
         """
         Phase 1: Decision Phase
-        Collect actions from all living animals using simple decision logic.
-        In the future, this will integrate with MLP neural networks.
+        Collect actions from all living animals using MLP if available,
+        otherwise fall back to simple rule-based logic.
         """
         planned_actions = []
         
         for animal in living_animals:
             try:
-                # For now, use simple rule-based decision making
-                # This will be replaced with MLP integration in Phase 3
-                action = self._make_animal_decision(animal)
+                # Prefer MLP-based decision when available
+                if getattr(animal, 'mlp_network', None) is not None:
+                    action = self._make_animal_decision_mlp(animal)
+                else:
+                    action = self._make_animal_decision(animal)
                 planned_actions.append(action)
                 
                 self.logger.debug(f"Animal {animal.animal_id} chose action: {action.action_type.value}")
@@ -63,8 +66,8 @@ class DecisionEngine:
     
     def _make_animal_decision(self, animal: Animal) -> AnimalAction:
         """
-        Make a decision for an animal using simple rule-based logic.
-        This is a placeholder that will be replaced with MLP neural networks.
+        Fallback rule-based decision used when no MLP is available or desired.
+        Kept intentionally to ensure robustness during partial integrations.
         """
         # Get current status
         health = animal.status.get('Health', 100)
@@ -106,6 +109,36 @@ class DecisionEngine:
             animal.animal_id, 
             animal, 
             chosen_movement,
+            target_location=target_location
+        )
+
+    def _make_animal_decision_mlp(self, animal: Animal) -> AnimalAction:
+        """Make a decision using the animal's MLP over the action space."""
+        x = build_input_vector(self.simulation, animal)
+        probs = animal.mlp_network.forward(x)
+        # Map output index to ActionType order defined in constants and ActionType
+        action_space = [
+            ActionType.MOVE_NORTH,
+            ActionType.MOVE_EAST,
+            ActionType.MOVE_SOUTH,
+            ActionType.MOVE_WEST,
+            ActionType.REST,
+            ActionType.EAT,
+            ActionType.DRINK,
+            ActionType.ATTACK,
+        ]
+        # Choose argmax
+        best_idx = max(range(len(probs)), key=lambda i: probs[i]) if probs else 4  # default REST idx=4
+        chosen = action_space[best_idx]
+
+        # Determine target location for movement or context actions
+        current_x, current_y = animal.location
+        target_location = self._calculate_target_location(current_x, current_y, chosen)
+
+        return AnimalAction(
+            animal_id=animal.animal_id,
+            animal=animal,
+            action_type=chosen,
             target_location=target_location
         )
     

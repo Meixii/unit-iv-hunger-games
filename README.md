@@ -56,14 +56,29 @@ cd evosim-game
 python demo/demo_phase1_complete.py
 ```
 
-### 3. Interactive Exploration
+### 3. Multi-Generation Demo (Evolution)
+Run multiple generations with evolution and a concise summary output:
+```bash
+cd evosim-game
+python demo/demo_generations.py
+```
+
+### 4. Data Logging Demo
+Run generations and export CSV summaries for AI/Evolution analysis:
+```bash
+cd evosim-game
+python demo/demo_logging.py
+```
+CSV is written to `evosim-game/demo/runs/population_summary.csv`.
+
+### 5. Interactive Exploration
 Try the hands-on interactive demo:
 ```bash
 cd evosim-game
 python demo/demo_interactive.py
 ```
 
-### 4. Run Tests
+### 6. Run Tests
 Verify the system integrity:
 ```bash
 cd evosim-game
@@ -114,12 +129,12 @@ Three distinct animal types with unique traits:
 - **Event & Disaster Engine**: Environmental challenges and events
 - **Simulation Engine Testing**: Integration and performance validation
 
-### 📋 Phase 3: Artificial Intelligence & Evolution (PLANNED)
-- **MLP Implementation**: Neural network decision system
-- **Sensory Input System**: Environmental perception
-- **Fitness Function**: Evolutionary success measurement
-- **Evolutionary Algorithm**: Population evolution mechanics
-- **AI/Evolution Testing**: Neural network training validation
+### 📋 Phase 3: Artificial Intelligence & Evolution (IN PROGRESS)
+- **MLP Implementation**: Neural network decision system (implemented)
+- **Sensory Input System**: Environmental perception (implemented)
+- **Fitness Function**: Evolutionary success measurement (implemented)
+- **Evolutionary Algorithm**: Population evolution mechanics (implemented)
+- **AI/Evolution Testing**: Multi-generation demos and CSV logging (added)
 
 ### 🎨 Phase 4: UI, Visualization & Reports (PLANNED)
 - **Training CLI Interface**: Interactive animal customization

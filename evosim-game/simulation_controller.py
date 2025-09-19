@@ -27,6 +27,7 @@ from action_resolution import ActionResolver
 
 # Import the event engine system
 from event_engine import EventEngine
+from evolution import evolve_population
 
 
 # =============================================================================
@@ -597,6 +598,42 @@ class SimulationController:
         except Exception as e:
             self.logger.error(f"Generation failed: {e}")
             raise
+
+    def evolve_to_next_generation(self) -> List[Animal]:
+        """Evolve current population to next generation and reset world/state."""
+        parents = self.simulation.get_living_animals() + self.simulation.graveyard
+        if not parents:
+            self.logger.warning("No parents available to evolve; population remains unchanged")
+            return []
+
+        self.logger.info("Evolving population to next generation...")
+        next_gen = evolve_population(parents)
+
+        # Regenerate world and reset simulation state
+        self.initialize_world()
+        self.simulation.reset()
+
+        # Place new generation
+        placed = self._place_animals_in_world(next_gen)
+        for a in placed:
+            self.simulation.add_animal(a)
+
+        # Advance generation counter
+        self.current_generation += 1
+        self.logger.info(f"Next generation initialized: {len(placed)} animals (Gen {self.current_generation})")
+        return placed
+
+    def run_generations(self, num_generations: Optional[int] = None, weeks_per_generation: Optional[int] = None) -> List[Dict[str, Any]]:
+        """Run multiple generations with evolution in between."""
+        gens = num_generations or self.config.max_generations
+        results: List[Dict[str, Any]] = []
+        for g in range(gens):
+            self.logger.info(f"==== RUN GENERATION {self.current_generation} ====")
+            result = self.run_generation(max_weeks=weeks_per_generation or self.config.max_weeks)
+            results.append(result)
+            if g < gens - 1:
+                self.evolve_to_next_generation()
+        return results
     
     def _run_weekly_cycle(self, week: int) -> Dict[str, Any]:
         """
