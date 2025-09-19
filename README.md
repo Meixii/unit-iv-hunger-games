@@ -229,10 +229,6 @@ This project is part of an academic curriculum and is intended for educational p
 - **Visualization**: Real-time 3D world rendering
 - **Data Analysis**: Advanced evolutionary progress tracking
 
-## 📞 Contact
-
-For questions about this project, please refer to the documentation or contact the development team.
-
 ---
 
 **EvoSim: Where Evolution Meets Artificial Intelligence** 🧬🤖
