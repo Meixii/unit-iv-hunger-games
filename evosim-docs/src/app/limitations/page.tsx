@@ -107,7 +107,7 @@ export default function LimitationsPage() {
               <div className="border rounded-lg p-6">
                 <h4 className="text-xl font-semibold text-orange-600 mb-3">Player Interaction</h4>
                 <p className="text-muted-foreground mb-4">
-                  Direct player control is intentionally limited to the initial 'Training' phase and timed 'Quick Events.' The core gameplay loop, including movement and resource gathering, is fully autonomous and governed by the animal's evolved MLP, reinforcing the project's focus on evolutionary algorithms.
+                  Direct player control is intentionally limited to the initial &apos;Training&apos; phase and timed &apos;Quick Events.&apos; The core gameplay loop, including movement and resource gathering, is fully autonomous and governed by the animal&apos;s evolved MLP, reinforcing the project&apos;s focus on evolutionary algorithms.
                 </p>
                 <div className="bg-orange-50 dark:bg-orange-950 p-4 rounded">
                   <h5 className="font-semibold mb-2">Impact:</h5>

@@ -28,7 +28,7 @@ export default function CoreMechanicsPage() {
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">2. Generational Loop</h4>
-              <p>The simulation proceeds in generations. Each generation consists of a full "Hunger Games" style survival scenario. The loop is as follows:</p>
+              <p>The simulation proceeds in generations. Each generation consists of a full &quot;Hunger Games&quot; style survival scenario. The loop is as follows:</p>
               <ol className="space-y-2 ml-4 list-decimal">
                 <li>Run the Weekly Cycle until a single animal survives or a maximum number of weeks is reached.</li>
                 <li>Calculate the final Fitness Score for every animal that participated.</li>
@@ -56,7 +56,7 @@ export default function CoreMechanicsPage() {
             
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">1. Decision Phase</h4>
-              <p>Every living animal's MLP is fed its current sensory inputs. Each MLP processes this information and outputs a chosen action (e.g., "Move North," "Eat"). All decisions are stored without being executed yet.</p>
+              <p>Every living animal&apos;s MLP is fed its current sensory inputs. Each MLP processes this information and outputs a chosen action (e.g., &quot;Move North,&quot; &quot;Eat&quot;). All decisions are stored without being executed yet.</p>
             </div>
 
             <div className="space-y-4">
@@ -64,7 +64,7 @@ export default function CoreMechanicsPage() {
               <p>Before actions are taken, passive changes are applied to all animals simultaneously.</p>
               <ul className="space-y-1 ml-4">
                 <li>• Hunger and Thirst depletion.</li>
-                <li>• Health loss from debuffs like 'Poisoned'.</li>
+                <li>• Health loss from debuffs like &apos;Poisoned&apos;.</li>
                 <li>• Passive Energy regeneration.</li>
               </ul>
             </div>
@@ -73,14 +73,14 @@ export default function CoreMechanicsPage() {
               <h4 className="text-xl font-semibold">3. Action Execution Phase</h4>
               <p>The stored actions are executed in a specific order of priority:</p>
               <ul className="space-y-2 ml-4">
-                <li><strong>Priority 1 (Stationary Actions):</strong> 'Rest', 'Eat', 'Drink', 'Attack'. These are resolved first.</li>
-                <li><strong>Priority 2 (Movement Actions):</strong> All 'Move' actions are resolved. If two animals attempt to move into the same empty tile, the one with the higher Agility succeeds, while the other's move fails (consuming no energy). If an animal moves onto a tile occupied by another, an 'Animal Encounter' is triggered.</li>
+                <li><strong>Priority 1 (Stationary Actions):</strong> &apos;Rest&apos;, &apos;Eat&apos;, &apos;Drink&apos;, &apos;Attack&apos;. These are resolved first.</li>
+                <li><strong>Priority 2 (Movement Actions):</strong> All &apos;Move&apos; actions are resolved. If two animals attempt to move into the same empty tile, the one with the higher Agility succeeds, while the other&apos;s move fails (consuming no energy). If an animal moves onto a tile occupied by another, an &apos;Animal Encounter&apos; is triggered.</li>
               </ul>
             </div>
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">4. Cleanup Phase</h4>
-              <p>Any new effects are applied (e.g., 'Well-Fed' after eating), and expired effects are removed.</p>
+              <p>Any new effects are applied (e.g., &apos;Well-Fed&apos; after eating), and expired effects are removed.</p>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export default function CoreMechanicsPage() {
             <h3 id="resource-dynamics" className="text-2xl font-semibold">Resource Dynamics</h3>
             <ul className="space-y-2 ml-4">
               <li><strong>Spawning:</strong> Resources are placed on the map during World Generation. When a resource is fully consumed, it has a small chance to respawn in a valid location after a set number of weeks, preventing the map from becoming permanently barren.</li>
-              <li><strong>Consumption:</strong> Resources have a set number of "uses." For example, a Plant resource might have 2 uses, restoring 40 Hunger each time before it disappears.</li>
+              <li><strong>Consumption:</strong> Resources have a set number of &quot;uses.&quot; For example, a Plant resource might have 2 uses, restoring 40 Hunger each time before it disappears.</li>
             </ul>
           </div>
 
@@ -101,15 +101,15 @@ export default function CoreMechanicsPage() {
             
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">Initiation</h4>
-              <p>Combat is initiated when an 'Animal Encounter' is triggered. The MLPs of both animals then make a choice based on their sensory input: 'Attack' or one of the 'Move' actions (to flee).</p>
+              <p>Combat is initiated when an &apos;Animal Encounter&apos; is triggered. The MLPs of both animals then make a choice based on their sensory input: &apos;Attack&apos; or one of the &apos;Move&apos; actions (to flee).</p>
             </div>
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">Resolution</h4>
               <ul className="space-y-2 ml-4">
-                <li>If both animals choose 'Attack', they engage in combat. Damage is exchanged simultaneously based on the formula in Section V. Combat continues in subsequent turns until one is defeated or chooses to flee.</li>
-                <li>If one animal chooses 'Attack' and the other chooses 'Flee', the attacker gets one free attack (the defender's AGI is not subtracted for this first strike). The fleeing animal then attempts to move to an adjacent tile.</li>
-                <li>If both choose 'Flee', they both move away in their chosen directions.</li>
+                <li>If both animals choose &apos;Attack&apos;, they engage in combat. Damage is exchanged simultaneously based on the formula in Section V. Combat continues in subsequent turns until one is defeated or chooses to flee.</li>
+                <li>If one animal chooses &apos;Attack&apos; and the other chooses &apos;Flee&apos;, the attacker gets one free attack (the defender&apos;s AGI is not subtracted for this first strike). The fleeing animal then attempts to move to an adjacent tile.</li>
+                <li>If both choose &apos;Flee&apos;, they both move away in their chosen directions.</li>
               </ul>
             </div>
           </div>

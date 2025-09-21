@@ -160,7 +160,7 @@ export default function DevelopmentTasksPage() {
             
             <div className="space-y-4">
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold">Task 3.1: MLP ("Brain") Implementation</h4>
+                <h4 className="font-semibold">Task 3.1: MLP (&quot;Brain&quot;) Implementation</h4>
                 <p className="text-sm text-muted-foreground mb-2">Develop the neural decision system.</p>
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Action Items:</p>

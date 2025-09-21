@@ -143,9 +143,9 @@ export default function FormulasPage() {
             <div className="border rounded-lg p-4">
               <h4 className="font-semibold">Complete Formula</h4>
               <div className="bg-muted p-4 rounded mt-2">
-                <code className="text-sm">
-                  Fitness Score = (Time Survived * W['Time']) + (Resources Gathered / 40 * W['Resource']) + (Kills * W['Kill']) + (Distance * W['Distance']) + (Events Survived * W['Event'])
-                </code>
+                  <code className="text-sm">
+                    Fitness Score = (Time Survived * W[&apos;Time&apos;]) + (Resources Gathered / 40 * W[&apos;Resource&apos;]) + (Kills * W[&apos;Kill&apos;]) + (Distance * W[&apos;Distance&apos;]) + (Events Survived * W[&apos;Event&apos;])
+                  </code>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                 <div>

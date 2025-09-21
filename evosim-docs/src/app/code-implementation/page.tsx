@@ -76,7 +76,7 @@ FITNESS_WEIGHTS = {'Time': 1, 'Resource': 5, 'Kill': 50, 'Distance': 0.2, 'Event
       <div className="space-y-8">
         <div className="space-y-4">
           <p className="text-lg text-muted-foreground">
-            This section provides a direct translation of the parameters in Section VIII into a format suitable for a configuration or constants file in Python. This centralizes all "magic numbers" for easy tweaking during development.
+            This section provides a direct translation of the parameters in Section VIII into a format suitable for a configuration or constants file in Python. This centralizes all &quot;magic numbers&quot; for easy tweaking during development.
           </p>
         </div>
 

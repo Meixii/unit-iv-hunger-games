@@ -11,7 +11,7 @@ export default function EventsDisastersPage() {
       <div className="space-y-8">
         <div className="space-y-4">
           <p className="text-lg text-muted-foreground">
-            This section covers the random environmental challenges that will test the animals' adaptability, such as storms, meteors, and resource depletion.
+            This section covers the random environmental challenges that will test the animals&apos; adaptability, such as storms, meteors, and resource depletion.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ export default function EventsDisastersPage() {
             <div className="grid gap-4">
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold">Animal Encounter</h4>
-                <p className="text-sm text-muted-foreground">Two animals move onto the same tile. The MLP for each decides "Fight" or "Flee".</p>
+                <p className="text-sm text-muted-foreground">Two animals move onto the same tile. The MLP for each decides &quot;Fight&quot; or &quot;Flee&quot;.</p>
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold">Resource Scarcity</h4>
@@ -59,7 +59,7 @@ export default function EventsDisastersPage() {
             <div className="grid gap-4">
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-green-600">Migration</h4>
-                <p className="text-sm text-muted-foreground">A random map quadrant becomes a "Lush Zone" for the week.</p>
+                <p className="text-sm text-muted-foreground">A random map quadrant becomes a &quot;Lush Zone&quot; for the week.</p>
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-blue-600">Resource Bloom</h4>
@@ -84,7 +84,7 @@ export default function EventsDisastersPage() {
             <div className="grid gap-4">
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-red-600">Wildfire</h4>
-                <p className="text-sm text-muted-foreground">Affects all 'Forest' terrain cells.</p>
+                <p className="text-sm text-muted-foreground">Affects all &apos;Forest&apos; terrain cells.</p>
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-orange-600">Contamination</h4>
@@ -96,7 +96,7 @@ export default function EventsDisastersPage() {
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-gray-600">Earthquake</h4>
-                <p className="text-sm text-muted-foreground">Changes some 'Plains' tiles to 'Difficult Terrain' and may cause the Injured debuff.</p>
+                <p className="text-sm text-muted-foreground">Changes some &apos;Plains&apos; tiles to &apos;Difficult Terrain&apos; and may cause the Injured debuff.</p>
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-cyan-600">Harsh Winter</h4>

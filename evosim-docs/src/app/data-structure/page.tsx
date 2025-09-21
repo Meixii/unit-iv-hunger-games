@@ -73,7 +73,7 @@ export default function DataStructurePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">terrain_type</span>
-                  <span className="text-muted-foreground">String, e.g., 'Plains', 'Forest'</span>
+                  <span className="text-muted-foreground">String, e.g., &apos;Plains&apos;, &apos;Forest&apos;</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">resource</span>
@@ -98,7 +98,7 @@ export default function DataStructurePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">category</span>
-                  <span className="text-muted-foreground">String, e.g., 'Carnivore'</span>
+                  <span className="text-muted-foreground">String, e.g., &apos;Carnivore&apos;</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">mlp_network</span>
@@ -114,7 +114,7 @@ export default function DataStructurePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">passive</span>
-                  <span className="text-muted-foreground">String, e.g., 'Ambush Predator'</span>
+                  <span className="text-muted-foreground">String, e.g., &apos;Ambush Predator&apos;</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">active_effects</span>
@@ -139,7 +139,7 @@ export default function DataStructurePage() {
               <div className="grid gap-2">
                 <div className="flex justify-between">
                   <span className="font-mono">name</span>
-                  <span className="text-muted-foreground">String, e.g., 'Poisoned'</span>
+                  <span className="text-muted-foreground">String, e.g., &apos;Poisoned&apos;</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">duration</span>
@@ -160,7 +160,7 @@ export default function DataStructurePage() {
               <div className="grid gap-2">
                 <div className="flex justify-between">
                   <span className="font-mono">type</span>
-                  <span className="text-muted-foreground">String, e.g., 'Plant', 'Prey', 'Water'</span>
+                  <span className="text-muted-foreground">String, e.g., &apos;Plant&apos;, &apos;Prey&apos;, &apos;Water&apos;</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-mono">quantity</span>

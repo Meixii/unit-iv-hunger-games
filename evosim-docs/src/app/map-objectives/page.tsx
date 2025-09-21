@@ -31,7 +31,7 @@ export default function MapObjectivesPage() {
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-green-800">Forest</h4>
-                <p className="text-sm text-muted-foreground">Dense woodland. Increased movement cost (x1.5). Provides a "Hidden" status, preventing detection from animals more than 2 tiles away. High density of plant-based food.</p>
+                <p className="text-sm text-muted-foreground">Dense woodland. Increased movement cost (x1.5). Provides a &quot;Hidden&quot; status, preventing detection from animals more than 2 tiles away. High density of plant-based food.</p>
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-green-900">Jungle</h4>
@@ -73,7 +73,7 @@ export default function MapObjectivesPage() {
 
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold">Objectives & Win Conditions</h3>
-            <p>The ultimate goal is to produce the most "fit" animal for the next generation.</p>
+            <p>The ultimate goal is to produce the most &quot;fit&quot; animal for the next generation.</p>
             
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">Primary Objective (Winning a Round)</h4>
@@ -86,7 +86,7 @@ export default function MapObjectivesPage() {
               <h4 className="text-xl font-semibold">Secondary Objective (Driving Evolution)</h4>
               <div className="border rounded-lg p-4">
                 <p className="font-semibold">Achieve the highest possible Fitness Score.</p>
-                <p className="text-sm text-muted-foreground">This score, calculated at the moment of an animal's death (or the end of the simulation), determines its evolutionary success.</p>
+                <p className="text-sm text-muted-foreground">This score, calculated at the moment of an animal&apos;s death (or the end of the simulation), determines its evolutionary success.</p>
               </div>
             </div>
 

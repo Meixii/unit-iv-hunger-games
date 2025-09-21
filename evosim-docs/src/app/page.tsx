@@ -44,7 +44,7 @@ export default function Home() {
           <div className="border rounded-lg p-6">
             <h3 className="text-xl font-semibold mb-3">General Objective</h3>
             <p className="text-muted-foreground">
-              To design and develop a competitive survival simulation where a Multi-Layer Perceptron, trained by an evolutionary algorithm, learns to effectively control an animal's behavior. The project aims to demonstrate how evolutionary processes can optimize a neural network's decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment.
+              To design and develop a competitive survival simulation where a Multi-Layer Perceptron, trained by an evolutionary algorithm, learns to effectively control an animal&apos;s behavior. The project aims to demonstrate how evolutionary processes can optimize a neural network&apos;s decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment.
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export default function Home() {
               <li>• To create a training system that uses evolutionary algorithms where animals can improve their behaviors by facing different survival events and scenarios across generations</li>
               <li>• To design and implement a multi-layered event system featuring: AI-driven Movement Events, player-interactive Quick Events, simulation-wide Random Events, and hazardous Disasters that occur on a structured weekly cycle</li>
               <li>• To develop a competitive survival simulation where AI-driven animals, managed by a Multi-Layer Perceptron trained through evolutionary algorithms, experience survival across multiple generations within a dynamic environment</li>
-              <li>• To enable the MLP to make decisions for basic actions (moving, hunting, drinking, fleeing) based on the animal's core Status inputs (Health, Hunger, Thirst, Energy, Instinct)</li>
+              <li>• To enable the MLP to make decisions for basic actions (moving, hunting, drinking, fleeing) based on the animal&apos;s core Status inputs (Health, Hunger, Thirst, Energy, Instinct)</li>
               <li>• To simulate users with different kinds of events, including hunting, migration, and resource collection</li>
               <li>• To create an environment with diverse terrains, such as jungle, lake, and plains</li>
               <li>• To create a system that displays animal skills based on specific statuses such as health, hunger, thirst, energy, and instinct</li>
@@ -122,7 +122,7 @@ export default function Home() {
             </div>
             <div className="border rounded p-4">
               <h3 className="font-semibold text-orange-600 mb-2">Player Interaction</h3>
-              <p>Direct player control is intentionally limited to the initial 'Training' phase and timed 'Quick Events.' The core gameplay loop, including movement and resource gathering, is fully autonomous and governed by the animal's evolved MLP, reinforcing the project's focus on evolutionary algorithms.</p>
+              <p>Direct player control is intentionally limited to the initial &apos;Training&apos; phase and timed &apos;Quick Events.&apos; The core gameplay loop, including movement and resource gathering, is fully autonomous and governed by the animal&apos;s evolved MLP, reinforcing the project&apos;s focus on evolutionary algorithms.</p>
             </div>
           </div>
         </div>

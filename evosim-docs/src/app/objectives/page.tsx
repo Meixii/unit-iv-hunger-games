@@ -11,7 +11,7 @@ export default function ObjectivesPage() {
       <div className="space-y-8">
         <div className="space-y-4">
           <p className="text-lg text-muted-foreground">
-            The project aims to demonstrate how evolutionary processes can optimize a neural network's decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment.
+            The project aims to demonstrate how evolutionary processes can optimize a neural network&apos;s decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment.
           </p>
         </div>
 
@@ -20,7 +20,7 @@ export default function ObjectivesPage() {
             <h3 className="text-2xl font-semibold">General Objective</h3>
             <div className="border rounded-lg p-6 bg-blue-50 dark:bg-blue-950">
               <p className="text-muted-foreground">
-                To design and develop a competitive survival simulation where a Multi-Layer Perceptron, trained by an evolutionary algorithm, learns to effectively control an animal's behavior. The project aims to demonstrate how evolutionary processes can optimize a neural network's decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment.
+                To design and develop a competitive survival simulation where a Multi-Layer Perceptron, trained by an evolutionary algorithm, learns to effectively control an animal&apos;s behavior. The project aims to demonstrate how evolutionary processes can optimize a neural network&apos;s decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment.
               </p>
             </div>
           </div>
@@ -50,7 +50,7 @@ export default function ObjectivesPage() {
               
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold mb-2">MLP Decision Making</h4>
-                <p className="text-sm text-muted-foreground">To enable the MLP to make decisions for basic actions (moving, hunting, drinking, fleeing) based on the animal's core Status inputs (Health, Hunger, Thirst, Energy, Instinct)</p>
+                <p className="text-sm text-muted-foreground">To enable the MLP to make decisions for basic actions (moving, hunting, drinking, fleeing) based on the animal&apos;s core Status inputs (Health, Hunger, Thirst, Energy, Instinct)</p>
               </div>
               
               <div className="border rounded-lg p-4">

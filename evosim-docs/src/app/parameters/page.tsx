@@ -37,7 +37,7 @@ export default function ParametersPage() {
 
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold">Traits</h3>
-            <p>Core genetic attributes that define an animal's capabilities (Scale: 1-10). These will be the values the evolutionary algorithm tunes.</p>
+            <p>Core genetic attributes that define an animal&apos;s capabilities (Scale: 1-10). These will be the values the evolutionary algorithm tunes.</p>
             <div className="grid gap-4">
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold">Strength (STR)</h4>
@@ -64,11 +64,11 @@ export default function ParametersPage() {
 
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold">Status</h3>
-            <p>Dynamic variables reflecting an animal's current well-being. These are critical inputs for the MLP.</p>
+            <p>Dynamic variables reflecting an animal&apos;s current well-being. These are critical inputs for the MLP.</p>
             <div className="grid gap-4">
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold">Health</h4>
-                <p className="text-sm text-muted-foreground">Animal's life force. If it reaches 0, the animal perishes. Calculated as 100 + (Endurance * 10). Does not regenerate passively.</p>
+                <p className="text-sm text-muted-foreground">Animal&apos;s life force. If it reaches 0, the animal perishes. Calculated as 100 + (Endurance * 10). Does not regenerate passively.</p>
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold">Hunger</h4>
@@ -84,7 +84,7 @@ export default function ParametersPage() {
               </div>
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold">Instinct (Danger Level)</h4>
-                <p className="text-sm text-muted-foreground">A state (e.g., Calm or Alert). Becomes "Alert" when health is low, a predator is nearby, or during a disaster. This state is a direct input to the MLP to influence its decision-making priorities (e.g., flee vs. eat).</p>
+                <p className="text-sm text-muted-foreground">A state (e.g., Calm or Alert). Becomes &quot;Alert&quot; when health is low, a predator is nearby, or during a disaster. This state is a direct input to the MLP to influence its decision-making priorities (e.g., flee vs. eat).</p>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function ParametersPage() {
                     </div>
                     <div className="border rounded p-3">
                       <p className="font-medium">Rested</p>
-                      <p className="text-xs text-muted-foreground">Significant boost to energy regeneration for 3 turns. (Trigger: Taking the 'Rest' action)</p>
+                      <p className="text-xs text-muted-foreground">Significant boost to energy regeneration for 3 turns. (Trigger: Taking the &apos;Rest&apos; action)</p>
                     </div>
                     <div className="border rounded p-3">
                       <p className="font-medium">Adrenaline Rush</p>

@@ -6,7 +6,7 @@ export default function FitnessFunctionPage() {
       <div className="space-y-4">
         <h1 className="text-4xl font-bold tracking-tight">Fitness Function & Generational Goals</h1>
         <p className="text-lg text-muted-foreground">
-          This section defines the precise formula for calculating an animal's fitness and the high-level objectives for each evolutionary generation.
+          This section defines the precise formula for calculating an animal&apos;s fitness and the high-level objectives for each evolutionary generation.
         </p>
       </div>
       
@@ -16,7 +16,7 @@ export default function FitnessFunctionPage() {
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold">Fitness Function Rationale</h3>
             <p>
-              The goal of the fitness function is to provide a single, quantitative measure of an animal's success. This value guides the Evolutionary Algorithm by rewarding beneficial strategies and behaviors.
+              The goal of the fitness function is to provide a single, quantitative measure of an animal&apos;s success. This value guides the Evolutionary Algorithm by rewarding beneficial strategies and behaviors.
             </p>
             
             <div className="bg-muted p-6 rounded-lg">
@@ -39,7 +39,7 @@ export default function FitnessFunctionPage() {
                 <div className="border rounded-lg p-4">
                   <h5 className="font-semibold text-green-600">Resources Gathered</h5>
                   <p className="text-sm text-muted-foreground">
-                    This incentivizes the MLP to learn proactive behaviors. It's not enough to simply hide; an animal must actively seek out food and water to replenish its status, and this term rewards that efficiency.
+                    This incentivizes the MLP to learn proactive behaviors. It&apos;s not enough to simply hide; an animal must actively seek out food and water to replenish its status, and this term rewards that efficiency.
                   </p>
                 </div>
                 
@@ -89,7 +89,7 @@ export default function FitnessFunctionPage() {
                 <div className="border rounded-lg p-4">
                   <h5 className="font-semibold">Observe Adaptation</h5>
                   <p className="text-sm text-muted-foreground">
-                    We expect to see the population's average traits shift in response to environmental pressures. For instance, in a world with frequent "Harsh Winter" disasters, animals with higher Endurance should have higher fitness scores, leading to a gradual increase in the average Endurance of the population over generations.
+                    We expect to see the population&apos;s average traits shift in response to environmental pressures. For instance, in a world with frequent &quot;Harsh Winter&quot; disasters, animals with higher Endurance should have higher fitness scores, leading to a gradual increase in the average Endurance of the population over generations.
                   </p>
                 </div>
                 

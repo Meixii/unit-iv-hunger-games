@@ -16,12 +16,12 @@ export default function MLPEvolutionPage() {
           <div className="space-y-4">
             <h3 className="text-2xl font-semibold">Multi-Layer Perceptron (MLP) Architecture</h3>
             <p>
-              The MLP serves as the decision-making core for each animal. Its weights and biases are the "genes" that will be evolved.
+              The MLP serves as the decision-making core for each animal. Its weights and biases are the &quot;genes&quot; that will be evolved.
             </p>
             
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">1. Input Layer</h4>
-              <p>The sensory information provided to the MLP. It's a flattened vector of normalized values (0.0 to 1.0) representing:</p>
+              <p>The sensory information provided to the MLP. It&apos;s a flattened vector of normalized values (0.0 to 1.0) representing:</p>
               <ul className="space-y-2 ml-4">
                 <li><strong>Internal Status (5 nodes):</strong> Health %, Hunger %, Thirst %, Energy %, and Instinct (0 for Calm, 1 for Alert).</li>
                 <li><strong>Sensory Grid (Perception-based):</strong> A 3x3 grid of tiles centered on the animal. For each of the 9 tiles, the following data is included:
@@ -49,7 +49,7 @@ export default function MLPEvolutionPage() {
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">3. Output Layer</h4>
-              <p>The layer that determines the animal's action. The neuron with the highest activation value is the chosen action for the turn.</p>
+              <p>The layer that determines the animal&apos;s action. The neuron with the highest activation value is the chosen action for the turn.</p>
               
               <div className="space-y-2">
                 <p><strong>Output Actions (8 nodes):</strong></p>
@@ -66,7 +66,7 @@ export default function MLPEvolutionPage() {
               </div>
               
               <div className="bg-muted p-4 rounded-lg">
-                <p><strong>Activation Function:</strong> Softmax, to ensure a clear "choice" among the possible actions.</p>
+                <p><strong>Activation Function:</strong> Softmax, to ensure a clear &quot;choice&quot; among the possible actions.</p>
               </div>
             </div>
           </div>
@@ -84,15 +84,15 @@ export default function MLPEvolutionPage() {
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">2. Evaluation</h4>
-              <p>The entire simulation is run for a fixed number of "weeks." As each animal perishes or when the simulation ends, its performance is calculated using the Fitness Function.</p>
+              <p>The entire simulation is run for a fixed number of &quot;weeks.&quot; As each animal perishes or when the simulation ends, its performance is calculated using the Fitness Function.</p>
             </div>
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">3. Selection</h4>
-              <p>The top-performing animals are selected to become "parents" for the next generation.</p>
+              <p>The top-performing animals are selected to become &quot;parents&quot; for the next generation.</p>
               <ul className="space-y-2 ml-4">
                 <li><strong>Elitism:</strong> The top 10% of the population (based on fitness score) are automatically carried over to the next generation unchanged.</li>
-                <li><strong>Tournament Selection:</strong> To fill the remaining 90% of the new population, pairs of "parents" are chosen. A small group of animals (e.g., 5) is randomly selected from the previous generation, and the one with the highest fitness score in that group wins the "tournament" and is chosen as a parent.</li>
+                <li><strong>Tournament Selection:</strong> To fill the remaining 90% of the new population, pairs of &quot;parents&quot; are chosen. A small group of animals (e.g., 5) is randomly selected from the previous generation, and the one with the highest fitness score in that group wins the &quot;tournament&quot; and is chosen as a parent.</li>
               </ul>
             </div>
 
@@ -104,8 +104,8 @@ export default function MLPEvolutionPage() {
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold">5. Mutation</h4>
-              <p>To introduce new genetic diversity, the offspring's MLP weights are slightly and randomly altered.</p>
-              <p><strong>Method:</strong> For each weight in the offspring's network, there is a small mutation chance (e.g., 2%). If mutation occurs, a small random value (from a Gaussian distribution) is added to the existing weight.</p>
+              <p>To introduce new genetic diversity, the offspring&apos;s MLP weights are slightly and randomly altered.</p>
+              <p><strong>Method:</strong> For each weight in the offspring&apos;s network, there is a small mutation chance (e.g., 2%). If mutation occurs, a small random value (from a Gaussian distribution) is added to the existing weight.</p>
             </div>
           </div>
         </div>

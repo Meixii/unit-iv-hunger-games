@@ -61,7 +61,7 @@ export default function PhasesPage() {
                   <h4 className="text-xl font-semibold">Simulation Phase</h4>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Build the core simulation loop and event system. This phase creates the "heart" of the simulation where all the action happens.
+                  Build the core simulation loop and event system. This phase creates the &quot;heart&quot; of the simulation where all the action happens.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -97,7 +97,7 @@ export default function PhasesPage() {
                   <h4 className="text-xl font-semibold">AI & Evolution Phase</h4>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Implement the neural networks and evolutionary algorithms. This phase brings the "intelligence" to the simulation.
+                  Implement the neural networks and evolutionary algorithms. This phase brings the &quot;intelligence&quot; to the simulation.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
