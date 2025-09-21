@@ -107,7 +107,7 @@ export default function ParametersPage() {
                 </div>
                 <div className="border rounded-lg p-4">
                   <h5 className="font-semibold text-blue-600">Omnivore - Iron Stomach</h5>
-                  <p className="text-sm text-muted-foreground">Has a high resistance to negative effects from food or water sources (e.g., "Sick" or "Poisoned"). This makes them excellent scavengers and adaptable survivors.</p>
+                  <p className="text-sm text-muted-foreground">Has a high resistance to negative effects from food or water sources (e.g., &quot;Sick&quot; or &quot;Poisoned&quot;). This makes them excellent scavengers and adaptable survivors.</p>
                 </div>
               </div>
             </div>

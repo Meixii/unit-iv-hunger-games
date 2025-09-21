@@ -70,7 +70,7 @@ export default function EventsDisastersPage() {
                 <p className="text-sm text-muted-foreground">Half of all water source tiles become inactive for the week.</p>
               </div>
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-purple-600">Predator's Frenzy / Grazing Season</h4>
+                <h4 className="font-semibold text-purple-600">Predator&apos; Frenzy / Grazing Season</h4>
                 <p className="text-sm text-muted-foreground">A global +1 STR buff for Carnivores or +1 AGI for Herbivores for one week.</p>
               </div>
             </div>

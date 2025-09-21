@@ -178,7 +178,7 @@ export default function DevelopmentTasksPage() {
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Action Items:</p>
                   <ul className="text-sm text-muted-foreground ml-4 space-y-1">
-                    <li>• Gather and normalize animal's internal stats, scan localized grid</li>
+                    <li>• Gather and normalize animal&apos;s internal stats, scan localized grid</li>
                     <li>• Flatten to 41-node vector</li>
                   </ul>
                 </div>

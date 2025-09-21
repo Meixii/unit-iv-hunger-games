@@ -60,7 +60,7 @@ export default function FitnessFunctionPage() {
                 <div className="border rounded-lg p-4">
                   <h5 className="font-semibold text-orange-600">Events Survived</h5>
                   <p className="text-sm text-muted-foreground">
-                    This rewards adaptability. By providing a fitness bonus for successfully navigating Triggered Events, we encourage the evolution of more flexible and "intelligent" MLPs that can handle unexpected situations.
+                    This rewards adaptability. By providing a fitness bonus for successfully navigating Triggered Events, we encourage the evolution of more flexible and &quot;intelligent&quot; MLPs that can handle unexpected situations.
                   </p>
                 </div>
               </div>
