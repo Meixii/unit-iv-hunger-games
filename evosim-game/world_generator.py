@@ -76,35 +76,98 @@ class WorldGenerator:
         return world
     
     def _generate_terrain_grid(self) -> List[List[TerrainType]]:
-        """Generate a 2D grid of terrain types based on distribution."""
-        terrain_grid = []
-        
-        # Create weighted list of terrain types (excluding mountains for interior)
-        interior_terrain_weights = []
-        interior_terrain_types = []
-        for terrain_name, weight in self.config.terrain_distribution.items():
-            if terrain_name != 'Mountains':  # Exclude mountains from interior
-                interior_terrain_weights.append(weight)
-                interior_terrain_types.append(TerrainType(terrain_name))
-        
-        # Normalize interior weights to sum to 1.0
-        total_interior_weight = sum(interior_terrain_weights)
-        interior_terrain_weights = [w / total_interior_weight for w in interior_terrain_weights]
-        
-        # Generate grid
-        for y in range(self.config.height):
-            row = []
-            for x in range(self.config.width):
-                # Check if this is a border tile and mountain borders are enabled
+        """Generate a 2D grid of terrain types with clustered biomes.
+
+        Strategy:
+        - Place mountain borders if enabled.
+        - Compute interior target counts from distribution.
+        - For each non-plains terrain (Water, Forest, Jungle, Swamp), grow
+          several clusters by random BFS until the target count is reached.
+        - Fill remaining cells with Plains.
+        """
+        width, height = self.config.width, self.config.height
+        grid: List[List[Optional[TerrainType]]] = [[None for _ in range(width)] for _ in range(height)]
+
+        # 1) Mountains along the border (if enabled)
+        interior_cells = 0
+        for y in range(height):
+            for x in range(width):
                 if self.config.mountain_border and self._is_border_tile(x, y):
-                    terrain = TerrainType.MOUNTAINS
+                    grid[y][x] = TerrainType.MOUNTAINS
                 else:
-                    # Use interior terrain distribution
-                    terrain = self.random.choices(interior_terrain_types, weights=interior_terrain_weights)[0]
-                row.append(terrain)
-            terrain_grid.append(row)
-        
-        return terrain_grid
+                    interior_cells += 1
+
+        # 2) Determine target counts for interior terrains (excluding Mountains)
+        #    We will assign Forest/Jungle/Swamp/Water first; Plains fills the rest.
+        distribution = self.config.terrain_distribution
+        def count_for(name: str) -> int:
+            return max(0, int(round(distribution.get(name, 0.0) * (width * height))))
+
+        target_water   = min(interior_cells, count_for('Water'))
+        target_forest  = min(interior_cells, count_for('Forest'))
+        target_jungle  = min(interior_cells, count_for('Jungle'))
+        target_swamp   = min(interior_cells, count_for('Swamp'))
+        # Plains are the remainder implicitly
+
+        # Helper to list free interior cells
+        def free_cells() -> List[tuple]:
+            cells = []
+            for yy in range(height):
+                for xx in range(width):
+                    if grid[yy][xx] is None:
+                        cells.append((xx, yy))
+            return cells
+
+        # Helper to get 4-neighbors
+        def neighbors4(x: int, y: int) -> List[tuple]:
+            out = []
+            for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < width and 0 <= ny < height and grid[ny][nx] is None:
+                    out.append((nx, ny))
+            return out
+
+        # Generic cluster grower
+        def grow_terrain(terrain: TerrainType, remaining: int, seed_attempts: int, continue_prob: float) -> None:
+            nonlocal grid
+            if remaining <= 0:
+                return
+            attempts = 0
+            while remaining > 0 and attempts < seed_attempts * 100:
+                attempts += 1
+                cells = free_cells()
+                if not cells:
+                    break
+                sx, sy = self.random.choice(cells)
+                # Start a cluster
+                queue = [(sx, sy)]
+                while queue and remaining > 0:
+                    x, y = queue.pop(0)
+                    if grid[y][x] is not None:
+                        continue
+                    grid[y][x] = terrain
+                    remaining -= 1
+                    # Probabilistically continue to neighbors to keep compact blobs
+                    for nx, ny in neighbors4(x, y):
+                        if self.random.random() < continue_prob:
+                            queue.append((nx, ny))
+                # Move to a new seed if we still have remaining tiles
+                if remaining <= 0:
+                    break
+
+        # Tune per-terrain clustering behavior
+        grow_terrain(TerrainType.WATER,   target_water,  seed_attempts=8,  continue_prob=0.7)
+        grow_terrain(TerrainType.FOREST,  target_forest, seed_attempts=12, continue_prob=0.6)
+        grow_terrain(TerrainType.JUNGLE,  target_jungle, seed_attempts=6,  continue_prob=0.65)
+        grow_terrain(TerrainType.SWAMP,   target_swamp,  seed_attempts=6,  continue_prob=0.55)
+
+        # 3) Fill any remaining interior cells with Plains
+        for y in range(height):
+            for x in range(width):
+                if grid[y][x] is None:
+                    grid[y][x] = TerrainType.PLAINS
+
+        return grid
     
     def _is_border_tile(self, x: int, y: int) -> bool:
         """Check if a tile is on the border of the world."""

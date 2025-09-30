@@ -80,16 +80,33 @@ class DecisionEngine:
             return AnimalAction(animal.animal_id, animal, ActionType.REST)
         
         if hunger <= 30:
-            # Look for food resources nearby
+            # Prefer eating on current tile if edible food exists
+            cur_loc = self._resource_on_current_tile(animal, 'food')
+            if cur_loc:
+                return AnimalAction(animal.animal_id, animal, ActionType.EAT, target_location=cur_loc)
+            # Otherwise look nearby
             food_location = self._find_nearby_resource(animal, 'food')
             if food_location:
                 return AnimalAction(animal.animal_id, animal, ActionType.EAT, target_location=food_location)
         
         if thirst <= 30:
+            # Drink from current tile if water resource exists
+            cur_loc = self._resource_on_current_tile(animal, 'water')
+            if cur_loc:
+                return AnimalAction(animal.animal_id, animal, ActionType.DRINK, target_location=cur_loc)
             # Look for water resources nearby
             water_location = self._find_nearby_resource(animal, 'water')
             if water_location:
                 return AnimalAction(animal.animal_id, animal, ActionType.DRINK, target_location=water_location)
+            # If none found, try to step towards any adjacent water terrain
+            wx, wy = animal.location
+            for dx, dy in [(1,0),(-1,0),(0,1),(0,-1)]:
+                tx, ty = wx + dx, wy + dy
+                if (0 <= tx < self.simulation.world.dimensions[0] and
+                    0 <= ty < self.simulation.world.dimensions[1]):
+                    tile = self.simulation.world.get_tile(tx, ty)
+                    if tile and tile.terrain_type.value == 'Water':
+                        return AnimalAction(animal.animal_id, animal, ActionType.DRINK, target_location=(wx, wy))
         
         # Priority 2: Energy management
         if energy <= 40:
@@ -150,7 +167,7 @@ class DecisionEngine:
         current_x, current_y = animal.location
         world = self.simulation.world
         
-        # Check adjacent tiles for resources
+        # Check adjacent tiles for resources (including diagonals)
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
@@ -176,6 +193,36 @@ class DecisionEngine:
                                 (resource_type == 'water' and res.resource_type.value == 'Water')):
                                 return (check_x, check_y)
         
+        return None
+
+    def _resource_on_current_tile(self, animal: Animal, resource_type: str) -> Optional[Tuple[int, int]]:
+        """Check if the current tile has a desired resource, respecting diet for food."""
+        if not animal.location or not self.simulation.world:
+            return None
+        x, y = animal.location
+        tile = self.simulation.world.get_tile(x, y)
+        if not tile:
+            return None
+
+        def edible_for(cat: AnimalCategory, rtype: str) -> bool:
+            if resource_type == 'water':
+                return rtype == 'Water'
+            # food
+            if cat == AnimalCategory.HERBIVORE:
+                return rtype == 'Plant'
+            if cat == AnimalCategory.CARNIVORE:
+                return rtype in ['Prey', 'Carcass']
+            return rtype in ['Plant', 'Prey', 'Carcass']
+
+        # Support both models
+        if hasattr(tile, 'resources') and tile.resources:
+            for res in tile.resources:
+                if edible_for(animal.category, res.resource_type.value):
+                    return (x, y)
+        elif getattr(tile, 'resource', None):
+            res = tile.resource
+            if edible_for(animal.category, res.resource_type.value):
+                return (x, y)
         return None
     
     def _calculate_target_location(self, x: int, y: int, action: ActionType) -> Tuple[int, int]:

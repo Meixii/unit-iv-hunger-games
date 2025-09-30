@@ -20,10 +20,10 @@ from data_structures import (
 
 class TrainingQuestion(Enum):
     """Training questions for initial animal customization."""
-    HUNTING_STYLE = "hunting_style"
+    MOVEMENT_STYLE = "movement_style"
     SURVIVAL_PRIORITY = "survival_priority"
     ENVIRONMENT_PREFERENCE = "environment_preference"
-    COMBAT_APPROACH = "combat_approach"
+    CONFLICT_RESOLUTION = "conflict_resolution"
     RESOURCE_STRATEGY = "resource_strategy"
 
 
@@ -46,37 +46,48 @@ class AnimalCreator:
     """Handles animal creation and customization."""
     
     def __init__(self, seed: Optional[int] = None):
-        """Initialize the animal creator."""
+        """Initialize the animal creator with optional seed for reproducible results.
+        
+        Args:
+            seed: Optional random seed for reproducible animal generation
+        """
         self.random = random.Random(seed)
         self.training_questions = self._create_training_questions()
     
     def _create_training_questions(self) -> Dict[TrainingQuestion, TrainingQuestionData]:
-        """Create the training questions for animal customization."""
+        """Create the training questions for animal customization.
+        
+        Generates a set of 5 general survival questions that work for any animal category.
+        Each question has 4 options, each corresponding to a different trait bonus.
+        
+        Returns:
+            Dictionary mapping question types to their data and options
+        """
         questions = {}
         
-        # Question 1: Hunting Style
-        questions[TrainingQuestion.HUNTING_STYLE] = TrainingQuestionData(
-            question="What is your preferred hunting style?",
+        # Question 1: Movement Style
+        questions[TrainingQuestion.MOVEMENT_STYLE] = TrainingQuestionData(
+            question="How do you prefer to move through your environment?",
             options=[
                 QuestionOption(
-                    text="Ambush and strike quickly",
+                    text="Quick bursts of speed",
                     trait_bonus="AGI",
-                    description="Focus on speed and stealth"
+                    description="Fast, agile movements"
                 ),
                 QuestionOption(
-                    text="Direct confrontation",
+                    text="Steady, powerful strides",
                     trait_bonus="STR",
-                    description="Rely on strength and power"
+                    description="Strong, determined movement"
                 ),
                 QuestionOption(
-                    text="Patient observation",
+                    text="Careful, calculated steps",
                     trait_bonus="PER",
-                    description="Use intelligence and awareness"
+                    description="Observant and cautious approach"
                 ),
                 QuestionOption(
-                    text="Endure long pursuits",
+                    text="Consistent, long-distance travel",
                     trait_bonus="END",
-                    description="Outlast your prey"
+                    description="Enduring, persistent movement"
                 )
             ]
         )
@@ -86,105 +97,105 @@ class AnimalCreator:
             question="What is your top survival priority?",
             options=[
                 QuestionOption(
-                    text="Finding food quickly",
+                    text="Finding resources quickly",
                     trait_bonus="AGI",
-                    description="Speed in resource gathering"
+                    description="Speed in gathering food and water"
                 ),
                 QuestionOption(
-                    text="Avoiding predators",
+                    text="Avoiding danger",
                     trait_bonus="PER",
-                    description="Awareness of threats"
+                    description="Awareness of threats and hazards"
                 ),
                 QuestionOption(
                     text="Conserving energy",
                     trait_bonus="END",
-                    description="Efficiency in movement"
+                    description="Efficiency and endurance"
                 ),
                 QuestionOption(
-                    text="Learning from experience",
+                    text="Learning and adapting",
                     trait_bonus="INT",
-                    description="Adaptability and intelligence"
+                    description="Intelligence and problem-solving"
                 )
             ]
         )
         
         # Question 3: Environment Preference
         questions[TrainingQuestion.ENVIRONMENT_PREFERENCE] = TrainingQuestionData(
-            question="Which environment do you prefer?",
+            question="Which type of environment do you prefer?",
             options=[
                 QuestionOption(
-                    text="Open plains",
+                    text="Open, wide spaces",
                     trait_bonus="AGI",
                     description="Speed and mobility"
                 ),
                 QuestionOption(
-                    text="Dense forests",
+                    text="Dense, complex areas",
                     trait_bonus="PER",
                     description="Stealth and awareness"
                 ),
                 QuestionOption(
-                    text="Harsh mountains",
+                    text="Challenging, harsh terrain",
                     trait_bonus="END",
                     description="Endurance and toughness"
                 ),
                 QuestionOption(
-                    text="Complex terrain",
+                    text="Varied, changing landscapes",
                     trait_bonus="INT",
-                    description="Problem-solving ability"
+                    description="Adaptability and problem-solving"
                 )
             ]
         )
         
-        # Question 4: Combat Approach
-        questions[TrainingQuestion.COMBAT_APPROACH] = TrainingQuestionData(
-            question="How do you handle conflicts?",
+        # Question 4: Conflict Resolution
+        questions[TrainingQuestion.CONFLICT_RESOLUTION] = TrainingQuestionData(
+            question="How do you handle conflicts or threats?",
             options=[
                 QuestionOption(
-                    text="Strike first and hard",
+                    text="Face them head-on",
                     trait_bonus="STR",
-                    description="Overwhelming force"
+                    description="Direct confrontation and strength"
                 ),
                 QuestionOption(
-                    text="Dodge and counter",
+                    text="Escape quickly",
                     trait_bonus="AGI",
-                    description="Speed and reflexes"
+                    description="Speed and evasion"
                 ),
                 QuestionOption(
-                    text="Outsmart opponents",
+                    text="Outsmart the situation",
                     trait_bonus="INT",
-                    description="Tactical advantage"
+                    description="Intelligence and strategy"
                 ),
                 QuestionOption(
-                    text="Outlast the fight",
+                    text="Endure and persist",
                     trait_bonus="END",
-                    description="Persistence and stamina"
+                    description="Patience and resilience"
                 )
             ]
         )
         
         # Question 5: Resource Strategy
         questions[TrainingQuestion.RESOURCE_STRATEGY] = TrainingQuestionData(
-            question="What's your resource strategy?",
+            question="What's your approach to finding resources?",
             options=[
                 QuestionOption(
-                    text="Gather as much as possible",
+                    text="Gather large amounts",
                     trait_bonus="STR",
-                    description="Carrying capacity"
+                    description="Strength and carrying capacity"
                 ),
                 QuestionOption(
-                    text="Find the best sources",
+                    text="Find the best quality sources",
                     trait_bonus="PER",
-                    description="Quality over quantity"
+                    description="Awareness and detection"
                 ),
                 QuestionOption(
-                    text="Efficient collection",
+                    text="Collect efficiently and quickly",
                     trait_bonus="AGI",
                     description="Speed and efficiency"
                 ),
                 QuestionOption(
-                    text="Plan for the future",
+                    text="Plan and strategize",
                     trait_bonus="INT",
-                    description="Strategic thinking"
+                    description="Intelligence and foresight"
                 )
             ]
         )
@@ -197,7 +208,22 @@ class AnimalCreator:
         category: AnimalCategory,
         training_choices: List[int]
     ) -> Animal:
-        """Create an animal with custom training choices."""
+        """Create an animal with custom training choices applied.
+        
+        Creates a base animal and applies trait bonuses based on training question answers.
+        Each training choice corresponds to one of the 5 training questions.
+        
+        Args:
+            animal_id: Unique identifier for the animal
+            category: Animal category (Herbivore, Carnivore, Omnivore)
+            training_choices: List of 5 integers (0-3) representing question answers
+            
+        Returns:
+            Animal with training bonuses applied
+            
+        Raises:
+            ValueError: If training_choices length doesn't match number of questions
+        """
         if len(training_choices) != len(TrainingQuestion):
             raise ValueError(f"Expected {len(TrainingQuestion)} training choices, got {len(training_choices)}")
         
@@ -211,7 +237,16 @@ class AnimalCreator:
         return animal
     
     def _calculate_training_bonuses(self, training_choices: List[int]) -> Dict[str, int]:
-        """Calculate trait bonuses from training choices."""
+        """Calculate trait bonuses from training choices.
+        
+        Maps each training choice to its corresponding trait bonus and sums them up.
+        
+        Args:
+            training_choices: List of integers (0-3) representing question answers
+            
+        Returns:
+            Dictionary mapping trait names to their total bonus values
+        """
         bonuses = {trait: 0 for trait in constants.TRAIT_NAMES}
         
         for i, choice in enumerate(training_choices):
@@ -225,7 +260,15 @@ class AnimalCreator:
         return bonuses
     
     def _apply_trait_bonuses(self, animal: Animal, bonuses: Dict[str, int]) -> None:
-        """Apply trait bonuses to an animal."""
+        """Apply trait bonuses to an animal and recalculate derived stats.
+        
+        Adds trait bonuses to the animal's traits, ensuring they don't exceed maximum values.
+        Recalculates health and energy based on the new endurance value.
+        
+        Args:
+            animal: Animal to apply bonuses to
+            bonuses: Dictionary mapping trait names to bonus values
+        """
         for trait, bonus in bonuses.items():
             if bonus > 0:
                 animal.traits[trait] += bonus
@@ -245,7 +288,22 @@ class AnimalCreator:
         category: AnimalCategory,
         custom_traits: Dict[str, int]
     ) -> Animal:
-        """Create an animal with custom trait values."""
+        """Create an animal with completely custom trait values.
+        
+        Allows for precise control over all animal traits, useful for testing
+        specific trait combinations or creating animals with exact specifications.
+        
+        Args:
+            animal_id: Unique identifier for the animal
+            category: Animal category (Herbivore, Carnivore, Omnivore)
+            custom_traits: Dictionary mapping trait names to their desired values
+            
+        Returns:
+            Animal with the specified custom traits
+            
+        Raises:
+            ValueError: If custom_traits are invalid or incomplete
+        """
         # Validate custom traits
         self._validate_custom_traits(custom_traits)
         
@@ -266,7 +324,17 @@ class AnimalCreator:
         return animal
     
     def _validate_custom_traits(self, traits: Dict[str, int]) -> None:
-        """Validate custom trait values."""
+        """Validate custom trait values for correctness and completeness.
+        
+        Ensures all required traits are present, have valid names, and are within
+        acceptable value ranges.
+        
+        Args:
+            traits: Dictionary of trait names to values to validate
+            
+        Raises:
+            ValueError: If traits are invalid, missing, or out of range
+        """
         # Check for invalid trait names
         for trait in traits:
             if trait not in constants.TRAIT_NAMES:
@@ -289,7 +357,21 @@ class AnimalCreator:
         population_size: int,
         training_choices: List[List[int]]
     ) -> List[Animal]:
-        """Create a population of animals with training choices."""
+        """Create a population of animals with individual training choices.
+        
+        Creates multiple animals with different training configurations, cycling
+        through animal categories to ensure diversity.
+        
+        Args:
+            population_size: Number of animals to create
+            training_choices: List of training choice lists, one per animal
+            
+        Returns:
+            List of trained animals
+            
+        Raises:
+            ValueError: If training_choices length doesn't match population_size
+        """
         if len(training_choices) != population_size:
             raise ValueError(f"Expected {population_size} training choice sets, got {len(training_choices)}")
         
@@ -309,7 +391,18 @@ class AnimalCreator:
         population_size: int,
         diversity_factor: float = 0.5
     ) -> List[Animal]:
-        """Create a diverse population with varied traits."""
+        """Create a diverse population with varied traits.
+        
+        Generates a population with random trait variations to increase genetic
+        diversity. Each animal has a chance to receive trait modifications.
+        
+        Args:
+            population_size: Number of animals to create
+            diversity_factor: Probability (0.0-1.0) that each animal gets trait variation
+            
+        Returns:
+            List of diverse animals with varied traits
+        """
         animals = []
         categories = list(AnimalCategory)
         
@@ -329,7 +422,14 @@ class AnimalCreator:
         return animals
     
     def _add_trait_variation(self, animal: Animal) -> None:
-        """Add random variation to an animal's traits."""
+        """Add random variation to an animal's traits.
+        
+        Randomly boosts one trait and reduces another to create trait diversity.
+        Ensures traits stay within valid ranges and recalculates derived stats.
+        
+        Args:
+            animal: Animal to add trait variation to
+        """
         # Randomly boost one trait
         trait_to_boost = self.random.choice(constants.TRAIT_NAMES)
         boost_amount = self.random.randint(1, 2)
@@ -355,11 +455,36 @@ class AnimalCreator:
         animal.status['Energy'] = float(max_energy)
     
     def get_training_questions(self) -> Dict[TrainingQuestion, TrainingQuestionData]:
-        """Get the training questions for display."""
+        """Get the training questions for display or interactive use.
+        
+        Returns the complete set of training questions that can be used
+        for user interfaces or programmatic animal creation.
+        
+        Returns:
+            Dictionary mapping question types to their data and options
+        """
         return self.training_questions
     
     def analyze_animal_traits(self, animal: Animal) -> Dict[str, any]:
-        """Analyze an animal's trait distribution."""
+        """Analyze an animal's trait distribution and characteristics.
+        
+        Provides comprehensive analysis of an animal's trait distribution,
+        specialization level, and effective stats for evaluation purposes.
+        
+        Args:
+            animal: Animal to analyze
+            
+        Returns:
+            Dictionary containing trait analysis data including:
+            - total_traits: Sum of all trait values
+            - primary_trait: Highest trait name
+            - primary_value: Value of highest trait
+            - trait_balance: Difference between highest and lowest traits
+            - specialization: Specialization level (High/Medium/Low)
+            - effective_traits: Effective trait values after modifiers
+            - max_health: Maximum health value
+            - max_energy: Maximum energy value
+        """
         traits = animal.traits
         total_traits = sum(traits.values())
         
@@ -395,11 +520,25 @@ class AnimalCustomizer:
     """Handles advanced animal customization and trait optimization."""
     
     def __init__(self, seed: Optional[int] = None):
-        """Initialize the animal customizer."""
+        """Initialize the animal customizer with optional seed for reproducible results.
+        
+        Args:
+            seed: Optional random seed for reproducible animal generation
+        """
         self.random = random.Random(seed)
     
     def optimize_animal_for_category(self, animal: Animal) -> Animal:
-        """Optimize an animal's traits for its category."""
+        """Optimize an animal's traits for its category's primary focus.
+        
+        Maximizes the animal's primary trait for its category and ensures all
+        other traits are within standard ranges for optimal performance.
+        
+        Args:
+            animal: Animal to optimize
+            
+        Returns:
+            Optimized animal with traits adjusted for its category
+        """
         category = animal.category
         primary_trait = constants.CATEGORY_PRIMARY_TRAITS[category.value]
         
@@ -430,7 +569,19 @@ class AnimalCustomizer:
         category: AnimalCategory,
         target_total: int = 30
     ) -> Animal:
-        """Create an animal with balanced traits."""
+        """Create an animal with balanced traits across all categories.
+        
+        Creates an animal with the primary trait maximized and remaining points
+        distributed evenly among other traits for a balanced build.
+        
+        Args:
+            animal_id: Unique identifier for the animal
+            category: Animal category (Herbivore, Carnivore, Omnivore)
+            target_total: Total trait points to distribute (default: 30)
+            
+        Returns:
+            Animal with balanced trait distribution
+        """
         # Calculate trait distribution
         primary_trait = constants.CATEGORY_PRIMARY_TRAITS[category.value]
         remaining_points = target_total - constants.PRIMARY_TRAIT_MAX
@@ -458,7 +609,23 @@ class AnimalCustomizer:
         specialization_trait: str,
         specialization_level: int = 9
     ) -> Animal:
-        """Create an animal specialized in a specific trait."""
+        """Create an animal specialized in a specific trait.
+        
+        Creates an animal with one trait maximized and remaining points distributed
+        among other traits. Useful for testing extreme trait combinations.
+        
+        Args:
+            animal_id: Unique identifier for the animal
+            category: Animal category (Herbivore, Carnivore, Omnivore)
+            specialization_trait: Trait to specialize in (STR, AGI, INT, END, PER)
+            specialization_level: Level of specialization (1-10, default: 9)
+            
+        Returns:
+            Animal specialized in the specified trait
+            
+        Raises:
+            ValueError: If specialization_trait is invalid or specialization_level is out of range
+        """
         if specialization_trait not in constants.TRAIT_NAMES:
             raise ValueError(f"Invalid trait: {specialization_trait}")
         
@@ -497,7 +664,20 @@ class AnimalCustomizer:
 
 
 def create_animal_with_questions(animal_id: str, category: AnimalCategory) -> Tuple[Animal, List[TrainingQuestionData]]:
-    """Interactive function to create an animal with training questions."""
+    """Interactive function to create an animal with training questions.
+    
+    Creates an animal using random training choices and returns both the animal
+    and the list of questions. In a real implementation, this would be interactive.
+    
+    Args:
+        animal_id: Unique identifier for the animal
+        category: Animal category (Herbivore, Carnivore, Omnivore)
+        
+    Returns:
+        Tuple containing:
+        - Animal: Created animal with training applied
+        - List[TrainingQuestionData]: List of training questions for display
+    """
     creator = AnimalCreator()
     questions = creator.get_training_questions()
     

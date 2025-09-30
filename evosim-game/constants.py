@@ -8,6 +8,13 @@ Reference: Section IX - Code Implementation Constants from documentation.md
 """
 
 # =============================================================================
+# Game Parameters
+# =============================================================================
+
+GAME_VERSION = "1.0.0"
+GAME_NAME = "EvoSim: Evolve or Perish"
+
+# =============================================================================
 # WORLD GENERATION PARAMETERS
 # =============================================================================
 
@@ -17,8 +24,10 @@ GRID_HEIGHT = 25
 
 # Terrain distribution percentages
 TERRAIN_DISTRIBUTION = {
-    'Plains': 0.60,
-    'Forest': 0.25,
+    'Plains': 0.55,
+    'Forest': 0.20,
+    'Jungle': 0.05,
+    'Swamp': 0.05,
     'Water': 0.10,
     'Mountains': 0.05
 }

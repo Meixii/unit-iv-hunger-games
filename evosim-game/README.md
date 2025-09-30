@@ -123,6 +123,8 @@ A Python implementation of the EvoSim simulation project, featuring evolutionary
 - **Files:** `logging_utils.py`, `demo/demo_logging.py`
 - **Description:** CSV population summaries for per-generation analysis (fitness components, traits, status)
 
+### Phase 4: UI, Visualization & Reports
+
 ## Project Structure
 
 ```
@@ -134,6 +136,7 @@ evosim-game/
 ├── animal_creator.py            # Animal creation and customization system
 ├── simulation_controller.py     # Main simulation controller and orchestration
 ├── action_resolution/           # Modular action resolution system
+│   ├── README.md               # Comprehensive action resolution documentation
 │   ├── __init__.py             # Package initialization
 │   ├── action_data.py          # Action data structures and enums
 │   ├── action_resolver.py      # Main action resolution orchestrator
@@ -141,39 +144,17 @@ evosim-game/
 │   ├── status_engine.py        # Phase 2: Status & environmental effects
 │   ├── execution_engine.py     # Phase 3: Action execution with conflicts
 │   └── cleanup_engine.py       # Phase 4: Effect management
-├── event_engine/                # Modular event & disaster system
-│   ├── __init__.py             # Package initialization
-│   ├── event_data.py           # Event data structures and base classes
-│   ├── event_engine.py         # Main event engine interface
-│   ├── event_scheduler.py      # Event scheduling and coordination
-│   ├── triggered_events.py     # Condition-based events
-│   ├── random_events.py        # Probability-based events
-│   └── disaster_events.py      # Large-scale disaster events
-├── demo/                        # Demonstration scripts
-│   ├── demo_mountain_borders.py # Mountain border feature demonstration
-│   ├── demo_phase1_complete.py  # Complete Phase 1 demonstration
-│   ├── demo_interactive.py      # Interactive hands-on demo
-│   ├── demo_simulation_controller.py # Simulation controller demonstration
-│   ├── demo_game_loop.py        # Game loop implementation demonstration
-│   ├── demo_action_resolution.py # Action resolution system demonstration
-│   ├── demo_event_engine.py     # Event & disaster engine demonstration
-│   ├── demo_generations.py      # Multi-generation evolution demo
-│   └── demo_logging.py          # Multi-generation run with CSV logging
-├── example/                     # Example usage scripts
-│   ├── example_usage.py         # Constants usage examples
-│   ├── example_data_usage.py    # Data structures usage examples
-│   ├── example_world_generation.py # World generation usage examples
-│   └── example_animal_creation.py # Animal creation usage examples
-└── test/                        # Test scripts
-    ├── test_constants.py        # Test script for constants validation
-    ├── test_data_structures.py  # Test script for data structures validation
-    ├── test_world_generator.py  # Test script for world generation validation
-    ├── test_animal_creator.py   # Test script for animal creation validation
-    ├── test_simulation_controller.py # Test script for simulation controller validation
-    ├── test_game_loop.py        # Test script for game loop functionality validation
-    ├── test_action_resolution.py # Test script for action resolution system validation
-    ├── test_edge_cases.py       # Edge case and boundary condition tests
-    └── test_runner.py           # Comprehensive test runner with coverage analysis
+└──  event_engine/                # Modular event & disaster system
+    ├── README.md               # Comprehensive event engine documentation
+    ├── __init__.py             # Package initialization
+    ├── event_data.py           # Event data structures and base classes
+    ├── event_engine.py         # Main event engine interface
+    ├── event_scheduler.py      # Event scheduling and coordination
+    ├── triggered_events.py     # Condition-based events
+    ├── random_events.py        # Probability-based events
+    └── disaster_events.py      # Large-scale disaster events
+
+
 ```
 
 ## Data Structures Features
@@ -293,57 +274,6 @@ The `animal_creator.py` file includes:
 - **Specialization Detection**: Identify primary traits and specialization levels
 - **Trait Validation**: Ensure all traits are within valid ranges
 - **Health/Energy Calculation**: Automatic recalculation based on endurance
-
-## Testing Features
-
-The comprehensive test suite includes:
-
-### Core Test Modules
-- **`test_constants.py`** - Validates all constants are defined and accessible
-- **`test_data_structures.py`** - Tests all classes instantiate and validate correctly
-- **`test_world_generator.py`** - Tests terrain, resources, and animals placed correctly
-- **`test_animal_creator.py`** - Tests training, customization, and analysis working
-
-### Advanced Testing
-- **`test_edge_cases.py`** - Edge cases, boundary conditions, and error handling
-- **`test_runner.py`** - Comprehensive test runner with coverage analysis
-
-### Test Coverage
-- **100% Success Rate** - All tests pass consistently
-- **80%+ Code Coverage** - Meets requirement for foundational classes
-- **Edge Case Testing** - Boundary values, invalid inputs, extreme scenarios
-- **Integration Testing** - Complete workflow from world creation to animal placement
-- **Performance Testing** - Ensures reasonable execution times
-- **Error Recovery** - Graceful handling of invalid inputs and edge cases
-
-### Test Categories
-- **Unit Tests** - Individual component testing
-- **Integration Tests** - Component interaction testing
-- **Edge Case Tests** - Boundary condition testing
-- **Performance Tests** - Execution time validation
-- **Error Handling Tests** - Invalid input validation
-
-## Demo Applications
-
-The project includes comprehensive demonstration applications:
-
-### Complete Phase 1 Demo
-- **`demo/demo_phase1_complete.py`** - Comprehensive showcase of all Phase 1 components
-- **Features**: Constants, data structures, world generation, animal creation, testing
-- **Usage**: `python demo/demo_phase1_complete.py`
-- **Output**: Full demonstration with visualizations and performance metrics
-
-### Interactive Demo
-- **`demo/demo_interactive.py`** - Hands-on interactive exploration
-- **Features**: Custom world creation, animal customization, training system testing
-- **Usage**: `python demo/demo_interactive.py`
-- **Output**: Menu-driven interface for exploring all features
-
-### Mountain Borders Demo
-- **`demo/demo_mountain_borders.py`** - Specific feature demonstration
-- **Features**: Mountain border generation and effects
-- **Usage**: `python demo/demo_mountain_borders.py`
-- **Output**: Visual comparison of worlds with and without borders
 
 ## Constants File Features
 
@@ -465,21 +395,6 @@ time_weight = constants.FITNESS_WEIGHTS['Time']
 constants.validate_constants()
 ```
 
-## Testing
-
-Run the test script to validate constants:
-
-```bash
-python test_constants.py
-```
-
-## Next Steps
-
-- **Task 1.2:** Build Core Data Classes
-- **Task 1.3:** World & Map Generation
-- **Task 1.4:** Animal Creation & Customization
-- **Task 1.5:** Foundational Unit Tests
-
 ## Reference
 
-This implementation follows the detailed specifications in `documentation.md` Section IX: Code Implementation Constants.
+This implementation follows the detailed specifications in `documentation.md`.

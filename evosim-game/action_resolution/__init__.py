@@ -11,12 +11,17 @@ The system ensures fairness by preventing animals that act earlier from having a
 """
 
 from .action_data import AnimalAction, ActionPriority
-from data_structures import ActionType
 from .action_resolver import ActionResolver
 from .decision_engine import DecisionEngine
 from .execution_engine import ExecutionEngine
 from .status_engine import StatusEngine
 from .cleanup_engine import CleanupEngine
+
+# Import ActionType from parent directory
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 __all__ = [
     'AnimalAction',

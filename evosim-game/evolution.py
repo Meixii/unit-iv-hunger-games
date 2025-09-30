@@ -11,7 +11,7 @@ from typing import List, Tuple
 import random
 
 import constants
-from data_structures import Animal, AnimalCategory, create_random_animal
+from data_structures import Animal, create_random_animal
 from mlp import MLPNetwork
 
 

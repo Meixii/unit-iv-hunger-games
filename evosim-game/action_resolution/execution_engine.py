@@ -164,9 +164,17 @@ class ExecutionEngine:
             if getattr(tile, 'resource', None) and tile.resource.resource_type.value in ['Plant', 'Prey', 'Carcass']:
                 food_resource = tile.resource
         
-        if not food_resource:
+        # Validate by category: Herbivore -> Plant; Carnivore -> Prey/Carcass; Omnivore -> any food
+        def is_edible_for_category(res_type: str, cat: AnimalCategory) -> bool:
+            if cat == AnimalCategory.HERBIVORE:
+                return res_type == 'Plant'
+            if cat == AnimalCategory.CARNIVORE:
+                return res_type in ['Prey', 'Carcass']
+            return res_type in ['Plant', 'Prey', 'Carcass']
+
+        if not food_resource or not is_edible_for_category(food_resource.resource_type.value, animal.category):
             action.success = False
-            action.result_message = "No food available at location"
+            action.result_message = "No edible food available at location"
             return False
         
         # Consume energy for the action
@@ -222,7 +230,7 @@ class ExecutionEngine:
             action.result_message = "Invalid tile location"
             return False
         
-        # Find water resource
+        # Find water resource OR allow drinking when adjacent to a water tile
         water_resource = None
         if hasattr(tile, 'resources') and isinstance(tile.resources, list):
             for resource in tile.resources:
@@ -234,9 +242,21 @@ class ExecutionEngine:
                 water_resource = tile.resource
         
         if not water_resource:
-            action.success = False
-            action.result_message = "No water available at location"
-            return False
+            # Check adjacency to any water terrain tile (drinking from edge)
+            ax, ay = location
+            world = self.simulation.world
+            adjacent = [(ax+1,ay),(ax-1,ay),(ax,ay+1),(ax,ay-1)]
+            adjacent_has_water = False
+            for nx, ny in adjacent:
+                if 0 <= nx < world.dimensions[0] and 0 <= ny < world.dimensions[1]:
+                    t = world.get_tile(nx, ny)
+                    if t and t.terrain_type == TerrainType.WATER:
+                        adjacent_has_water = True
+                        break
+            if not adjacent_has_water:
+                action.success = False
+                action.result_message = "No water available at or adjacent to location"
+                return False
         
         # Consume energy for the action
         animal.status['Energy'] = max(0, animal.status.get('Energy', 100) - action.energy_cost)
@@ -249,7 +269,7 @@ class ExecutionEngine:
         add_resource_units(animal, float(thirst_restored))
         
         # Water resources typically don't get depleted as quickly
-        if random.random() < 0.1:  # 10% chance to deplete water
+        if water_resource and random.random() < 0.1:  # 10% chance to deplete water
             if hasattr(water_resource, 'uses'):
                 water_resource.uses -= 1
                 if water_resource.uses <= 0 and hasattr(tile, 'resources') and isinstance(tile.resources, list):

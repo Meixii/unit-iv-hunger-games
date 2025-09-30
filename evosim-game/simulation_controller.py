@@ -8,12 +8,11 @@ Reference: Section IV.A - Simulation Flow from documentation.md
 Reference: Section XI - Conceptual Data Structure from documentation.md
 """
 
+import os
 from typing import Dict, List, Optional, Tuple, Any, Union
-from dataclasses import dataclass, field
 import random
 import logging
 from datetime import datetime
-from enum import Enum
 
 from data_structures import (
     Simulation, World, Animal, Effect,
@@ -28,31 +27,14 @@ from action_resolution import ActionResolver
 # Import the event engine system
 from event_engine import EventEngine
 from evolution import evolve_population
+from logging_utils import (
+    write_population_csv,
+    compute_generation_summary,
+    write_generation_summary_csv,
+)
 
-
-# =============================================================================
-# SIMULATION CONTROLLER CLASS
-# =============================================================================
-
-@dataclass
-class SimulationConfig:
-    """Configuration for simulation parameters."""
-    max_weeks: int = 20
-    max_generations: int = 10
-    population_size: int = 20
-    enable_logging: bool = True
-    log_level: str = "INFO"
-    random_seed: Optional[int] = None
-    world_config: Optional[GenerationConfig] = None
-    
-    def __post_init__(self):
-        """Validate configuration after initialization."""
-        if self.max_weeks <= 0:
-            raise ValueError(f"Max weeks must be positive, got {self.max_weeks}")
-        if self.max_generations <= 0:
-            raise ValueError(f"Max generations must be positive, got {self.max_generations}")
-        if self.population_size <= 0:
-            raise ValueError(f"Population size must be positive, got {self.population_size}")
+# Centralized configuration
+from config import SimulationConfig
 
 
 class SimulationController:
@@ -190,20 +172,50 @@ class SimulationController:
             if not self.simulation.world:
                 raise ValueError("World must be initialized before population")
             
-            # Create animals with even distribution across categories
-            animals = []
-            categories = list(AnimalCategory)
-            animals_per_category = size // len(categories)
-            remaining = size % len(categories)
+            # Create animals with even distribution across categories (deprecated)
+            # animals = []
+            # categories = list(AnimalCategory)
+            # animals_per_category = size // len(categories)
+            # remaining = size % len(categories)
             
-            for i, category in enumerate(categories):
-                # Add one extra animal to some categories if there's a remainder
-                count = animals_per_category + (1 if i < remaining else 0)
+            # for i, category in enumerate(categories):
+            #     # Add one extra animal to some categories if there's a remainder
+            #     count = animals_per_category + (1 if i < remaining else 0)
                 
-                for j in range(count):
-                    animal_id = f"{category.value}_{i}_{j}"
-                    animal = self.animal_customizer.create_balanced_animal(animal_id, category)
-                    animals.append(animal)
+            #     for j in range(count):
+            #         animal_id = f"{category.value}_{i}_{j}"
+            #         animal = self.animal_customizer.create_balanced_animal(animal_id, category)
+            #         animals.append(animal)
+
+            # Create animals in ratio of 3:1:1 for Herbivore, Carnivore, Omnivore
+            animals = []
+            
+            # Calculate distribution: 3:1:1 ratio
+            # Total parts = 3 + 1 + 1 = 5
+            # Herbivores: 3/5 of population
+            # Carnivores: 1/5 of population  
+            # Omnivores: 1/5 of population
+            herbivore_count = int(size * 3 / 5)
+            carnivore_count = int(size * 1 / 5)
+            omnivore_count = size - herbivore_count - carnivore_count  # Handle rounding
+            
+            # Create herbivores
+            for i in range(herbivore_count):
+                animal_id = f"herbivore_{i}"
+                animal = self.animal_customizer.create_balanced_animal(animal_id, AnimalCategory.HERBIVORE)
+                animals.append(animal)
+            
+            # Create carnivores
+            for i in range(carnivore_count):
+                animal_id = f"carnivore_{i}"
+                animal = self.animal_customizer.create_balanced_animal(animal_id, AnimalCategory.CARNIVORE)
+                animals.append(animal)
+            
+            # Create omnivores
+            for i in range(omnivore_count):
+                animal_id = f"omnivore_{i}"
+                animal = self.animal_customizer.create_balanced_animal(animal_id, AnimalCategory.OMNIVORE)
+                animals.append(animal)
             
             # Place animals in the world
             placed_animals = self._place_animals_in_world(animals)
@@ -592,6 +604,32 @@ class SimulationController:
             
             # Store generation statistics
             self.generation_stats.append(generation_result)
+
+            # Reporting: write per-animal and per-generation CSVs
+            try:
+                # Get the directory containing this file
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                if current_dir and os.path.exists(current_dir):
+                    out_dir = os.path.join(current_dir, 'demo', 'runs')
+                else:
+                    # Fallback to current working directory
+                    out_dir = os.path.join(os.getcwd(), 'demo', 'runs')
+            except Exception:
+                # Final fallback
+                out_dir = os.path.join(os.getcwd(), 'simulation_data')
+            try:
+                write_population_csv(
+                    os.path.join(out_dir, 'population_summary.csv'),
+                    self.current_generation,
+                    self.simulation.population + self.simulation.graveyard,
+                )
+                summary = compute_generation_summary(self.current_generation, self.simulation.population + self.simulation.graveyard)
+                write_generation_summary_csv(
+                    os.path.join(out_dir, 'generations.csv'),
+                    summary,
+                )
+            except Exception as e:
+                self.logger.warning(f"Reporting write failed: {e}")
             
             return generation_result
             
@@ -634,6 +672,89 @@ class SimulationController:
             if g < gens - 1:
                 self.evolve_to_next_generation()
         return results
+
+    # =============================================================================
+    # UI SUPPORT: SNAPSHOTS AND STEPPING
+    # =============================================================================
+
+    def get_world_snapshot(self) -> List[List[Dict[str, Any]]]:
+        """
+        Return a 2D array snapshot of the world with minimal UI-friendly fields:
+        [{ terrain, resource_type, resource_uses, occupant_id, occupant_category }]
+        """
+        world = self.simulation.world
+        if not world:
+            return []
+        w, h = world.dimensions
+        grid: List[List[Dict[str, Any]]] = []
+        for y in range(h):
+            row: List[Dict[str, Any]] = []
+            for x in range(w):
+                tile = world.get_tile(x, y)
+                if tile:
+                    resource_type = None
+                    resource_uses = 0
+                    if tile.resource:
+                        resource_type = tile.resource.resource_type.value
+                        resource_uses = getattr(tile.resource, 'uses_left', 0)
+                    occupant_id = tile.occupant.animal_id if tile.occupant else None
+                    occupant_category = tile.occupant.category.value if tile.occupant else None
+                    row.append({
+                        'terrain': tile.terrain_type.value,
+                        'resource_type': resource_type,
+                        'resource_uses': resource_uses,
+                        'occupant_id': occupant_id,
+                        'occupant_category': occupant_category,
+                    })
+                else:
+                    row.append({'terrain': None, 'resource_type': None, 'resource_uses': 0, 'occupant_id': None, 'occupant_category': None})
+            grid.append(row)
+        return grid
+
+    def get_population_snapshot(self) -> List[Dict[str, Any]]:
+        """Return a minimal snapshot of living animals for overlays."""
+        out: List[Dict[str, Any]] = []
+        for a in self.simulation.get_living_animals():
+            out.append({
+                'animal_id': a.animal_id,
+                'category': a.category.value,
+                'location': a.location,
+                'health': a.status.get('Health', 0),
+                'energy': a.status.get('Energy', 0),
+            })
+        return out
+
+    def step_decision_status(self, week: int) -> Dict[str, Any]:
+        """
+        Execute Decision and Status phases only, returning results for visualization.
+        """
+        if self._action_resolver is None:
+            self._action_resolver = ActionResolver(self.simulation, self.logger)
+        living = self.simulation.get_living_animals()
+        actions = self._action_resolver.decision_engine.execute_decision_phase(living)
+        status_results = self._action_resolver.status_engine.execute_status_environmental_phase(living)
+        return {
+            'week': week,
+            'planned_actions': actions,
+            'status_results': status_results,
+        }
+
+    def step_execution_cleanup(self, planned_actions: List[Any]) -> Dict[str, Any]:
+        """Execute Execution and Cleanup phases with provided actions."""
+        if self._action_resolver is None:
+            self._action_resolver = ActionResolver(self.simulation, self.logger)
+        exec_results = self._action_resolver.execution_engine.execute_action_execution_phase(planned_actions)
+        cleanup_results = self._action_resolver.cleanup_engine.execute_cleanup_phase(self.simulation.get_living_animals())
+        return {
+            'execution_results': exec_results,
+            'cleanup_results': cleanup_results,
+        }
+
+    def set_quiet_logging(self, quiet: bool = True) -> None:
+        """Reduce console spam for UI auto-run; sets logger level to WARNING if quiet."""
+        if not hasattr(self, 'logger'):
+            return
+        self.logger.setLevel(logging.WARNING if quiet else getattr(logging, self.config.log_level.upper(), logging.INFO))
     
     def _run_weekly_cycle(self, week: int) -> Dict[str, Any]:
         """
