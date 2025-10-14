@@ -1,0 +1,38 @@
+{
+  "grid_size": [20, 20],
+  "population_size": 30,
+  "max_generations": 5,
+  "steps_per_generation": 100,
+  "simulation_speed": 1.0,
+  "food_density": 0.15,
+  "water_density": 0.15,
+  "drought_probability": 0.02,
+  "storm_probability": 0.01,
+  "famine_probability": 0.02,
+  "bonus_probability": 0.01,
+  "mutation_rate": 0.05,
+  "crossover_rate": 0.7,
+  "selection_method": "tournament",
+  "tournament_size": 3,
+  "elite_percentage": 0.2,
+  "animal_config": {
+    "initial_hunger": 100.0,
+    "initial_thirst": 100.0,
+    "initial_energy": 100.0,
+    "hunger_decay": 0.5,
+    "thirst_decay": 0.5,
+    "energy_decay": 0.2,
+    "action_costs": {
+      "move": 5.0,
+      "eat": 2.0,
+      "drink": 2.0,
+      "rest": 1.0
+    }
+  },
+  "neural_network_config": {
+    "input_size": 2,
+    "hidden_size": 4,
+    "output_size": 4,
+    "mutation_strength": 0.1
+  }
+}

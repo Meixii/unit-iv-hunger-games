@@ -1,0 +1,18 @@
+# GUI Requirements for EvoSim
+# These are additional requirements for the GUI application
+
+# Core GUI framework (included with Python)
+# tkinter - Built into Python standard library
+
+# Optional: For enhanced visualization
+matplotlib>=3.5.0
+numpy>=1.21.0
+
+# Optional: For better GUI styling
+ttkthemes>=3.2.0
+
+# Optional: For data export/import
+pandas>=1.3.0
+
+# Optional: For configuration management
+pyyaml>=6.0

@@ -1,0 +1,52 @@
+{
+    "drought": {
+        "name": "Drought",
+        "description": "Reduces water availability significantly",
+        "effects": {
+            "water_availability": 0.3,
+            "water_regeneration_rate": 0.1
+        },
+        "visual_effects": {
+            "color": "#8B4513",
+            "symbol": "D"
+        }
+    },
+    "storm": {
+        "name": "Storm",
+        "description": "Makes movement more difficult and costly",
+        "effects": {
+            "movement_cost_multiplier": 2.0,
+            "energy_decay_multiplier": 1.5,
+            "visibility_reduction": 0.5
+        },
+        "visual_effects": {
+            "color": "#4169E1",
+            "symbol": "S"
+        }
+    },
+    "famine": {
+        "name": "Famine",
+        "description": "Reduces food availability",
+        "effects": {
+            "food_availability": 0.4,
+            "food_regeneration_rate": 0.2
+        },
+        "visual_effects": {
+            "color": "#A0522D",
+            "symbol": "F"
+        }
+    },
+    "bonus": {
+        "name": "Resource Bonus",
+        "description": "Increases resource availability temporarily",
+        "effects": {
+            "food_availability": 1.5,
+            "water_availability": 1.5,
+            "resource_regeneration_rate": 2.0
+        },
+        "visual_effects": {
+            "color": "#32CD32",
+            "symbol": "B"
+        }
+    }
+}
