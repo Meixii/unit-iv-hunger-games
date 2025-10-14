@@ -28,7 +28,8 @@ class Animal:
     
     def __init__(self, x: int, y: int, neural_network: Optional[NeuralNetwork] = None,
                  initial_hunger: float = 100.0, initial_thirst: float = 100.0, 
-                 initial_energy: float = 100.0, animal_id: Optional[str] = None):
+                 initial_energy: float = 100.0, animal_id: Optional[str] = None,
+                 generation: int = 0):
         """
         Initialize an animal with position and neural network brain.
         
@@ -40,16 +41,18 @@ class Animal:
             initial_thirst: Starting thirst level (0-100)
             initial_energy: Starting energy level (0-100)
             animal_id: Unique identifier for the animal
+            generation: Generation when this animal was born
         """
         self.animal_id = animal_id or f"animal_{uuid.uuid4().hex[:12]}"
         self.position = (x, y)
+        self.generation = generation  # Track which generation this animal was born in
         self.neural_network = neural_network if neural_network else NeuralNetwork()
         
         # Internal state
         self.hunger = initial_hunger
         self.thirst = initial_thirst
         self.energy = initial_energy
-        self.health = 100.0  # New health system
+        self.health = 100.0
         self.age = 0
         self.fitness = 0.0
         self.alive = True
@@ -77,7 +80,7 @@ class Animal:
         self.hunger_decay = 0.5  # Increased hunger decay
         self.thirst_decay = 0.5  # Increased thirst decay
         self.energy_decay = 0.2  # Increased energy decay
-        self.health_decay = 0.1  # Health decays when hunger/thirst are low
+        self.health_decay = 0.3 # Health decays when hunger/thirst are low
         
         # Action costs
         self.action_costs = {
@@ -293,17 +296,33 @@ class Animal:
         self.energy = max(0, self.energy - self.energy_decay)
         
         # Health decays when hunger or thirst are low
-        if self.hunger < 20 or self.thirst < 20:
-            self.health = max(0, self.health - self.health_decay)
-        elif self.hunger > 80 and self.thirst > 80:
+        if self.hunger < 30 or self.thirst < 30:
+            # Gradual health decay when resources are low
+            decay_rate = self.health_decay * 2 if (self.hunger < 20 or self.thirst < 20) else self.health_decay * 1.5
+            self.health = max(0, self.health - decay_rate)
+        elif self.hunger > 70 and self.thirst > 70:
             # Health slowly recovers when well-fed
-            self.health = min(self.max_health, self.health + 0.02)
+            self.health = min(self.max_health, self.health + 0.05)
     
     def _check_survival(self) -> None:
         """Check if the animal survives based on current state."""
         # Animal dies if health reaches 0 (new health system)
         if self.health <= 0:
             self.alive = False
+        
+        # Animal dies if both hunger and thirst are 0 for too long
+        if self.hunger <= 0 and self.thirst <= 0:
+            if not hasattr(self, '_starvation_steps'):
+                self._starvation_steps = 0
+            self._starvation_steps += 1
+            
+            # Die after 3 steps of complete starvation
+            if self._starvation_steps >= 3:
+                self.alive = False
+        else:
+            # Reset starvation counter if hunger or thirst is restored
+            if hasattr(self, '_starvation_steps'):
+                self._starvation_steps = 0
         
         # Animal dies if energy reaches 0 AND has been without energy for too long
         if self.energy <= 0:
@@ -426,6 +445,42 @@ class Animal:
         for action in self.action_history:
             action_counts[action] += 1
         return action_counts
+    
+    def get_learning_progress(self) -> Dict[str, float]:
+        """
+        Get learning progress indicators for educational purposes.
+        
+        Returns:
+            Dictionary with learning metrics
+        """
+        total_actions = len(self.action_history)
+        if total_actions == 0:
+            return {
+                'survival_rate': 0.0,
+                'resource_efficiency': 0.0,
+                'exploration_rate': 0.0,
+                'adaptation_score': 0.0
+            }
+        
+        # Calculate survival rate (how long they've stayed alive)
+        survival_rate = min(1.0, self.age / 100.0)  # Normalize to 100 steps
+        
+        # Calculate resource efficiency (how well they find resources)
+        resource_actions = self.behavioral_counts['eat'] + self.behavioral_counts['drink']
+        resource_efficiency = resource_actions / total_actions if total_actions > 0 else 0.0
+        
+        # Calculate exploration rate (how much they move)
+        exploration_rate = self.behavioral_counts['move'] / total_actions if total_actions > 0 else 0.0
+        
+        # Calculate adaptation score (combination of all factors)
+        adaptation_score = (survival_rate * 0.4 + resource_efficiency * 0.3 + exploration_rate * 0.3)
+        
+        return {
+            'survival_rate': survival_rate,
+            'resource_efficiency': resource_efficiency,
+            'exploration_rate': exploration_rate,
+            'adaptation_score': adaptation_score
+        }
     
     def reset_for_new_generation(self, x: int, y: int) -> None:
         """

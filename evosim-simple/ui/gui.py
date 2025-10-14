@@ -365,7 +365,7 @@ class SimulationGUI:
         self.animals_frame = ttk.LabelFrame(self.root, text="Animal Statistics", padding=10)
         
         # Create treeview for animal list with sortable columns
-        columns = ('ID', 'Position', 'Status', 'Health', 'Age', 'Fitness', 'Actions', 'Resources')
+        columns = ('ID', 'Position', 'Status', 'Health', 'Age', 'Fitness', 'Actions', 'Resources', 'Generation')
         
         self.animals_tree = ttk.Treeview(self.animals_frame, columns=columns, show='headings', height=15)
         
@@ -378,6 +378,7 @@ class SimulationGUI:
         self.animals_tree.heading('Fitness', text='Fitness', command=lambda: self._sort_animals('Fitness'))
         self.animals_tree.heading('Actions', text='Actions', command=lambda: self._sort_animals('Actions'))
         self.animals_tree.heading('Resources', text='Resources', command=lambda: self._sort_animals('Resources'))
+        self.animals_tree.heading('Generation', text='Generation', command=lambda: self._sort_animals('Generation'))
         
         # Set column widths
         self.animals_tree.column('ID', width=100)
@@ -388,6 +389,7 @@ class SimulationGUI:
         self.animals_tree.column('Fitness', width=80)
         self.animals_tree.column('Actions', width=120)
         self.animals_tree.column('Resources', width=100)
+        self.animals_tree.column('Generation', width=80)
         
         # Add scrollbar
         animals_scrollbar = ttk.Scrollbar(self.animals_frame, orient='vertical', command=self.animals_tree.yview)
@@ -410,10 +412,6 @@ class SimulationGUI:
         ttk.Button(buttons_frame, text="Export", command=self._export_animals_data).grid(row=0, column=2, padx=5)
         ttk.Button(buttons_frame, text="Sort by Fitness", command=lambda: self._sort_animals('Fitness')).grid(row=0, column=3, padx=5)
         ttk.Button(buttons_frame, text="Sort by Age", command=lambda: self._sort_animals('Age')).grid(row=0, column=4, padx=5)
-        
-        # Track current sort order
-        self.current_sort_column = 'Fitness'
-        self.current_sort_reverse = True
         
         # Add search/filter frame
         search_frame = ttk.Frame(self.animals_frame)
@@ -988,20 +986,8 @@ class SimulationGUI:
         # Get all animals (alive and dead)
         all_animals = self.simulation.environment.animals + self.simulation.environment.dead_animals
         
-        # Sort by current sort order
-        if self.current_sort_column == 'Fitness':
-            all_animals.sort(key=lambda a: a.fitness, reverse=self.current_sort_reverse)
-        elif self.current_sort_column == 'Age':
-            all_animals.sort(key=lambda a: a.age, reverse=self.current_sort_reverse)
-        elif self.current_sort_column == 'ID':
-            all_animals.sort(key=lambda a: a.animal_id, reverse=self.current_sort_reverse)
-        elif self.current_sort_column == 'Status':
-            all_animals.sort(key=lambda a: a.alive, reverse=self.current_sort_reverse)
-        elif self.current_sort_column == 'Position':
-            all_animals.sort(key=lambda a: (a.position[1], a.position[0]), reverse=self.current_sort_reverse)
-        else:
-            # Default sort by fitness
-            all_animals.sort(key=lambda a: a.fitness, reverse=True)
+        # Sort by fitness by default (highest first)
+        all_animals.sort(key=lambda a: a.fitness, reverse=True)
         
         for animal in all_animals:
             # Get animal state
@@ -1023,6 +1009,13 @@ class SimulationGUI:
             # Format resources consumed
             resources = f"F:{state['resource_consumed']['food']} W:{state['resource_consumed']['water']}"
             
+            # Get learning progress for educational purposes
+            learning = animal.get_learning_progress()
+            learning_info = f"L:{learning['adaptation_score']:.2f}"
+            
+            # Get current generation
+            current_generation = self.simulation.current_generation if self.simulation else 0
+            
             # Insert into tree
             self.animals_tree.insert('', 'end', values=(
                 state['animal_id'][:12],  # Show more of the ID
@@ -1032,7 +1025,8 @@ class SimulationGUI:
                 state['age'],
                 f"{state['fitness']:.1f}",
                 actions,
-                resources
+                f"{resources} {learning_info}",  # Include learning progress
+                current_generation
             ))
     
     def _clear_animals_list(self):
@@ -1045,27 +1039,34 @@ class SimulationGUI:
         if not self.simulation or not self.simulation.environment:
             return
         
-        # Update sort tracking
-        if self.current_sort_column == column:
-            self.current_sort_reverse = not self.current_sort_reverse
+        # Store current sort state
+        if not hasattr(self, '_current_sort_column'):
+            self._current_sort_column = None
+            self._current_sort_reverse = False
+        
+        # Toggle reverse if same column, otherwise start fresh
+        if self._current_sort_column == column:
+            self._current_sort_reverse = not self._current_sort_reverse
         else:
-            self.current_sort_column = column
-            self.current_sort_reverse = True
+            self._current_sort_column = column
+            self._current_sort_reverse = False
         
         # Get all animals
         all_animals = self.simulation.environment.animals + self.simulation.environment.dead_animals
         
         # Sort animals based on column
         if column == 'Fitness':
-            all_animals.sort(key=lambda a: a.fitness, reverse=self.current_sort_reverse)
+            all_animals.sort(key=lambda a: a.fitness, reverse=self._current_sort_reverse)
         elif column == 'Age':
-            all_animals.sort(key=lambda a: a.age, reverse=self.current_sort_reverse)
+            all_animals.sort(key=lambda a: a.age, reverse=self._current_sort_reverse)
         elif column == 'ID':
-            all_animals.sort(key=lambda a: a.animal_id, reverse=self.current_sort_reverse)
+            all_animals.sort(key=lambda a: a.animal_id, reverse=self._current_sort_reverse)
         elif column == 'Status':
-            all_animals.sort(key=lambda a: a.alive, reverse=self.current_sort_reverse)
+            all_animals.sort(key=lambda a: a.alive, reverse=self._current_sort_reverse)
         elif column == 'Position':
-            all_animals.sort(key=lambda a: (a.position[1], a.position[0]), reverse=self.current_sort_reverse)
+            all_animals.sort(key=lambda a: (a.position[1], a.position[0]), reverse=self._current_sort_reverse)
+        elif column == 'Generation':
+            all_animals.sort(key=lambda a: getattr(a, 'generation', 0), reverse=self._current_sort_reverse)
         
         # Clear and repopulate with sorted data
         for item in self.animals_tree.get_children():
@@ -1079,6 +1080,13 @@ class SimulationGUI:
             actions = f"M:{state['behavioral_counts']['move']} E:{state['behavioral_counts']['eat']} D:{state['behavioral_counts']['drink']} R:{state['behavioral_counts']['rest']}"
             resources = f"F:{state['resource_consumed']['food']} W:{state['resource_consumed']['water']}"
             
+            # Get learning progress for educational purposes
+            learning = animal.get_learning_progress()
+            learning_info = f"L:{learning['adaptation_score']:.2f}"
+            
+            # Get animal's birth generation
+            animal_generation = getattr(animal, 'generation', 0)
+            
             self.animals_tree.insert('', 'end', values=(
                 state['animal_id'][:12],
                 coords,
@@ -1087,7 +1095,8 @@ class SimulationGUI:
                 state['age'],
                 f"{state['fitness']:.1f}",
                 actions,
-                resources
+                f"{resources} {learning_info}",
+                animal_generation
             ))
     
     def _filter_animals(self, event=None):

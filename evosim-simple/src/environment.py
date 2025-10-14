@@ -66,7 +66,7 @@ class GridWorld:
             'bonus': {'food_multiplier': 1.0, 'water_multiplier': 1.0, 'resource_regeneration': 1.0}
         }
     
-    def place_resources(self, food_density: float = 0.1, water_density: float = 0.1) -> None:
+    def place_resources(self, food_density: float = 0.15, water_density: float = 0.15) -> None:
         """
         Place food and water resources randomly on the grid.
         
@@ -79,6 +79,16 @@ class GridWorld:
         self.water_positions.clear()
         self.food_count = 0
         self.water_count = 0
+        
+        # Clear grid cells that were food or water (but preserve animals)
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.grid[y, x] in [1, 2]:  # Food or water
+                    self.grid[y, x] = 0  # Make empty
+        
+        # Reset event application flag for new generation
+        if hasattr(self, '_events_applied'):
+            delattr(self, '_events_applied')
         
         # Apply event modifiers to resource density
         modified_food_density = self.apply_event_modifiers(food_density, 'food')
@@ -408,6 +418,9 @@ class GridWorld:
                 decision = animal.make_decision(self)
                 success = self._execute_animal_action(animal, decision)
                 
+                # Also execute the action on the animal itself
+                animal.execute_action(decision, self)
+                
                 # If action failed, try a fallback action
                 if not success and decision != 'rest':
                     # Try rest as fallback
@@ -601,14 +614,19 @@ class GridWorld:
         for event_name, event in active_events.items():
             self.active_events[event_name] = event.get_effects()
         
-        # Apply event effects to resources
-        if event_effects:
-            # Drought: Reduce water availability
+        # Apply event effects to resources (only once per event activation)
+        if event_effects and not hasattr(self, '_events_applied'):
+            self._events_applied = True
+            # Drought: Reduce water availability (with 15% minimum cap)
             if 'water_availability' in event_effects:
                 water_multiplier = event_effects['water_availability']
-                # Remove some water resources
-                water_to_remove = int(self.water_count * (1 - water_multiplier))
-                if water_to_remove > 0:
+                # Calculate target water count with 15% minimum cap
+                total_cells = self.width * self.height
+                min_water = max(1, int(total_cells * 0.15))  # 15% minimum
+                target_water = max(min_water, int(self.water_count * water_multiplier))
+                
+                if self.water_count > target_water:
+                    water_to_remove = self.water_count - target_water
                     water_positions_list = list(self.water_positions)
                     positions_to_remove = random.sample(water_positions_list, min(water_to_remove, len(water_positions_list)))
                     for pos in positions_to_remove:
@@ -616,12 +634,16 @@ class GridWorld:
                         self.grid[pos[1], pos[0]] = 0
                         self.water_count -= 1
             
-            # Famine: Reduce food availability
+            # Famine: Reduce food availability (with 15% minimum cap)
             if 'food_availability' in event_effects:
                 food_multiplier = event_effects['food_availability']
-                # Remove some food resources
-                food_to_remove = int(self.food_count * (1 - food_multiplier))
-                if food_to_remove > 0:
+                # Calculate target food count with 15% minimum cap
+                total_cells = self.width * self.height
+                min_food = max(1, int(total_cells * 0.15))  # 15% minimum
+                target_food = max(min_food, int(self.food_count * food_multiplier))
+                
+                if self.food_count > target_food:
+                    food_to_remove = self.food_count - target_food
                     food_positions_list = list(self.food_positions)
                     positions_to_remove = random.sample(food_positions_list, min(food_to_remove, len(food_positions_list)))
                     for pos in positions_to_remove:

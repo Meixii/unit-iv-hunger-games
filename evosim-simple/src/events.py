@@ -84,11 +84,11 @@ class EventManager:
         self.event_history: List[Dict] = []
         self.event_config = self._load_event_config(config_file)
         
-        # Event probabilities and settings (reduced for educational purposes)
-        self.drought_probability = 0.01  # Further reduced from 0.05
-        self.storm_probability = 0.01    # Further reduced from 0.03
-        self.famine_probability = 0.01  # Further reduced from 0.05
-        self.bonus_probability = 0.01    # Further reduced from 0.02
+        # Event probabilities and settings
+        self.drought_probability = 0.01
+        self.storm_probability = 0.01
+        self.famine_probability = 0.01
+        self.bonus_probability = 0.01
         
         # Event cooldowns (prevent overlapping events)
         self.event_cooldowns: Dict[str, int] = {
@@ -127,7 +127,7 @@ class EventManager:
                         "water_availability": 0.3,
                         "water_regeneration_rate": 0.1
                     },
-                    "duration": 200,
+                    "duration": 50,
                     "visual_effects": {
                         "color": "#8B4513",
                         "symbol": "D"
@@ -141,7 +141,7 @@ class EventManager:
                         "energy_decay_multiplier": 1.5,
                         "visibility_reduction": 0.5
                     },
-                    "duration": 100,
+                    "duration": 30,
                     "visual_effects": {
                         "color": "#4169E1",
                         "symbol": "S"
@@ -207,10 +207,10 @@ class EventManager:
         """Trigger a drought event."""
         config = self.event_config.get('drought', {})
         effects = config.get('effects', {
-            'water_availability': 0.3,
-            'water_regeneration_rate': 0.1
+            'water_availability': 0.7,
+            'water_regeneration_rate': 0.5
         })
-        duration = config.get('duration', 20)  # Further reduced from 50
+        duration = config.get('duration', 20)
         
         event = EnvironmentalEvent('drought', duration, effects)
         self.active_events['drought'] = event
@@ -225,7 +225,7 @@ class EventManager:
             'energy_decay_multiplier': 1.5,
             'visibility_reduction': 0.5
         })
-        duration = config.get('duration', 15)  # Further reduced from 30
+        duration = config.get('duration', 5)
         
         event = EnvironmentalEvent('storm', duration, effects)
         self.active_events['storm'] = event
@@ -236,10 +236,10 @@ class EventManager:
         """Trigger a famine event."""
         config = self.event_config.get('famine', {})
         effects = config.get('effects', {
-            'food_availability': 0.4,
-            'food_regeneration_rate': 0.2
+            'food_availability': 0.7,
+            'food_regeneration_rate': 0.5
         })
-        duration = config.get('duration', 20)  # Further reduced from 40
+        duration = config.get('duration', 10)
         
         event = EnvironmentalEvent('famine', duration, effects)
         self.active_events['famine'] = event
@@ -250,9 +250,9 @@ class EventManager:
         """Trigger a resource bonus event."""
         config = self.event_config.get('bonus', {})
         effects = config.get('effects', {
-            'food_availability': 1.5,
-            'water_availability': 1.5,
-            'resource_regeneration_rate': 2.0
+            'food_availability': 1.2,
+            'water_availability': 1.2,
+            'resource_regeneration_rate': 1.5
         })
         duration = config.get('duration', 50)
         

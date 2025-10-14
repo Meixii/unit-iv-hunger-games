@@ -281,8 +281,11 @@ class Population:
         """
         offspring = []
         
-        # Elitism: keep best individuals
+        # Elitism: keep best individuals (but reset their state)
         elite_animals = self._select_elite()
+        for elite in elite_animals:
+            # Reset elite animals for new generation
+            elite.reset_for_new_generation(0, 0)  # Will be repositioned by environment
         offspring.extend(elite_animals)
         
         # Create remaining offspring through crossover and mutation
@@ -327,14 +330,7 @@ class Population:
         sorted_animals = sorted(alive_animals, key=lambda a: a.fitness, reverse=True)
         elite_count = min(self.elite_size, len(sorted_animals))
         
-        # Create NEW animals with elite neural networks (don't reuse old animals!)
-        elite_animals = []
-        for elite_animal in sorted_animals[:elite_count]:
-            # Create a new animal with the elite's neural network
-            new_elite = Animal(0, 0, elite_animal.neural_network.copy())
-            elite_animals.append(new_elite)
-        
-        return elite_animals
+        return sorted_animals[:elite_count]
     
     def advance_generation(self, new_animals: List[Animal]) -> None:
         """

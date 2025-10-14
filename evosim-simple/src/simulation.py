@@ -16,8 +16,6 @@ from enum import Enum
 from .environment import GridWorld
 from .events import EventManager
 from .evolution import Population, EvolutionManager
-from .animal import Animal
-from .neural_network import NeuralNetwork
 
 
 class SimulationState(Enum):
@@ -64,7 +62,7 @@ class Simulation:
         self.current_step = 0
         self.current_generation = 0
         self.max_generations = self.config.get('max_generations', 5)
-        self.steps_per_generation = self.config.get('steps_per_generation', 1000)
+        self.steps_per_generation = self.config.get('steps_per_generation', 50)
         
         # Time management
         self.simulation_speed = self.config.get('simulation_speed', 1.0)  # Steps per second
@@ -93,15 +91,15 @@ class Simulation:
             'grid_size': (20, 20),
             'population_size': 50,
             'max_generations': 5,
-            'steps_per_generation': 1000,
+            'steps_per_generation': 50,
             'simulation_speed': 1.0,
             'day_night_cycle': False,
             'seasonal_variations': False,
-            'food_density': 0.1,
-            'water_density': 0.1,
-            'drought_probability': 0.2,
-            'storm_probability': 0.1,
-            'famine_probability': 0.15,
+            'food_density': 0.15,
+            'water_density': 0.15,
+            'drought_probability': 0.02,
+            'storm_probability': 0.01,
+            'famine_probability': 0.05,
             'bonus_probability': 0.05,
             'mutation_rate': 0.1,
             'crossover_rate': 0.8,
@@ -260,8 +258,8 @@ class Simulation:
                 if self.current_step >= self.steps_per_generation:
                     self._complete_generation()
                 
-                # Check if simulation is complete
-                if self.current_generation >= self.max_generations:
+                # Check if simulation is complete (run through the max generation)
+                if self.current_generation > self.max_generations:
                     self._set_state(SimulationState.FINISHED)
                     break
                 

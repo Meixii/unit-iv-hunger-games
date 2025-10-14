@@ -2,7 +2,7 @@
   "grid_size": [20, 20],
   "population_size": 30,
   "max_generations": 5,
-  "steps_per_generation": 100,
+  "steps_per_generation": 50,
   "simulation_speed": 1.0,
   "food_density": 0.15,
   "water_density": 0.15,
