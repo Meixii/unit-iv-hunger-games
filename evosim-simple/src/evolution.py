@@ -346,7 +346,8 @@ class Population:
         
         # Update population
         self.animals = new_animals[:self.size]  # Ensure correct population size
-        self.generation += 1
+        # Note: Generation counter is now managed by the simulation
+        # self.generation += 1  # Removed - simulation manages this
         
         # Place new animals in grid world
         if self.grid_world is not None:

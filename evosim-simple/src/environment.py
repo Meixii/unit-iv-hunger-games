@@ -418,15 +418,8 @@ class GridWorld:
                 decision = animal.make_decision(self)
                 success = self._execute_animal_action(animal, decision)
                 
-                # Also execute the action on the animal itself
-                animal.execute_action(decision, self)
-                
-                # If action failed, try a fallback action
-                if not success and decision != 'rest':
-                    # Try rest as fallback
-                    animal.execute_action('rest', self)
-                
-                # Update animal state
+                # Update animal state (aging, decay, survival check)
+                # Note: Action recording is now handled by _execute_animal_action
                 animal.update_state()
                 if not animal.is_alive():
                     dead_animals.append(animal)
@@ -445,7 +438,7 @@ class GridWorld:
             action: Action to execute
             
         Returns:
-            True if action was successful
+            True if action was successful, False if failed (allows new decision next step)
         """
         if not animal.is_alive():
             return False
@@ -469,19 +462,25 @@ class GridWorld:
                         resource_neighbors.append(neighbor)
                 
                 # Choose target position
+                import random
                 if resource_neighbors:
-                    # Move towards resources
-                    import random
-                    new_pos = random.choice(resource_neighbors)
+                    # Move towards resources (80% chance)
+                    if random.random() < 0.8:
+                        new_pos = random.choice(resource_neighbors)
+                    else:
+                        # Sometimes explore randomly even when resources are nearby
+                        new_pos = random.choice(neighbors)
                 else:
                     # Move randomly if no resources nearby
-                    import random
                     new_pos = random.choice(neighbors)
                 
                 if self.move_animal(animal, new_pos[0], new_pos[1]):
                     # Animal was successfully moved, consume energy and increment movement count
                     animal.energy -= animal.action_costs['move']
                     animal.movement_count += 1
+                    # Record the move action
+                    animal.action_history.append('move')
+                    animal.behavioral_counts['move'] += 1
                     return True
                 else:
                     # If can't move, return False to let animal try other actions
@@ -495,45 +494,59 @@ class GridWorld:
             if self.get_cell_content(x, y) == 'food':
                 if self.consume_resource(x, y, 'food'):
                     animal.add_food(40)  # Properly add food to animal
+                    # Record the successful eat action
+                    animal.action_history.append('eat')
+                    animal.behavioral_counts['eat'] += 1
                     return True
                 else:
-                    animal.execute_action('rest', self)
-                    return True
+                    return False  # Failed to consume, let animal try again next step
             else:
-                # Try to move to a nearby food cell
-                food_nearby = self._find_nearby_resource(x, y, 'food')
-                if food_nearby:
-                    if self.move_animal(animal, food_nearby[0], food_nearby[1]):
-                        # Now consume the food at the new position
-                        if self.consume_resource(food_nearby[0], food_nearby[1], 'food'):
-                            animal.add_food(40)  # Properly add food to animal
-                            return True
-                animal.execute_action('rest', self)
-                return True
+                # No food at current position - try to move towards food
+                nearby_food = self._find_nearby_resource(x, y, 'food')
+                if nearby_food:
+                    # Move towards the food - record as move action
+                    if self.move_animal(animal, nearby_food[0], nearby_food[1]):
+                        animal.energy -= animal.action_costs['move']
+                        animal.movement_count += 1
+                        # Record the actual action that happened (move, not eat)
+                        animal.action_history.append('move')
+                        animal.behavioral_counts['move'] += 1
+                        return True
+                # If no food nearby or can't move, action fails
+                return False
         
         elif action == 'drink':
             # Check if there's water at current position
             if self.get_cell_content(x, y) == 'water':
                 if self.consume_resource(x, y, 'water'):
                     animal.add_water(40)  # Properly add water to animal
+                    # Record the successful drink action
+                    animal.action_history.append('drink')
+                    animal.behavioral_counts['drink'] += 1
                     return True
                 else:
-                    animal.execute_action('rest', self)
-                    return True
+                    return False  # Failed to consume, let animal try again next step
             else:
-                # Try to move to a nearby water cell
-                water_nearby = self._find_nearby_resource(x, y, 'water')
-                if water_nearby:
-                    if self.move_animal(animal, water_nearby[0], water_nearby[1]):
-                        # Now consume the water at the new position
-                        if self.consume_resource(water_nearby[0], water_nearby[1], 'water'):
-                            animal.add_water(40)  # Properly add water to animal
-                            return True
-                animal.execute_action('rest', self)
-                return True
+                # No water at current position - try to move towards water
+                nearby_water = self._find_nearby_resource(x, y, 'water')
+                if nearby_water:
+                    # Move towards the water - record as move action
+                    if self.move_animal(animal, nearby_water[0], nearby_water[1]):
+                        animal.energy -= animal.action_costs['move']
+                        animal.movement_count += 1
+                        # Record the actual action that happened (move, not drink)
+                        animal.action_history.append('move')
+                        animal.behavioral_counts['move'] += 1
+                        return True
+                # If no water nearby or can't move, action fails
+                return False
         
         elif action == 'rest':
-            animal.execute_action('rest', self)
+            # Rest action - record the action and apply rest benefits
+            animal.action_history.append('rest')
+            animal.behavioral_counts['rest'] += 1
+            # Apply rest benefits immediately
+            animal.energy = min(animal.max_energy, animal.energy + 5)
             return True
         
         return False
@@ -713,7 +726,7 @@ class GridWorld:
     
     def _find_nearby_resource(self, x: int, y: int, resource_type: str) -> Optional[Tuple[int, int]]:
         """
-        Find a nearby resource of the specified type.
+        Find a nearby resource of the specified type within a 3-tile radius.
         
         Args:
             x: Current X coordinate
@@ -723,9 +736,9 @@ class GridWorld:
         Returns:
             Position of nearby resource or None if not found
         """
-        # Check adjacent cells (including diagonals)
-        for dx in [-1, 0, 1]:
-            for dy in [-1, 0, 1]:
+        # Check cells within 3-tile radius for better resource detection
+        for dx in range(-3, 4):
+            for dy in range(-3, 4):
                 if dx == 0 and dy == 0:
                     continue
                 

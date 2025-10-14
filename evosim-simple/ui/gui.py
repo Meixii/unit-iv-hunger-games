@@ -13,6 +13,7 @@ from tkinter import ttk, messagebox, filedialog
 import threading
 import time
 import json
+import numpy as np
 from typing import Dict, Any, Optional
 
 from src.simulation import Simulation, SimulationState
@@ -21,6 +22,32 @@ from src.events import EventManager
 from src.evolution import Population, EvolutionManager
 from analysis.statistics import StatisticsCollector
 from analysis.visualization import SimulationVisualizer, create_visualization_window
+
+
+def make_json_safe(obj):
+    """
+    Convert NumPy types and other non-JSON-serializable objects to JSON-safe types.
+    
+    Args:
+        obj: Object to convert
+        
+    Returns:
+        JSON-safe version of the object
+    """
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {key: make_json_safe(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [make_json_safe(item) for item in obj]
+    elif isinstance(obj, tuple):
+        return [make_json_safe(item) for item in obj]
+    else:
+        return obj
 
 
 class SimulationGUI:
@@ -848,11 +875,15 @@ class SimulationGUI:
                 data = {
                     'statistics': self.simulation.get_statistics(),
                     'step_history': self.simulation.get_step_history(),
-                    'generation_history': self.simulation.get_generation_history()
+                    'generation_history': self.simulation.get_generation_history(),
+                    'final_animal_statistics': self.simulation.get_final_animal_statistics()
                 }
                 
+                # Make data JSON-safe to handle NumPy types
+                json_safe_data = make_json_safe(data)
+                
                 with open(filename, 'w') as f:
-                    json.dump(data, f, indent=2)
+                    json.dump(json_safe_data, f, indent=2)
                 
                 messagebox.showinfo("Success", "Data exported successfully!")
                 
@@ -1202,22 +1233,9 @@ class SimulationGUI:
                 animals_data = []
                 
                 for animal in all_animals:
-                    state = animal.get_state()
-                    animals_data.append({
-                        'animal_id': state['animal_id'],
-                        'position': state['position'],
-                        'coordinates': state['coordinates'],
-                        'hunger': state['hunger'],
-                        'thirst': state['thirst'],
-                        'energy': state['energy'],
-                        'age': state['age'],
-                        'fitness': state['fitness'],
-                        'alive': state['alive'],
-                        'behavioral_counts': state['behavioral_counts'],
-                        'resource_consumed': state['resource_consumed'],
-                        'action_count': state['action_count'],
-                        'movement_count': state['movement_count']
-                    })
+                    # Use JSON-safe state to avoid NumPy type serialization issues
+                    state = animal.get_json_safe_state()
+                    animals_data.append(state)
                 
                 if filename.endswith('.csv'):
                     # Export as CSV

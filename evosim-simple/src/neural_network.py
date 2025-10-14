@@ -2,8 +2,8 @@
 Neural Network Implementation for Evolutionary Simulation
 
 This module implements a simple Multi-Layer Perceptron (MLP) neural network
-designed for the evolutionary simulation. The network has a 2-4-4 architecture:
-- 2 inputs: Hunger and Thirst levels
+designed for the evolutionary simulation. The network has a 4-4-4 architecture:
+- 4 inputs: Hunger, Thirst, Food Nearby, Water Nearby (all normalized 0-1)
 - 4 hidden neurons: Processing layer
 - 4 outputs: Move, Eat, Drink, Rest actions
 
@@ -72,7 +72,7 @@ class NeuralNetwork:
         Perform forward propagation through the network.
         
         Args:
-            inputs: Input vector [hunger, thirst] (shape: 2,)
+            inputs: Input vector [hunger, thirst, food_nearby, water_nearby] (shape: 4,)
             
         Returns:
             Output vector [move, eat, drink, rest] (shape: 4,)
@@ -99,7 +99,7 @@ class NeuralNetwork:
         Get the action decision based on network output.
         
         Args:
-            inputs: Input vector [hunger, thirst]
+            inputs: Input vector [hunger, thirst, food_nearby, water_nearby]
             
         Returns:
             Action string: 'move', 'eat', 'drink', or 'rest'
@@ -115,7 +115,7 @@ class NeuralNetwork:
         Get probability distribution over all actions.
         
         Args:
-            inputs: Input vector [hunger, thirst]
+            inputs: Input vector [hunger, thirst, food_nearby, water_nearby]
             
         Returns:
             Dictionary mapping actions to probabilities

@@ -12,6 +12,7 @@ import time
 import threading
 from typing import Dict, List, Optional, Callable, Any
 from enum import Enum
+import random
 
 from .environment import GridWorld
 from .events import EventManager
@@ -256,12 +257,14 @@ class Simulation:
                 
                 # Check if generation is complete
                 if self.current_step >= self.steps_per_generation:
+                    # Check if we've reached max generations BEFORE completing the generation
+                    if self.current_generation >= self.max_generations:
+                        print(f"[FINISH] Reached max generations ({self.max_generations}), stopping simulation")
+                        # Collect final statistics for the last generation before stopping
+                        self._collect_final_animal_statistics()
+                        self._set_state(SimulationState.FINISHED)
+                        break
                     self._complete_generation()
-                
-                # Check if simulation is complete (run through the max generation)
-                if self.current_generation > self.max_generations:
-                    self._set_state(SimulationState.FINISHED)
-                    break
                 
                 # Sleep to control simulation speed
                 time.sleep(self.time_step_duration)
@@ -302,6 +305,9 @@ class Simulation:
         
         print(f"[EVOLVE] Completing generation {self.current_generation}")
         
+        # Collect final animal statistics before reset
+        self._collect_final_animal_statistics()
+        
         # Collect generation statistics
         gen_stats = self._collect_generation_statistics()
         self.generation_history.append(gen_stats)
@@ -324,6 +330,10 @@ class Simulation:
         self.current_generation += 1
         self.current_step = 0
         
+        # Synchronize population generation with simulation generation
+        if self.population:
+            self.population.generation = self.current_generation
+        
         # Notify generation callbacks
         self._notify_generation_callbacks(gen_stats)
         
@@ -340,7 +350,7 @@ class Simulation:
             for animal in self.population.animals:
                 empty_positions = self.environment.get_empty_positions()
                 if empty_positions:
-                    pos = empty_positions[0]
+                    pos = random.choice(empty_positions)
                     self.environment.add_animal(animal, pos[0], pos[1])
         
         # Reset resources
@@ -349,6 +359,48 @@ class Simulation:
                 food_density=self.config['food_density'],
                 water_density=self.config['water_density']
             )
+    
+    def _collect_final_animal_statistics(self) -> None:
+        """Collect final statistics from all animals before generation reset."""
+        if not self.environment:
+            return
+        
+        # Store final statistics for all animals (alive and dead)
+        all_animals = self.environment.get_all_animals() + self.environment.dead_animals
+        
+        # Initialize final statistics storage if not exists
+        if not hasattr(self, 'final_animal_statistics'):
+            self.final_animal_statistics = []
+        
+        # Collect final stats for each animal
+        generation_final_stats = {
+            'generation': self.current_generation,
+            'timestamp': time.time(),
+            'animals': []
+        }
+        
+        for animal in all_animals:
+            animal_final_stats = {
+                'animal_id': animal.animal_id,
+                'position': animal.position,
+                'hunger': animal.hunger,
+                'thirst': animal.thirst,
+                'energy': animal.energy,
+                'health': animal.health,
+                'age': animal.age,
+                'fitness': animal.fitness,
+                'alive': animal.alive,
+                'action_count': len(animal.action_history),
+                'movement_count': animal.movement_count,
+                'resource_consumed': animal.resource_consumed.copy(),
+                'behavioral_counts': animal.behavioral_counts.copy()
+            }
+            generation_final_stats['animals'].append(animal_final_stats)
+        
+        # Store the final statistics for this generation
+        self.final_animal_statistics.append(generation_final_stats)
+        
+        print(f"[STATS] Collected final statistics for {len(all_animals)} animals in generation {self.current_generation}")
     
     def _apply_environmental_effects(self) -> None:
         """Apply environmental effects to animals."""
@@ -507,6 +559,29 @@ class Simulation:
         if last_n is None:
             return self.generation_history.copy()
         return self.generation_history[-last_n:]
+    
+    def get_final_animal_statistics(self, generation: Optional[int] = None) -> List[Dict]:
+        """
+        Get final animal statistics for a specific generation or all generations.
+        
+        Args:
+            generation: Specific generation number, or None for all generations
+            
+        Returns:
+            List of final animal statistics
+        """
+        if not hasattr(self, 'final_animal_statistics'):
+            return []
+        
+        if generation is None:
+            return self.final_animal_statistics.copy()
+        
+        # Find statistics for specific generation
+        for gen_stats in self.final_animal_statistics:
+            if gen_stats['generation'] == generation:
+                return [gen_stats]
+        
+        return []
     
     def is_running(self) -> bool:
         """Check if simulation is running."""

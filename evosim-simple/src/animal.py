@@ -62,6 +62,10 @@ class Animal:
         self.resource_consumed = {'food': 0, 'water': 0}
         self.movement_count = 0
         
+        # Decision loop prevention
+        self.recent_actions = []  # Track last 5 actions
+        self.max_recent_actions = 5
+        
         # Behavioral pattern tracking
         self.behavioral_counts = {
             'move': 0,
@@ -76,17 +80,17 @@ class Animal:
         self.max_energy = 100.0
         self.max_health = 100.0
         
-        # Decay rates (per time step)
-        self.hunger_decay = 0.5  # Increased hunger decay
-        self.thirst_decay = 0.5  # Increased thirst decay
-        self.energy_decay = 0.2  # Increased energy decay
+        # Decay rates (per time step) - slightly increased to encourage active behavior
+        self.hunger_decay = 0.6  # Increased hunger decay
+        self.thirst_decay = 0.6  # Increased thirst decay
+        self.energy_decay = 0.25  # Increased energy decay
         self.health_decay = 0.3 # Health decays when hunger/thirst are low
         
-        # Action costs
+        # Action costs - rebalanced to make movement more attractive
         self.action_costs = {
-            'move': 3.0,  # Reduced move cost
-            'eat': 1.0,   # Reduced eat cost
-            'drink': 1.0, # Reduced drink cost
+            'move': 1.5,  # Much cheaper movement to encourage exploration
+            'eat': 1.0,   # Keep eat cost the same
+            'drink': 1.0, # Keep drink cost the same
             'rest': 0.0   # Resting should not cost energy
         }
     
@@ -110,9 +114,9 @@ class Animal:
         
         if environment:
             x, y = self.position
-            # Check cells within 3-5 tile radius for resources (extended field of view)
-            for dx in range(-5, 6):
-                for dy in range(-5, 6):
+            # Check cells within 2-3 tile radius for resources (more focused field of view)
+            for dx in range(-3, 4):
+                for dy in range(-3, 4):
                     if dx == 0 and dy == 0:
                         continue  # Skip current position
                     
@@ -133,6 +137,7 @@ class Animal:
     def make_decision(self, environment=None) -> str:
         """
         Use neural network to make a decision about what action to take.
+        Enhanced with better loop-breaking and exploration encouragement.
         
         Args:
             environment: GridWorld instance for resource detection
@@ -148,6 +153,30 @@ class Animal:
         
         # Use neural network to decide
         action = self.neural_network.get_decision(inputs)
+        
+        # Enhanced loop-breaking logic
+        if len(self.recent_actions) >= 3:
+            # Check for repeated failed actions
+            recent_failed_actions = [a for a in self.recent_actions[-3:] if a in ['eat', 'drink']]
+            if len(recent_failed_actions) >= 2:
+                # If animal keeps trying to eat/drink without success, force movement
+                action = 'move'
+            elif all(a == action for a in self.recent_actions[-3:]):
+                # If same action repeated 3 times, try something different
+                available_actions = ['move', 'eat', 'drink', 'rest']
+                available_actions.remove(action)
+                if available_actions:
+                    # Prefer movement for exploration when stuck
+                    if 'move' in available_actions and np.random.random() < 0.7:
+                        action = 'move'
+                    else:
+                        action = np.random.choice(available_actions)
+        
+        # Encourage exploration if animal hasn't moved much
+        if (len(self.action_history) > 10 and 
+            self.behavioral_counts['move'] < len(self.action_history) * 0.2 and
+            action == 'rest' and np.random.random() < 0.3):
+            action = 'move'
         
         return action
     
@@ -167,6 +196,8 @@ class Animal:
     def execute_action(self, action: str, environment=None) -> bool:
         """
         Execute the chosen action and update animal state.
+        NOTE: This method now only handles internal state changes.
+        Environment interactions are handled by environment.py
         
         Args:
             action: Action to execute ('move', 'eat', 'drink', 'rest')
@@ -178,28 +209,17 @@ class Animal:
         if not self.alive:
             return False
         
-        success = False
-        
-        if action == 'move':
-            success = self._execute_move(environment)
-        elif action == 'eat':
-            success = self._execute_eat(environment)
-        elif action == 'drink':
-            success = self._execute_drink(environment)
-        elif action == 'rest':
-            success = self._execute_rest()
-        else:
-            raise ValueError(f"Unknown action: {action}")
-        
         # Record action in history
         self.action_history.append(action)
+        
+        # Track recent actions for loop prevention
+        self.recent_actions.append(action)
+        if len(self.recent_actions) > self.max_recent_actions:
+            self.recent_actions.pop(0)
         
         # Track behavioral patterns
         if action in self.behavioral_counts:
             self.behavioral_counts[action] += 1
-        
-        # Update age
-        self.age += 1
         
         # Apply natural decay
         self._apply_decay()
@@ -207,7 +227,7 @@ class Animal:
         # Check survival conditions
         self._check_survival()
         
-        return success
+        return True
     
     def _execute_move(self, environment=None) -> bool:
         """Execute move action."""
@@ -228,55 +248,27 @@ class Animal:
         return True
     
     def _execute_eat(self, environment=None) -> bool:
-        """Execute eat action."""
+        """Execute eat action - only apply energy cost, environment handles resource consumption."""
         # Check if we have enough energy
         if self.energy < self.action_costs['eat']:
             return False
         
-        # Consume energy
+        # Consume energy for the action
         self.energy -= self.action_costs['eat']
         
-        # If environment is provided, check for food availability
-        if environment:
-            # For now, assume food is available and reduce hunger
-            # Actual food consumption will be handled by the environment
-            self.hunger = min(self.max_hunger, self.hunger + 40)  # Increase hunger (reduce hunger level)
-            self.health = min(self.max_health, self.health + 15)  # Improve health
-            self.energy = min(self.max_energy, self.energy + 5)  # Eating gives energy
-            self.resource_consumed['food'] += 1
-            return True
-        
-        # Without environment, just reduce hunger
-        self.hunger = min(self.max_hunger, self.hunger + 40)
-        self.health = min(self.max_health, self.health + 15)
-        self.energy = min(self.max_energy, self.energy + 5)  # Eating gives energy
-        self.resource_consumed['food'] += 1
+        # Environment will handle actual food consumption and call add_food() if successful
         return True
     
     def _execute_drink(self, environment=None) -> bool:
-        """Execute drink action."""
+        """Execute drink action - only apply energy cost, environment handles resource consumption."""
         # Check if we have enough energy
         if self.energy < self.action_costs['drink']:
             return False
         
-        # Consume energy
+        # Consume energy for the action
         self.energy -= self.action_costs['drink']
         
-        # If environment is provided, check for water availability
-        if environment:
-            # For now, assume water is available and reduce thirst
-            # Actual water consumption will be handled by the environment
-            self.thirst = min(self.max_thirst, self.thirst + 40)  # Increase thirst (reduce thirst level)
-            self.health = min(self.max_health, self.health + 15)  # Improve health
-            self.energy = min(self.max_energy, self.energy + 5)  # Drinking gives energy
-            self.resource_consumed['water'] += 1
-            return True
-        
-        # Without environment, just reduce thirst
-        self.thirst = min(self.max_thirst, self.thirst + 40)
-        self.health = min(self.max_health, self.health + 15)
-        self.energy = min(self.max_energy, self.energy + 5)  # Drinking gives energy
-        self.resource_consumed['water'] += 1
+        # Environment will handle actual water consumption and call add_water() if successful
         return True
     
     def _execute_rest(self) -> bool:
@@ -347,6 +339,9 @@ class Animal:
         # Apply natural decay
         self._apply_decay()
         
+        # Note: Rest benefits are now handled directly in environment.py
+        # to avoid double application
+        
         # Update age
         self.age += 1
         
@@ -355,7 +350,8 @@ class Animal:
     
     def calculate_fitness(self) -> float:
         """
-        Calculate fitness score based on survival and behavior.
+        Calculate fitness score based primarily on survival time.
+        Simplified for debugging and clearer evolutionary pressure.
         
         Returns:
             Fitness score (higher is better)
@@ -363,25 +359,16 @@ class Animal:
         if not self.alive:
             return 0.0
         
-        # Base fitness from survival time
-        survival_bonus = self.age * 10
+        # Primary fitness: survival time
+        # Each step alive is worth 10 points
+        survival_fitness = self.age * 10
         
-        # Resource efficiency bonus
-        resource_efficiency = (self.hunger + self.thirst) / 200.0
+        # Small bonus for resource consumption (encourages foraging)
+        resource_bonus = (self.resource_consumed['food'] + 
+                         self.resource_consumed['water']) * 5
         
-        # Energy management bonus
-        energy_bonus = self.energy / 100.0
-        
-        # Movement efficiency (animals that move more might be more successful)
-        movement_bonus = min(self.movement_count * 0.1, 10.0)
-        
-        # Resource consumption bonus
-        resource_consumption = (self.resource_consumed['food'] + 
-                               self.resource_consumed['water']) * 2
-        
-        # Calculate total fitness
-        fitness = (survival_bonus + resource_efficiency + energy_bonus + 
-                  movement_bonus + resource_consumption)
+        # Total fitness
+        fitness = survival_fitness + resource_bonus
         
         self.fitness = fitness
         return fitness
@@ -412,6 +399,31 @@ class Animal:
             'movement_count': self.movement_count,
             'resource_consumed': self.resource_consumed.copy(),
             'behavioral_counts': self.behavioral_counts.copy()
+        }
+    
+    def get_json_safe_state(self) -> Dict:
+        """
+        Get current animal state as a JSON-safe dictionary.
+        Converts NumPy types to Python native types.
+        
+        Returns:
+            Dictionary containing all state information with JSON-safe types
+        """
+        return {
+            'animal_id': str(self.animal_id),
+            'position': [int(self.position[0]), int(self.position[1])],
+            'coordinates': {'x': int(self.position[0]), 'y': int(self.position[1])},
+            'hunger': float(self.hunger),
+            'thirst': float(self.thirst),
+            'energy': float(self.energy),
+            'health': float(self.health),
+            'age': int(self.age),
+            'fitness': float(self.fitness),
+            'alive': bool(self.alive),
+            'action_count': int(len(self.action_history)),
+            'movement_count': int(self.movement_count),
+            'resource_consumed': {k: int(v) for k, v in self.resource_consumed.items()},
+            'behavioral_counts': {k: int(v) for k, v in self.behavioral_counts.items()}
         }
     
     def set_position(self, x: int, y: int) -> None:
@@ -485,11 +497,28 @@ class Animal:
     def reset_for_new_generation(self, x: int, y: int) -> None:
         """
         Reset animal for a new generation while preserving the neural network.
+        Preserves final statistics from the previous generation.
         
         Args:
             x: New X coordinate
             y: New Y coordinate
         """
+        # Store final statistics before reset
+        self.final_generation_stats = {
+            'final_age': self.age,
+            'final_fitness': self.fitness,
+            'final_action_count': len(self.action_history),
+            'final_movement_count': self.movement_count,
+            'final_resource_consumed': self.resource_consumed.copy(),
+            'final_behavioral_counts': self.behavioral_counts.copy(),
+            'final_hunger': self.hunger,
+            'final_thirst': self.thirst,
+            'final_energy': self.energy,
+            'final_health': self.health,
+            'final_alive': self.alive
+        }
+        
+        # Reset for new generation
         self.position = (x, y)
         self.hunger = self.max_hunger
         self.thirst = self.max_thirst
@@ -501,6 +530,15 @@ class Animal:
         self.action_history = []
         self.resource_consumed = {'food': 0, 'water': 0}
         self.movement_count = 0
+    
+    def get_final_generation_stats(self) -> Dict:
+        """
+        Get the final statistics from the previous generation.
+        
+        Returns:
+            Dictionary with final generation statistics, or None if not available
+        """
+        return getattr(self, 'final_generation_stats', None)
     
     def __str__(self) -> str:
         """String representation of the animal."""
