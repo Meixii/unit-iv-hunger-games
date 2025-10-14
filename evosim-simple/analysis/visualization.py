@@ -249,6 +249,154 @@ class SimulationVisualizer:
         fig.tight_layout()
         return fig
     
+    def create_step_analysis_chart(self, step_data: List[Dict[str, Any]]) -> Figure:
+        """
+        Create step-by-step analysis chart.
+        
+        Args:
+            step_data: List of step statistics
+            
+        Returns:
+            Matplotlib figure
+        """
+        fig = Figure(figsize=(12, 8))
+        
+        if not step_data:
+            ax = fig.add_subplot(111)
+            ax.text(0.5, 0.5, 'No step data available', 
+                   ha='center', va='center', transform=ax.transAxes, fontsize=16)
+            ax.set_title('Step Analysis')
+            return fig
+        
+        # Extract data
+        steps = [d.get('step', 0) for d in step_data]
+        alive_animals = [d.get('alive_animals', 0) for d in step_data]
+        food_consumed = [d.get('total_food_consumed', 0) for d in step_data]
+        water_consumed = [d.get('total_water_consumed', 0) for d in step_data]
+        
+        # Create subplots
+        ax1 = fig.add_subplot(2, 2, 1)
+        ax2 = fig.add_subplot(2, 2, 2)
+        ax3 = fig.add_subplot(2, 2, 3)
+        ax4 = fig.add_subplot(2, 2, 4)
+        
+        # Population over time
+        ax1.plot(steps, alive_animals, 'b-', linewidth=2, label='Alive Animals')
+        ax1.set_xlabel('Step')
+        ax1.set_ylabel('Population')
+        ax1.set_title('Population Over Time')
+        ax1.grid(True, alpha=0.3)
+        ax1.legend()
+        
+        # Resource consumption
+        ax2.plot(steps, food_consumed, 'g-', linewidth=2, label='Food Consumed')
+        ax2.plot(steps, water_consumed, 'b-', linewidth=2, label='Water Consumed')
+        ax2.set_xlabel('Step')
+        ax2.set_ylabel('Resources Consumed')
+        ax2.set_title('Resource Consumption Over Time')
+        ax2.grid(True, alpha=0.3)
+        ax2.legend()
+        
+        # Survival rate
+        if len(steps) > 1:
+            survival_rates = [alive / max(1, alive_animals[0]) for alive in alive_animals]
+            ax3.plot(steps, survival_rates, 'r-', linewidth=2, label='Survival Rate')
+            ax3.set_xlabel('Step')
+            ax3.set_ylabel('Survival Rate')
+            ax3.set_title('Survival Rate Over Time')
+            ax3.grid(True, alpha=0.3)
+            ax3.legend()
+        
+        # Resource efficiency
+        if len(steps) > 1:
+            efficiency = [(f + w) / max(1, alive) for f, w, alive in zip(food_consumed, water_consumed, alive_animals)]
+            ax4.plot(steps, efficiency, 'm-', linewidth=2, label='Resource Efficiency')
+            ax4.set_xlabel('Step')
+            ax4.set_ylabel('Efficiency (Resources/Population)')
+            ax4.set_title('Resource Efficiency Over Time')
+            ax4.grid(True, alpha=0.3)
+            ax4.legend()
+        
+        fig.suptitle('Step-by-Step Analysis', fontsize=16, fontweight='bold')
+        fig.tight_layout()
+        
+        return fig
+    
+    def create_generation_comparison_chart(self, gen_data: List[Dict[str, Any]]) -> Figure:
+        """
+        Create generation comparison chart.
+        
+        Args:
+            gen_data: List of generation statistics
+            
+        Returns:
+            Matplotlib figure
+        """
+        fig = Figure(figsize=(12, 8))
+        
+        if not gen_data:
+            ax = fig.add_subplot(111)
+            ax.text(0.5, 0.5, 'No generation data available', 
+                   ha='center', va='center', transform=ax.transAxes, fontsize=16)
+            ax.set_title('Generation Comparison')
+            return fig
+        
+        # Extract data
+        generations = [d.get('generation', 0) for d in gen_data]
+        pop_stats = [d.get('population_stats', {}) for d in gen_data]
+        
+        # Extract metrics
+        avg_fitness = [p.get('average_fitness', 0) for p in pop_stats]
+        best_fitness = [p.get('best_fitness', 0) for p in pop_stats]
+        survival_rates = [p.get('survival_rate', 0) for p in pop_stats]
+        alive_counts = [p.get('alive_count', 0) for p in pop_stats]
+        
+        # Create subplots
+        ax1 = fig.add_subplot(2, 2, 1)
+        ax2 = fig.add_subplot(2, 2, 2)
+        ax3 = fig.add_subplot(2, 2, 3)
+        ax4 = fig.add_subplot(2, 2, 4)
+        
+        # Fitness progression
+        ax1.plot(generations, avg_fitness, 'b-', linewidth=2, label='Average Fitness')
+        ax1.plot(generations, best_fitness, 'r-', linewidth=2, label='Best Fitness')
+        ax1.set_xlabel('Generation')
+        ax1.set_ylabel('Fitness')
+        ax1.set_title('Fitness Progression')
+        ax1.grid(True, alpha=0.3)
+        ax1.legend()
+        
+        # Survival rates
+        ax2.plot(generations, survival_rates, 'g-', linewidth=2, label='Survival Rate')
+        ax2.set_xlabel('Generation')
+        ax2.set_ylabel('Survival Rate')
+        ax2.set_title('Survival Rate by Generation')
+        ax2.grid(True, alpha=0.3)
+        ax2.legend()
+        
+        # Population sizes
+        ax3.plot(generations, alive_counts, 'm-', linewidth=2, label='Alive Animals')
+        ax3.set_xlabel('Generation')
+        ax3.set_ylabel('Population Size')
+        ax3.set_title('Population Size by Generation')
+        ax3.grid(True, alpha=0.3)
+        ax3.legend()
+        
+        # Fitness improvement
+        if len(avg_fitness) > 1:
+            improvement = [avg_fitness[i] - avg_fitness[0] for i in range(len(avg_fitness))]
+            ax4.plot(generations, improvement, 'c-', linewidth=2, label='Fitness Improvement')
+            ax4.set_xlabel('Generation')
+            ax4.set_ylabel('Fitness Improvement')
+            ax4.set_title('Fitness Improvement Over Generations')
+            ax4.grid(True, alpha=0.3)
+            ax4.legend()
+        
+        fig.suptitle('Generation Comparison Analysis', fontsize=16, fontweight='bold')
+        fig.tight_layout()
+        
+        return fig
+    
     def create_summary_dashboard(self, summary_stats: Dict[str, Any]) -> Figure:
         """
         Create summary dashboard with key metrics.
@@ -407,6 +555,24 @@ def create_visualization_window(statistics_data: Dict[str, Any],
         behavior_data = statistics_data['behavioral_patterns']
         fig = visualizer.create_behavioral_pattern_chart(behavior_data)
         visualizer.embed_figure_in_frame(fig, behavior_frame, 'behavior')
+    
+    # Step-by-step analysis tab
+    if 'step_history' in statistics_data and statistics_data['step_history']:
+        step_frame = ttk.Frame(notebook)
+        notebook.add(step_frame, text="Step Analysis")
+        
+        step_data = statistics_data['step_history']
+        fig = visualizer.create_step_analysis_chart(step_data)
+        visualizer.embed_figure_in_frame(fig, step_frame, 'step_analysis')
+    
+    # Generation comparison tab
+    if 'generation_history' in statistics_data and statistics_data['generation_history']:
+        gen_frame = ttk.Frame(notebook)
+        notebook.add(gen_frame, text="Generation Comparison")
+        
+        gen_data = statistics_data['generation_history']
+        fig = visualizer.create_generation_comparison_chart(gen_data)
+        visualizer.embed_figure_in_frame(fig, gen_frame, 'generation_comparison')
     
     # Summary tab
     if 'summary' in statistics_data:

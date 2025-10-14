@@ -157,41 +157,6 @@ class GridWorld:
                 del self.animal_positions[pos]
                 self.grid[pos[1], pos[0]] = 0
     
-    def move_animal(self, animal: Animal, new_x: int, new_y: int) -> bool:
-        """
-        Move an animal to a new position.
-        
-        Args:
-            animal: Animal to move
-            new_x: New X coordinate
-            new_y: New Y coordinate
-            
-        Returns:
-            True if move successful, False otherwise
-        """
-        if not self.is_valid_position(new_x, new_y):
-            return False
-        
-        # Check if new position is occupied by another animal
-        if (new_x, new_y) in self.animal_positions:
-            return False
-        
-        # Get current position
-        old_x, old_y = animal.get_position()
-        
-        # Update grid
-        self.grid[old_y, old_x] = 0
-        self.grid[new_y, new_x] = 3
-        
-        # Update tracking
-        del self.animal_positions[(old_x, old_y)]
-        self.animal_positions[(new_x, new_y)] = animal
-        
-        # Update animal position
-        animal.set_position(new_x, new_y)
-        
-        return True
-    
     def is_valid_position(self, x: int, y: int) -> bool:
         """
         Check if position is valid (within bounds).
@@ -248,13 +213,11 @@ class GridWorld:
         
         if resource_type == 'food' and (x, y) in self.food_positions:
             self.food_positions.remove((x, y))
-            self.grid[y, x] = 0
             self.food_count -= 1
             self.total_food_consumed += 1
             return True
         elif resource_type == 'water' and (x, y) in self.water_positions:
             self.water_positions.remove((x, y))
-            self.grid[y, x] = 0
             self.water_count -= 1
             self.total_water_consumed += 1
             return True
@@ -442,6 +405,10 @@ class GridWorld:
         """
         if not animal.is_alive():
             return False
+
+        animal.recent_actions.append(action)
+        if len(animal.recent_actions) > animal.max_recent_actions:
+            animal.recent_actions.pop(0)
         
         pos = animal.get_position()
         x, y = pos
@@ -488,65 +455,88 @@ class GridWorld:
             else:
                 # No neighbors available, return False to let animal try other actions
                 return False
-        
+
+        # --- FIX: Check resource sets directly for action execution ---
         elif action == 'eat':
-            # Check if there's food at current position
-            if self.get_cell_content(x, y) == 'food':
+            if (x, y) in self.food_positions: # Check the set, not the grid
                 if self.consume_resource(x, y, 'food'):
-                    animal.add_food(40)  # Properly add food to animal
-                    # Record the successful eat action
+                    animal.add_food(40)
                     animal.action_history.append('eat')
                     animal.behavioral_counts['eat'] += 1
                     return True
-                else:
-                    return False  # Failed to consume, let animal try again next step
-            else:
-                # No food at current position - try to move towards food
-                nearby_food = self._find_nearby_resource(x, y, 'food')
-                if nearby_food:
-                    # Move towards the food - record as move action
-                    if self.move_animal(animal, nearby_food[0], nearby_food[1]):
-                        animal.energy -= animal.action_costs['move']
-                        animal.movement_count += 1
-                        # Record the actual action that happened (move, not eat)
-                        animal.action_history.append('move')
-                        animal.behavioral_counts['move'] += 1
-                        return True
-                # If no food nearby or can't move, action fails
-                return False
+            return False # Action fails if not on food
         
         elif action == 'drink':
-            # Check if there's water at current position
-            if self.get_cell_content(x, y) == 'water':
+            if (x, y) in self.water_positions: # Check the set, not the grid
                 if self.consume_resource(x, y, 'water'):
-                    animal.add_water(40)  # Properly add water to animal
-                    # Record the successful drink action
+                    animal.add_water(40)
                     animal.action_history.append('drink')
                     animal.behavioral_counts['drink'] += 1
                     return True
-                else:
-                    return False  # Failed to consume, let animal try again next step
-            else:
-                # No water at current position - try to move towards water
-                nearby_water = self._find_nearby_resource(x, y, 'water')
-                if nearby_water:
-                    # Move towards the water - record as move action
-                    if self.move_animal(animal, nearby_water[0], nearby_water[1]):
-                        animal.energy -= animal.action_costs['move']
-                        animal.movement_count += 1
-                        # Record the actual action that happened (move, not drink)
-                        animal.action_history.append('move')
-                        animal.behavioral_counts['move'] += 1
-                        return True
-                # If no water nearby or can't move, action fails
-                return False
+            return False # Action fails if not on water
+        # --- End of fix ---
+
+
+        # elif action == 'eat':
+        #     # Check if there's food at current position
+        #     if self.get_cell_content(x, y) == 'food':
+        #         if self.consume_resource(x, y, 'food'):
+        #             animal.add_food(40)  # Properly add food to animal
+        #             # Record the successful eat action
+        #             animal.action_history.append('eat')
+        #             animal.behavioral_counts['eat'] += 1
+        #             return True
+        #         else:
+        #             return False  # Failed to consume, let animal try again next step
+        #     else:
+        #         # No food at current position - try to move towards food
+        #         nearby_food = self._find_nearby_resource(x, y, 'food')
+        #         if nearby_food:
+        #             # Move towards the food - record as move action
+        #             if self.move_animal(animal, nearby_food[0], nearby_food[1]):
+        #                 animal.energy -= animal.action_costs['move']
+        #                 animal.movement_count += 1
+        #                 # Record the actual action that happened (move, not eat)
+        #                 animal.action_history.append('move')
+        #                 animal.behavioral_counts['move'] += 1
+        #                 return True
+        #         # If no food nearby or can't move, action fails
+        #         return False
+        
+        # elif action == 'drink':
+        #     # Check if there's water at current position
+        #     if self.get_cell_content(x, y) == 'water':
+        #         if self.consume_resource(x, y, 'water'):
+        #             animal.add_water(40)  # Properly add water to animal
+        #             # Record the successful drink action
+        #             animal.action_history.append('drink')
+        #             animal.behavioral_counts['drink'] += 1
+        #             return True
+        #         else:
+        #             return False  # Failed to consume, let animal try again next step
+        #     else:
+        #         # No water at current position - try to move towards water
+        #         nearby_water = self._find_nearby_resource(x, y, 'water')
+        #         if nearby_water:
+        #             # Move towards the water - record as move action
+        #             if self.move_animal(animal, nearby_water[0], nearby_water[1]):
+        #                 animal.energy -= animal.action_costs['move']
+        #                 animal.movement_count += 1
+        #                 # Record the actual action that happened (move, not drink)
+        #                 animal.action_history.append('move')
+        #                 animal.behavioral_counts['move'] += 1
+        #                 return True
+        #         # If no water nearby or can't move, action fails
+        #         return False
         
         elif action == 'rest':
-            # Rest action - record the action and apply rest benefits
+            # Rest action - record the action and apply minimal rest benefits
             animal.action_history.append('rest')
             animal.behavioral_counts['rest'] += 1
-            # Apply rest benefits immediately
-            animal.energy = min(animal.max_energy, animal.energy + 5)
+            # --- FIX: Make resting more effective ---
+            # Recover energy regardless of current level, up to the max.
+            animal.energy = min(animal.max_energy, animal.energy + 5) # Increased from 2
+            # --- End of fix ---
             return True
         
         return False
@@ -601,10 +591,10 @@ class GridWorld:
         modified_value = base_value
         
         for event_name, modifiers in self.active_events.items():
-            if resource_type == 'water' and 'water_multiplier' in modifiers:
-                modified_value *= modifiers['water_multiplier']
-            elif resource_type == 'food' and 'food_multiplier' in modifiers:
-                modified_value *= modifiers['food_multiplier']
+            if resource_type == 'water' and 'water_availability' in modifiers:
+                modified_value *= modifiers['water_availability']
+            elif resource_type == 'food' and 'food_availability' in modifiers:
+                modified_value *= modifiers['food_availability']
             elif resource_type == 'movement_cost' and 'movement_cost_multiplier' in modifiers:
                 modified_value *= modifiers['movement_cost_multiplier']
         

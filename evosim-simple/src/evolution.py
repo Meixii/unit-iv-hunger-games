@@ -60,8 +60,9 @@ class Population:
         self.animals.clear()
         
         for i in range(self.size):
-            # Create neural network with 4 inputs (hunger, thirst, food_nearby, water_nearby)
-            network = NeuralNetwork(input_size=4)
+            # --- FIX: Create neural network with 5 inputs ---
+            network = NeuralNetwork(input_size=5)
+            # --- End of fix ---
             
             # Create animal
             animal = Animal(0, 0, network)
@@ -281,15 +282,18 @@ class Population:
         """
         offspring = []
         
-        # Elitism: keep best individuals (but reset their state)
+        # --- FIX: Elitism - Create NEW animals with elite brains ---
         elite_animals = self._select_elite()
         for elite in elite_animals:
-            # Reset elite animals for new generation
-            elite.reset_for_new_generation(0, 0)  # Will be repositioned by environment
-        offspring.extend(elite_animals)
+            # Create a fresh clone with the elite's brain
+            new_elite_brain = elite.neural_network.copy()
+            new_elite = Animal(0, 0, new_elite_brain, 
+                             generation=self.generation + 1)
+            offspring.append(new_elite)
+        # --- End of fix ---
         
         # Create remaining offspring through crossover and mutation
-        remaining_size = self.size - len(elite_animals)
+        remaining_size = self.size - len(offspring)
         
         for i in range(remaining_size):
             # Select two parents
@@ -313,8 +317,9 @@ class Population:
                     mutation_strength=self.mutation_strength
                 )
             
-            # Create offspring animal
-            offspring_animal = Animal(0, 0, offspring_network)
+            # Create offspring animal with proper generation tracking
+            offspring_animal = Animal(0, 0, offspring_network, 
+                                     generation=self.generation + 1)
             offspring.append(offspring_animal)
         
         return offspring

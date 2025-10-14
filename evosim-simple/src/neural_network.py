@@ -2,8 +2,8 @@
 Neural Network Implementation for Evolutionary Simulation
 
 This module implements a simple Multi-Layer Perceptron (MLP) neural network
-designed for the evolutionary simulation. The network has a 4-4-4 architecture:
-- 4 inputs: Hunger, Thirst, Food Nearby, Water Nearby (all normalized 0-1)
+designed for the evolutionary simulation. The network has a 5-4-4 architecture:
+- 5 inputs: Hunger, Thirst, Energy, Food Nearby, Water Nearby (all normalized 0-1)
 - 4 hidden neurons: Processing layer
 - 4 outputs: Move, Eat, Drink, Rest actions
 
@@ -20,18 +20,18 @@ class NeuralNetwork:
     """
     Simple Multi-Layer Perceptron for animal decision-making.
     
-    Architecture: 4 inputs → 4 hidden → 4 outputs
-    - Inputs: [hunger, thirst, food_nearby, water_nearby] (normalized 0-1)
+    Architecture: 5 inputs → 4 hidden → 4 outputs
+    - Inputs: [hunger, thirst, energy, food_nearby, water_nearby] (normalized 0-1)
     - Outputs: [move, eat, drink, rest] (action probabilities)
     """
     
-    def __init__(self, input_size: int = 4, hidden_size: int = 4, 
+    def __init__(self, input_size: int = 5, hidden_size: int = 4, 
                  output_size: int = 4, weight_range: Tuple[float, float] = (-1.0, 1.0)):
         """
         Initialize the neural network with random weights.
         
         Args:
-            input_size: Number of input neurons (default: 4)
+            input_size: Number of input neurons (default: 5)
             hidden_size: Number of hidden neurons (default: 4)
             output_size: Number of output neurons (default: 4)
             weight_range: Range for random weight initialization
@@ -72,7 +72,7 @@ class NeuralNetwork:
         Perform forward propagation through the network.
         
         Args:
-            inputs: Input vector [hunger, thirst, food_nearby, water_nearby] (shape: 4,)
+            inputs: Input vector [hunger, thirst, energy, food_nearby, water_nearby] (shape: 5,)
             
         Returns:
             Output vector [move, eat, drink, rest] (shape: 4,)
@@ -99,7 +99,7 @@ class NeuralNetwork:
         Get the action decision based on network output.
         
         Args:
-            inputs: Input vector [hunger, thirst, food_nearby, water_nearby]
+            inputs: Input vector [hunger, thirst, energy, food_nearby, water_nearby]
             
         Returns:
             Action string: 'move', 'eat', 'drink', or 'rest'
@@ -115,7 +115,7 @@ class NeuralNetwork:
         Get probability distribution over all actions.
         
         Args:
-            inputs: Input vector [hunger, thirst, food_nearby, water_nearby]
+            inputs: Input vector [hunger, thirst, energy, food_nearby, water_nearby]
             
         Returns:
             Dictionary mapping actions to probabilities

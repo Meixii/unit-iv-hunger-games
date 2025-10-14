@@ -80,21 +80,25 @@ class Animal:
         self.max_energy = 100.0
         self.max_health = 100.0
         
-        # Decay rates (per time step) - slightly increased to encourage active behavior
-        self.hunger_decay = 0.6  # Increased hunger decay
-        self.thirst_decay = 0.6  # Increased thirst decay
-        self.energy_decay = 0.25  # Increased energy decay
-        self.health_decay = 0.3 # Health decays when hunger/thirst are low
+        # Decay rates (per time step) - significantly increased to force resource-seeking behavior
+        self.hunger_decay = 0.8
+        self.thirst_decay = 0.8
+        self.energy_decay = 0.4
+        self.health_decay = 0.5
         
         # Action costs - rebalanced to make movement more attractive
         self.action_costs = {
-            'move': 1.5,  # Much cheaper movement to encourage exploration
-            'eat': 1.0,   # Keep eat cost the same
-            'drink': 1.0, # Keep drink cost the same
-            'rest': 0.0   # Resting should not cost energy
+            # --- FIX: Slightly reduce move cost ---
+            'move': 1.2,  # Changed from 1.5
+            # --- End of fix ---
+            'eat': 1.0, 
+            'drink': 1.0,
+            # --- FIX: Resting should have no energy cost ---
+            'rest': 0.0   # Changed from 0.5
+            # --- End of fix ---
         }
     
-    def sense_environment(self, environment=None) -> Tuple[float, float, float, float]:
+    def sense_environment(self, environment=None) -> Tuple[float, float, float, float, float]:
         """
         Sense the environment and return normalized inputs for the neural network.
         
@@ -102,11 +106,14 @@ class Animal:
             environment: GridWorld instance to detect nearby resources
             
         Returns:
-            Tuple of (normalized_hunger, normalized_thirst, food_nearby, water_nearby)
+            Tuple of (normalized_hunger, normalized_thirst, normalized_energy, food_nearby, water_nearby)
         """
         # Normalize hunger and thirst to [0, 1] range
         normalized_hunger = self.hunger / self.max_hunger
         normalized_thirst = self.thirst / self.max_thirst
+        # --- FIX: Add normalized energy as a new input ---
+        normalized_energy = self.energy / self.max_energy
+        # --- End of fix ---
         
         # Detect nearby resources if environment is provided
         food_nearby = 0.0
@@ -121,18 +128,22 @@ class Animal:
                         continue  # Skip current position
                     
                     check_x, check_y = x + dx, y + dy
+                    check_pos = (check_x, check_y) # Create a tuple for checking
+
                     if 0 <= check_x < environment.width and 0 <= check_y < environment.height:
-                        cell_content = environment.get_cell_content(check_x, check_y)
-                        if cell_content == 'food':
+                        # --- FIX: Check the resource sets directly ---
+                        if check_pos in environment.food_positions:
                             # Closer food gets higher priority
                             distance = abs(dx) + abs(dy)
                             food_nearby = max(food_nearby, 1.0 / (distance + 1))
-                        elif cell_content == 'water':
+                        elif check_pos in environment.water_positions:
                             # Closer water gets higher priority
                             distance = abs(dx) + abs(dy)
                             water_nearby = max(water_nearby, 1.0 / (distance + 1))
+                        # --- End of fix ---
         
-        return (normalized_hunger, normalized_thirst, food_nearby, water_nearby)
+        # --- FIX: Return all 5 inputs ---
+        return (normalized_hunger, normalized_thirst, normalized_energy, food_nearby, water_nearby)
     
     def make_decision(self, environment=None) -> str:
         """
@@ -147,6 +158,24 @@ class Animal:
         """
         if not self.alive:
             return 'rest'
+
+        # --- FIX: Add a high-priority instinct to rest when exhausted ---
+        if self.energy < 10:  # If energy is critically low
+            return 'rest'
+        # --- End of fix ---
+
+        # High-priority instincts for survival
+        if environment:
+            x, y = self.position
+            pos = (x, y) # Create a tuple of the current position
+
+            # --- FIX: Check resource sets directly for the instinct ---
+            if self.hunger < 40 and pos in environment.food_positions:
+                return 'eat'
+            
+            if self.thirst < 40 and pos in environment.water_positions:
+                return 'drink'
+            # --- End of fix ---
         
         # Get sensory inputs (including resource detection)
         inputs = np.array(self.sense_environment(environment))
@@ -273,11 +302,11 @@ class Animal:
     
     def _execute_rest(self) -> bool:
         """Execute rest action."""
-        # Resting doesn't require energy - it's meant to recover energy
-        # Resting recovers energy and slowly reduces hunger/thirst
-        self.energy = min(self.max_energy, self.energy + 8)  # Increased recovery
-        self.hunger = max(0, self.hunger - 1)  # Reduced hunger decay
-        self.thirst = max(0, self.thirst - 1)  # Reduced thirst decay
+        # Resting provides minimal benefits to discourage over-reliance
+        # Only recover energy if already low, and don't reduce hunger/thirst
+        if self.energy < 50:  # Only recover if energy is low
+            self.energy = min(self.max_energy, self.energy + 3)  # Reduced recovery
+        # No hunger/thirst reduction - resting doesn't solve resource needs
         
         return True
     
@@ -311,6 +340,8 @@ class Animal:
             # Die after 3 steps of complete starvation
             if self._starvation_steps >= 3:
                 self.alive = False
+                # Set health to 0 to reflect catastrophic death from starvation
+                self.health = 0.0
         else:
             # Reset starvation counter if hunger or thirst is restored
             if hasattr(self, '_starvation_steps'):
@@ -326,6 +357,8 @@ class Animal:
             # Die after 5 steps without energy
             if self._energy_zero_steps >= 5:
                 self.alive = False
+                # Set health to 0 to reflect catastrophic death from energy depletion
+                self.health = 0.0
         else:
             # Reset energy zero counter if energy is restored
             if hasattr(self, '_energy_zero_steps'):

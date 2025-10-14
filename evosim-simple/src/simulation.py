@@ -76,6 +76,10 @@ class Simulation:
         self.step_history: List[Dict] = []
         self.generation_history: List[Dict] = []
         
+        # Per-step animal history tracking
+        self.animal_step_history: Dict[str, List[Dict]] = {}  # animal_id -> list of step data
+        self.track_animal_history = False  # Enable/disable per-animal tracking
+        
         # Threading
         self._simulation_thread: Optional[threading.Thread] = None
         self._stop_event = threading.Event()
@@ -170,6 +174,11 @@ class Simulation:
         
         if not self.environment:
             self.initialize()
+        
+        # Auto-enable animal tracking for better debugging experience
+        if not self.track_animal_history:
+            self.enable_animal_history_tracking(True)
+            print("[START] Auto-enabled animal history tracking")
         
         self._set_state(SimulationState.RUNNING)
         self._stop_event.clear()
@@ -292,6 +301,9 @@ class Simulation:
         # Apply environmental effects
         self._apply_environmental_effects()
         
+        # Collect per-step animal data if tracking is enabled
+        self._collect_animal_step_data()
+        
         # Collect step statistics
         step_stats = self._collect_step_statistics()
         self.step_history.append(step_stats)
@@ -345,6 +357,9 @@ class Simulation:
             # Remove all animals
             for animal in self.environment.get_all_animals():
                 self.environment.remove_animal(animal)
+
+            # Clear dead animals
+            self.environment.dead_animals.clear()
             
             # Place new animals from population
             for animal in self.population.animals:
@@ -401,6 +416,42 @@ class Simulation:
         self.final_animal_statistics.append(generation_final_stats)
         
         print(f"[STATS] Collected final statistics for {len(all_animals)} animals in generation {self.current_generation}")
+    
+    def _collect_animal_step_data(self) -> None:
+        """Collect per-step data for all animals if tracking is enabled."""
+        if not self.track_animal_history or not self.environment:
+            return
+        
+        # Get all animals (alive and dead)
+        all_animals = self.environment.get_all_animals() + self.environment.dead_animals
+        
+        for animal in all_animals:
+            # Initialize history for this animal if not exists
+            if animal.animal_id not in self.animal_step_history:
+                self.animal_step_history[animal.animal_id] = []
+            
+            # Collect step data for this animal
+            step_data = {
+                'step': self.current_step,
+                'generation': self.current_generation,
+                'timestamp': time.time(),
+                'position': animal.position,
+                'hunger': animal.hunger,
+                'thirst': animal.thirst,
+                'energy': animal.energy,
+                'health': animal.health,
+                'age': animal.age,
+                'fitness': animal.fitness,
+                'alive': animal.alive,
+                'action_count': len(animal.action_history),
+                'movement_count': animal.movement_count,
+                'resource_consumed': animal.resource_consumed.copy(),
+                'behavioral_counts': animal.behavioral_counts.copy(),
+                'recent_actions': animal.recent_actions.copy() if hasattr(animal, 'recent_actions') else []
+            }
+            
+            # Add to animal's history
+            self.animal_step_history[animal.animal_id].append(step_data)
     
     def _apply_environmental_effects(self) -> None:
         """Apply environmental effects to animals."""
@@ -582,6 +633,94 @@ class Simulation:
                 return [gen_stats]
         
         return []
+    
+    def enable_animal_history_tracking(self, enable: bool = True) -> None:
+        """
+        Enable or disable per-step animal history tracking.
+        
+        Args:
+            enable: True to enable tracking, False to disable
+        """
+        self.track_animal_history = enable
+        if enable:
+            print("[TRACKING] Animal step history tracking enabled")
+        else:
+            print("[TRACKING] Animal step history tracking disabled")
+    
+    def get_animal_history(self, animal_id: str) -> List[Dict]:
+        """
+        Get the complete step history for a specific animal.
+        
+        Args:
+            animal_id: ID of the animal to get history for
+            
+        Returns:
+            List of step data for the animal, or empty list if not found
+        """
+        return self.animal_step_history.get(animal_id, [])
+    
+    def get_available_animal_ids(self) -> List[str]:
+        """
+        Get list of all animal IDs that have history data.
+        
+        Returns:
+            List of animal IDs with history data
+        """
+        return list(self.animal_step_history.keys())
+    
+    def export_animal_history(self, animal_id: str, filename: Optional[str] = None) -> str:
+        """
+        Export the step history for a specific animal to a JSON file.
+        
+        Args:
+            animal_id: ID of the animal to export
+            filename: Optional filename, defaults to f"{animal_id}_history.json"
+            
+        Returns:
+            Path to the exported file
+        """
+        if animal_id not in self.animal_step_history:
+            raise ValueError(f"No history data found for animal {animal_id}")
+        
+        if filename is None:
+            filename = f"{animal_id}_history.json"
+        
+        # Ensure filename has .json extension
+        if not filename.endswith('.json'):
+            filename += '.json'
+        
+        # Get the history data
+        history_data = {
+            'animal_id': animal_id,
+            'total_steps': len(self.animal_step_history[animal_id]),
+            'generations_tracked': len(set(step['generation'] for step in self.animal_step_history[animal_id])),
+            'step_history': self.animal_step_history[animal_id]
+        }
+        
+        # Export to file
+        import json
+        with open(filename, 'w') as f:
+            json.dump(history_data, f, indent=2)
+        
+        print(f"[EXPORT] Animal history exported to {filename}")
+        return filename
+    
+    def clear_animal_history(self, animal_id: Optional[str] = None) -> None:
+        """
+        Clear animal history data.
+        
+        Args:
+            animal_id: Specific animal ID to clear, or None to clear all
+        """
+        if animal_id is None:
+            self.animal_step_history.clear()
+            print("[TRACKING] Cleared all animal history data")
+        else:
+            if animal_id in self.animal_step_history:
+                del self.animal_step_history[animal_id]
+                print(f"[TRACKING] Cleared history for animal {animal_id}")
+            else:
+                print(f"[TRACKING] No history data found for animal {animal_id}")
     
     def is_running(self) -> bool:
         """Check if simulation is running."""
