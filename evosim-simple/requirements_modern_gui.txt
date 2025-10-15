@@ -1,0 +1,20 @@
+# Modern GUI Dependencies for Evolutionary Simulation
+# Install with: pip install -r requirements_modern_gui.txt
+
+# Core simulation dependencies (from existing requirements.txt)
+numpy>=1.21.0
+matplotlib>=3.5.0
+
+# Modern GUI framework
+arcade>=2.6.0
+
+# Optional: Enhanced graphics and effects
+pillow>=8.0.0  # For image processing and sprites
+pyglet>=1.5.0  # Arcade's underlying graphics library
+
+# Optional: Sound effects (if you want to add audio)
+# arcade-sound>=1.0.0
+
+# Development and testing
+pytest>=6.0.0
+pytest-arcade>=0.1.0  # For testing Arcade applications
