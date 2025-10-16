@@ -203,6 +203,35 @@ class EventManager:
               self.event_cooldowns['famine'] == 0):
             self._trigger_famine()
     
+    def trigger_event(self, event_name: str) -> bool:
+        """
+        Manually trigger an event (used by GUI).
+        
+        Args:
+            event_name: Name of the event to trigger ('drought', 'storm', 'famine', 'bonus')
+            
+        Returns:
+            True if event was triggered, False if already active or on cooldown
+        """
+        if event_name in self.active_events:
+            print(f"[EVENT] {event_name} is already active")
+            return False
+            
+        if event_name == 'drought':
+            self._trigger_drought()
+        elif event_name == 'storm':
+            self._trigger_storm()
+        elif event_name == 'famine':
+            self._trigger_famine()
+        elif event_name == 'bonus':
+            self._trigger_bonus()
+        else:
+            print(f"[EVENT] Unknown event type: {event_name}")
+            return False
+        
+        print(f"[EVENT] Manually triggered: {event_name}")
+        return True
+    
     def _trigger_drought(self) -> None:
         """Trigger a drought event."""
         config = self.event_config.get('drought', {})

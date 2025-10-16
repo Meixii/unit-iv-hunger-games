@@ -1,5 +1,5 @@
 # Modern GUI Dependencies for Evolutionary Simulation
-# Install with: pip install -r requirements_modern_gui.txt
+# Install with: pip install -r requirements_main_gui.txt
 
 # Core simulation dependencies (from existing requirements.txt)
 numpy>=1.21.0
@@ -17,4 +17,3 @@ pyglet>=1.5.0  # Arcade's underlying graphics library
 
 # Development and testing
 pytest>=6.0.0
-pytest-arcade>=0.1.0  # For testing Arcade applications
