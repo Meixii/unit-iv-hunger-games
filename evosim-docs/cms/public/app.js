@@ -1,4 +1,4 @@
-/* EvoSim CMS Admin — Vanilla JS schema-driven content editor */
+/* EvoSim CMS Admin: Vanilla JS schema-driven content editor */
 "use strict";
 
 const $ = (id) => document.getElementById(id);

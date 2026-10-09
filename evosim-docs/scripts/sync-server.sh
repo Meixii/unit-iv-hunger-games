@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# sync-server.sh — Bidirectional Git sync & deployment for EvoSim Documentation
+# sync-server.sh: Bidirectional Git sync & deployment for EvoSim Documentation
 #
 # Supports:
 #   - Pushing CMS auto-commits from home server to GitHub (origin)

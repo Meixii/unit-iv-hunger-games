@@ -1,7 +1,7 @@
 {
   "name": "evosim-docs-cms",
-  "version": "0.1.0",
-  "description": "Self-hosted CMS for EvoSim documentation — edits every document and configuration in content/*.json",
+  "version": "0.1.1",
+  "description": "Self-hosted CMS for EvoSim documentation: edits every document and configuration in content/*.json",
   "type": "module",
   "private": true,
   "scripts": {

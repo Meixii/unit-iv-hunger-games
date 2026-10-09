@@ -1,6 +1,6 @@
 {
   "name": "evosim-docs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Technical documentation and research monograph for EvoSim: AI-Driven Animal Survival in a Neural Network Battle Royale",
   "type": "module",
   "private": true,

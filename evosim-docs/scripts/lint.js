@@ -2,7 +2,7 @@
 /**
  * Strict Anti-Slop and Code Quality Linter
  * Enforces:
- *   - Zero em dashes (—) across all UI, markdown, and content files (R-02)
+ *   - Zero em dashes (anti-slop) across all UI, markdown, and content files (R-02)
  *   - No empty links or orphan anchors (R-24)
  *   - Content JSON file structural validity
  */

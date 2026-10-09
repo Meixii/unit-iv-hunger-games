@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-09
+
+### Fixed
+- **CMS View Visibility Stack:** Added strict `[hidden] { display: none !important; }` rules to `admin.css`, resolving specificity conflicts where `.app-view` and `.login-view` flex styling previously overrode HTML `hidden` attributes and caused stacked UI rendering.
+- **Anti-Slop Cleanliness:** Replaced residual em dashes across scripts, CMS packages, and server comments with standard colons and parentheses.
+
+### Removed
+- **Header CMS Button:** Cleaned up unused `.header-cms-link` CSS rules in `DocHeader.astro` following the removal of the public CMS link button from the header navigation.
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
@@ -53,5 +62,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `scripts/lint.js`: Enforces zero em dashes and checks link integrity.
   - `scripts/test.js`: Validates all JSON files, mathematical formulas, and Astro routes.
 
-[unreleased]: https://github.com/Meixii/unit-iv-hunger-games/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/Meixii/unit-iv-hunger-games/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Meixii/unit-iv-hunger-games/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Meixii/unit-iv-hunger-games/releases/tag/v0.1.0

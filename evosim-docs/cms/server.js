@@ -1,5 +1,5 @@
 /**
- * EvoSim Docs CMS — Self-hosted documentation admin app.
+ * EvoSim Docs CMS: Self-hosted documentation admin app.
  *
  * Edits JSON files in content/, accepts image uploads, and triggers static builds.
  */
