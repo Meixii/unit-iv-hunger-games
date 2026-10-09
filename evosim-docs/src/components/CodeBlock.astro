@@ -1,0 +1,59 @@
+---
+interface Props {
+  code: string;
+  language?: string;
+  filename?: string;
+}
+
+const { code, language = "python", filename } = Astro.props;
+---
+
+<div class="code-container">
+  <div class="code-header">
+    <span class="code-filename">{filename || language}</span>
+    <button class="copy-btn btn btn-ghost btn-mini" type="button" aria-label="Copy code snippet">
+      <span class="copy-label">Copy</span>
+    </button>
+  </div>
+  <pre><code class={`language-${language}`}>{code}</code></pre>
+</div>
+
+<style>
+  .copy-btn {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    min-height: 28px;
+  }
+  .code-filename {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+</style>
+
+<script>
+  function setupCopyButtons() {
+    document.querySelectorAll(".code-container").forEach((container) => {
+      const btn = container.querySelector(".copy-btn") as HTMLButtonElement | null;
+      const codeEl = container.querySelector("code");
+      const label = container.querySelector(".copy-label");
+      if (!btn || !codeEl || !label) return;
+
+      btn.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(codeEl.textContent || "");
+          label.textContent = "Copied!";
+          btn.style.color = "var(--accent-bio)";
+          setTimeout(() => {
+            label.textContent = "Copy";
+            btn.style.color = "";
+          }, 2000);
+        } catch (e) {
+          label.textContent = "Failed";
+        }
+      };
+    });
+  }
+  setupCopyButtons();
+  document.addEventListener("astro:page-load", setupCopyButtons);
+</script>

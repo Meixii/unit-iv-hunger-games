@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>EvoSim Docs CMS</title>
+    <script>
+      try {
+        var theme = localStorage.getItem("cms-theme");
+        if (theme !== "light" && theme !== "dark") {
+          theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    </script>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/admin/admin.css" />
+  </head>
+  <body>
+    <div id="login-view" class="login-view" hidden>
+      <form id="login-form" class="login-card">
+        <div class="login-header">
+          <div class="bio-pulse"></div>
+          <h1>EvoSim Docs CMS</h1>
+        </div>
+        <p class="login-sub">Sign in to edit the EvoSim research documentation and parameters in content/*.json.</p>
+        <label for="login-password">Master Password</label>
+        <input id="login-password" type="password" autocomplete="current-password" required placeholder="Enter CMS password" />
+        <p id="login-error" class="error" hidden></p>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
+    </div>
+
+    <div id="app-view" class="app-view" hidden>
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <div class="brand">
+            <span class="bio-pulse"></span>
+            <span class="sidebar-title">EvoSim CMS</span>
+          </div>
+          <button id="cms-theme-toggle" class="btn btn-ghost btn-mini theme-btn" type="button" aria-label="Switch theme" title="Switch theme">
+            <svg class="icon-moon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+            </svg>
+          </button>
+        </div>
+        <div class="sidebar-filter">
+          <input id="nav-search" type="text" placeholder="Filter sections..." aria-label="Filter sections" />
+        </div>
+        <nav id="collection-nav" class="collection-nav" aria-label="Documentation Collections"></nav>
+        <div class="sidebar-foot">
+          <a id="view-site" href="/" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+            Live Site
+          </a>
+          <button id="logout-btn" class="btn btn-ghost" type="button">Sign out</button>
+        </div>
+      </aside>
+
+      <main class="editor">
+        <header class="editor-topbar">
+          <div class="editor-titles">
+            <h2 id="collection-title">Loading…</h2>
+            <p id="collection-desc"></p>
+          </div>
+          <div class="topbar-actions">
+            <span id="dirty-note" class="dirty-note" hidden>Unsaved changes</span>
+            <button id="rebuild-btn" class="btn btn-ghost" type="button">Rebuild site</button>
+            <button id="save-btn" class="btn btn-primary" type="button" disabled>Save changes</button>
+          </div>
+        </header>
+
+        <section id="error-panel" class="error-panel" hidden>
+          <div class="error-head">
+            <strong>Validation Attention Required</strong>
+            <button id="error-dismiss" class="btn btn-ghost btn-mini" type="button">Dismiss</button>
+          </div>
+          <div id="error-list" class="error-list"></div>
+        </section>
+
+        <section id="build-panel" class="build-panel" hidden>
+          <div class="build-head">
+            <strong id="build-title">Site Build Status</strong>
+            <button id="build-close" class="btn btn-ghost" type="button">Close</button>
+          </div>
+          <pre id="build-output" class="build-output"></pre>
+        </section>
+
+        <form id="editor-form" class="editor-form" autocomplete="off"></form>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+    <script src="/admin/app.js"></script>
+  </body>
+</html>

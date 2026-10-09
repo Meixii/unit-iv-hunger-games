@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { limitationsData } from "../lib/content";
+
+const headings = [
+  { id: "deliberate-limitations", text: "Deliberate Architectural Constraints" },
+];
+---
+
+<BaseLayout
+  title={limitationsData.title}
+  description={limitationsData.lede}
+  category="Overview"
+  headings={headings}
+>
+  <h2 id="deliberate-limitations">Deliberate Architectural Constraints</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Constraint</th>
+          <th>Domain Category</th>
+          <th>Technical Rationale & Bounds</th>
+        </tr>
+      </thead>
+      <tbody>
+        {limitationsData.items.map((item) => (
+          <tr>
+            <td><strong>{item.title}</strong></td>
+            <td><span class="category-tag">{item.category}</span></td>
+            <td>{item.detail}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</BaseLayout>
+
+<style>
+  .category-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-hazard);
+    background: var(--accent-hazard-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+</style>

@@ -1,0 +1,100 @@
+{
+  "title": "Mathematical Formulas & Computations Compendium",
+  "lede": "A unified mathematical index documenting every formula, algebraic equation, and statistical distribution in the EvoSim system.",
+  "categories": [
+    {
+      "name": "Animal Vitals & Attributes",
+      "items": [
+        {
+          "name": "Maximum Health (MaxHP)",
+          "formula": "MaxHP = BASE_HEALTH + (END * HEALTH_PER_ENDURANCE)",
+          "variables": [
+            { "symbol": "BASE_HEALTH", "meaning": "100 points baseline" },
+            { "symbol": "END", "meaning": "Endurance trait value (integer 4 to 12)" },
+            { "symbol": "HEALTH_PER_ENDURANCE", "meaning": "10 HP multiplier" }
+          ],
+          "notes": "Ensures high endurance species can sustain significant physical trauma before dying."
+        },
+        {
+          "name": "Maximum Energy (MaxEP)",
+          "formula": "MaxEP = BASE_ENERGY + (END * ENERGY_PER_ENDURANCE)",
+          "variables": [
+            { "symbol": "BASE_ENERGY", "meaning": "100 points baseline" },
+            { "symbol": "END", "meaning": "Endurance trait value" },
+            { "symbol": "ENERGY_PER_ENDURANCE", "meaning": "5 stamina multiplier" }
+          ],
+          "notes": "Determines total movement budget before exhaustion sets in."
+        }
+      ]
+    },
+    {
+      "name": "Locomotion & Action Costs",
+      "items": [
+        {
+          "name": "Movement Energy Cost (C_move)",
+          "formula": "C_move = max(1, (MOVEMENT_BASE_COST * T_mod) - (AGI * 0.5))",
+          "variables": [
+            { "symbol": "MOVEMENT_BASE_COST", "meaning": "10 energy" },
+            { "symbol": "T_mod", "meaning": "Terrain movement multiplier (Plains: 1.0, Forest: 1.5, Jungle: 2.0, Swamp: 1.8)" },
+            { "symbol": "AGI", "meaning": "Agility trait score" }
+          ],
+          "notes": "High agility substantially mitigates traversal penalties across dense terrain biomes."
+        }
+      ]
+    },
+    {
+      "name": "Combat & Evasion Resolution",
+      "items": [
+        {
+          "name": "Melee Combat Damage (D_combat)",
+          "formula": "D_combat = max(5, (STR * 2.0) - AGI_def)",
+          "variables": [
+            { "symbol": "STR", "meaning": "Attacker Strength score" },
+            { "symbol": "AGI_def", "meaning": "Defender Agility score" }
+          ],
+          "notes": "Clamped at minimum 5 damage so attacks always produce tangible impact."
+        },
+        {
+          "name": "Evasion Probability (P_evade)",
+          "formula": "P_evade = min(75%, AGI_def * 5.0%)",
+          "variables": [
+            { "symbol": "AGI_def", "meaning": "Defender Agility score" }
+          ],
+          "notes": "Capped at 75% to prevent complete invulnerability."
+        }
+      ]
+    },
+    {
+      "name": "Trait Difficulty Checks",
+      "items": [
+        {
+          "name": "Stochastic Check Function",
+          "formula": "Result = roll(d10) + Trait >= DC",
+          "variables": [
+            { "symbol": "roll(d10)", "meaning": "Uniform integer in {1, 2, ..., 10}" },
+            { "symbol": "Trait", "meaning": "Relevant biological attribute (STR, AGI, END, INT)" },
+            { "symbol": "DC", "meaning": "Difficulty Class threshold (typically 10 to 14)" }
+          ],
+          "notes": "Resolves situational challenges like rockslides, environmental hazards, and relic investigations."
+        }
+      ]
+    },
+    {
+      "name": "Generational Fitness Evaluation",
+      "items": [
+        {
+          "name": "Composite Fitness Equation",
+          "formula": "Fitness = (T_surv * 1.0) + ((R_gath / 40) * 5.0) + (Kills * 50.0) + (D_trav * 0.2) + (E_surv * 10.0)",
+          "variables": [
+            { "symbol": "T_surv", "meaning": "Total turns survived before death or epoch end" },
+            { "symbol": "R_gath", "meaning": "Nutritional and hydration points ingested" },
+            { "symbol": "Kills", "meaning": "Number of rival agents defeated in combat" },
+            { "symbol": "D_trav", "meaning": "Total distance traveled across unique tiles" },
+            { "symbol": "E_surv", "meaning": "Count of weekly environmental disasters endured" }
+          ],
+          "notes": "Higher fitness directly increases selection odds in the generational roulette wheel."
+        }
+      ]
+    }
+  ]
+}

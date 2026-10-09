@@ -1,0 +1,67 @@
+{
+  "title": "Events & Environmental Disasters",
+  "lede": "The environmental catastrophe engine that tests animal adaptability through simulation-wide phenomena and localized crises.",
+  "disasters": [
+    {
+      "name": "Wildfire",
+      "scope": "Spreading Sector Hazard",
+      "duration": "3 Turns",
+      "impact": "Consumes forest tiles and deals 20 points of direct fire damage to any organism trapped inside burning cells.",
+      "counterplay": "Animals must identify the fire sensory node and execute escape pathing toward open water or plains."
+    },
+    {
+      "name": "Harsh Winter",
+      "scope": "Global Simulation Arena",
+      "duration": "1 Week (7 Turns)",
+      "impact": "Freezes vegetation nodes and doubles metabolic depletion rate (Hunger x2 multiplier).",
+      "counterplay": "Favors organisms with high Endurance and stockpiled energy reserves."
+    },
+    {
+      "name": "Flash Flood",
+      "scope": "Lowland & River Corridors",
+      "duration": "2 Turns",
+      "impact": "Submerges plains adjacent to lake tiles, dealing 15 damage and sweeping unanchored agents 2 tiles eastward.",
+      "counterplay": "Requires retreat to elevated forested or mountain-adjacent tiles."
+    },
+    {
+      "name": "Toxic Chemical Cloud",
+      "scope": "Drifting 4x4 Grid Cloud",
+      "duration": "4 Turns",
+      "impact": "Forces an Endurance save check (roll(d10) + END >= 10) on every turn inside the cloud. Failure applies Poison debuff (5 HP damage/turn).",
+      "counterplay": "High endurance species or omnivores with Iron Stomach can endure; others must flee."
+    },
+    {
+      "name": "Earthquake",
+      "scope": "Global Shockwave",
+      "duration": "Instantaneous",
+      "impact": "Causes 25% injury probability across all agents, reducing movement speed by 50% for 3 turns.",
+      "counterplay": "Agility checks reduce injury probability to 10%."
+    }
+  ],
+  "randomEvents": [
+    {
+      "name": "Prolonged Drought",
+      "effect": "Reduces drinkable water tiles by 50% for one weekly cycle, sparking violent clashes around surviving springs."
+    },
+    {
+      "name": "Super Resource Bloom",
+      "effect": "Doubles flora respawn rate and boosts food nutritional value by 1.5x, enabling aggressive population growth."
+    },
+    {
+      "name": "Seasonal Herbivore Migration",
+      "effect": "Grants 15 bonus stamina points when agents sustain unidirectional movement across 5 consecutive turns."
+    }
+  ],
+  "triggeredEvents": [
+    {
+      "name": "Rockslide Encounter",
+      "trigger": "Traversing within 1 tile of mountain terrain during seismic disturbances.",
+      "checks": "Escape: roll(d10) + AGI >= 14 | Hide: roll(d10) + END >= 12. Failure inflicts 15 blunt damage."
+    },
+    {
+      "name": "Curious Object Discovery",
+      "trigger": "Entering a cell containing ancient terrain remnants.",
+      "checks": "Investigate: roll(d10) + INT >= 13. Success awards permanent training points; failure inflicts brief confusion."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { formulasData } from "../lib/content";
+
+const headings = formulasData.categories.map((cat) => ({
+  id: cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+  text: cat.name,
+}));
+---
+
+<BaseLayout
+  title={formulasData.title}
+  description={formulasData.lede}
+  category="Technical Details"
+  headings={headings}
+>
+  {formulasData.categories.map((cat) => {
+    const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    return (
+      <section id={slug} class="formula-section">
+        <h2>{cat.name}</h2>
+        <div class="grid-cards">
+          {cat.items.map((item) => (
+            <div class="card formula-item-card">
+              <h3 class="card-title">{item.name}</h3>
+              <div class="formula-display">{item.formula}</div>
+              {item.variables && item.variables.length > 0 && (
+                <div class="var-list">
+                  <span class="var-title">Variable Definitions:</span>
+                  {item.variables.map((v) => (
+                    <div class="var-item">
+                      <code>{v.symbol}</code> <span class="var-meaning">{v.meaning}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {item.notes && <p class="formula-notes">{item.notes}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  })}
+</BaseLayout>
+
+<style>
+  .formula-section {
+    margin-bottom: 2.5rem;
+  }
+  .formula-item-card {
+    margin-bottom: 0;
+  }
+  .var-list {
+    margin: 0.75rem 0;
+    font-size: 0.8125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .var-title {
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+  }
+  .var-item code {
+    font-size: 0.75rem;
+  }
+  .var-meaning {
+    color: var(--text-secondary);
+  }
+  .formula-notes {
+    font-size: 0.8125rem;
+    color: var(--accent-bio);
+    margin: 0.5rem 0 0 0 !important;
+  }
+</style>

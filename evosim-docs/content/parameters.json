@@ -1,0 +1,63 @@
+{
+  "title": "Simulation Parameters & Constants",
+  "lede": "Numerical configuration parameters that dictate balance, metabolic rates, combat mathematics, and environmental generation.",
+  "sections": [
+    {
+      "category": "World & Spatial Generation",
+      "parameters": [
+        { "name": "GRID_WIDTH", "value": 25, "unit": "tiles", "description": "Horizontal dimensions of the survival arena" },
+        { "name": "GRID_HEIGHT", "value": 25, "unit": "tiles", "description": "Vertical dimensions of the survival arena" },
+        { "name": "TERRAIN_PLAINS", "value": 0.60, "unit": "ratio", "description": "Proportion of open savanna / plains tiles" },
+        { "name": "TERRAIN_FOREST", "value": 0.25, "unit": "ratio", "description": "Proportion of forested cover tiles" },
+        { "name": "TERRAIN_WATER", "value": 0.10, "unit": "ratio", "description": "Proportion of lake and freshwater tiles" },
+        { "name": "TERRAIN_MOUNTAINS", "value": 0.05, "unit": "ratio", "description": "Proportion of impassable rocky mountain tiles" },
+        { "name": "FOOD_SPAWN_CHANCE", "value": 0.15, "unit": "probability", "description": "Chance per eligible tile to spawn edible vegetation" },
+        { "name": "WATER_SPAWN_CHANCE", "value": 0.05, "unit": "probability", "description": "Chance per eligible tile to spawn drinkable water" }
+      ]
+    },
+    {
+      "category": "Animal Baselines & Vitals",
+      "parameters": [
+        { "name": "BASE_HEALTH", "value": 100, "unit": "points", "description": "Foundational health pool for all species" },
+        { "name": "HEALTH_PER_ENDURANCE", "value": 10, "unit": "HP / END", "description": "Bonus health gained per point in Endurance" },
+        { "name": "BASE_ENERGY", "value": 100, "unit": "points", "description": "Foundational stamina pool for physical tasks" },
+        { "name": "ENERGY_PER_ENDURANCE", "value": 5, "unit": "Stamina / END", "description": "Bonus stamina gained per point in Endurance" },
+        { "name": "STANDARD_TRAIT_MIN", "value": 4, "unit": "points", "description": "Lower bound for non-primary traits at spawn" },
+        { "name": "STANDARD_TRAIT_MAX", "value": 6, "unit": "points", "description": "Upper bound for non-primary traits at spawn" },
+        { "name": "PRIMARY_TRAIT_MIN", "value": 7, "unit": "points", "description": "Lower bound for species-defining primary traits" },
+        { "name": "PRIMARY_TRAIT_MAX", "value": 9, "unit": "points", "description": "Upper bound for species-defining primary traits" }
+      ]
+    },
+    {
+      "category": "Metabolism & Status Depletion",
+      "parameters": [
+        { "name": "HUNGER_DEPLETION_RATE", "value": 5, "unit": "points / turn", "description": "Turn-by-turn caloric drain" },
+        { "name": "THIRST_DEPLETION_RATE", "value": 8, "unit": "points / turn", "description": "Turn-by-turn hydration drain" },
+        { "name": "PASSIVE_ENERGY_REGEN", "value": 10, "unit": "points / turn", "description": "Baseline stamina restoration when not sprinting" },
+        { "name": "STARVATION_DAMAGE", "value": 5, "unit": "HP / turn", "description": "Health penalty when hunger reaches 0" },
+        { "name": "DEHYDRATION_DAMAGE", "value": 10, "unit": "HP / turn", "description": "Health penalty when thirst reaches 0" }
+      ]
+    },
+    {
+      "category": "Action Costs & Gains",
+      "parameters": [
+        { "name": "MOVEMENT_BASE_COST", "value": 10, "unit": "energy", "description": "Standard stamina consumed to move one tile" },
+        { "name": "MOVEMENT_AGILITY_MULTIPLIER", "value": 0.5, "unit": "energy / AGI", "description": "Energy reduction per point of Agility" },
+        { "name": "REST_ENERGY_GAIN", "value": 40, "unit": "energy", "description": "Stamina restored by selecting the Rest action" },
+        { "name": "PLANT_FOOD_GAIN", "value": 40, "unit": "hunger points", "description": "Hunger restored by consuming vegetation" },
+        { "name": "PREY_FOOD_GAIN", "value": 50, "unit": "hunger points", "description": "Hunger restored by consuming prey meat" },
+        { "name": "DRINKING_THIRST_GAIN", "value": 40, "unit": "thirst points", "description": "Hydration restored by drinking from water tiles" }
+      ]
+    },
+    {
+      "category": "Combat & Passive Multipliers",
+      "parameters": [
+        { "name": "STRENGTH_DAMAGE_MULTIPLIER", "value": 2.0, "unit": "damage / STR", "description": "Attack power scaling per point of Strength" },
+        { "name": "AGILITY_EVASION_MULTIPLIER", "value": 5.0, "unit": "% / AGI", "description": "Evasion percentage per point of Agility" },
+        { "name": "AMBUSH_PREDATOR_MULTIPLIER", "value": 1.5, "unit": "ratio", "description": "Damage boost on stealth / cover strikes" },
+        { "name": "EFFICIENT_GRAZER_MULTIPLIER", "value": 1.25, "unit": "ratio", "description": "Nutritional bonus on plant foraging" },
+        { "name": "IRON_STOMACH_RESISTANCE", "value": 0.50, "unit": "probability", "description": "Chance to resist contaminated food toxins" }
+      ]
+    }
+  ]
+}

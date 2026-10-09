@@ -1,0 +1,95 @@
+---
+import { siteData, pageTitle, getPageNavigation } from "../lib/content";
+import DocHeader from "../components/DocHeader.astro";
+import DocSidebar from "../components/DocSidebar.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import SearchModal from "../components/SearchModal.astro";
+import "../styles/global.css";
+
+interface HeadingItem {
+  id: string;
+  text: string;
+}
+
+interface Props {
+  title?: string;
+  description?: string;
+  category?: string;
+  headings?: HeadingItem[];
+}
+
+const { title, description, category, headings = [] } = Astro.props;
+const currentPath = Astro.url.pathname;
+const fullTitle = pageTitle(title);
+const metaDescription = description || siteData.seo.description;
+const pagination = getPageNavigation(currentPath);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, siteData.seo.canonicalUrl).toString()} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- No-flash theme initialization -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem("evosim-theme");
+          var theme = saved;
+          if (theme !== "light" && theme !== "dark") {
+            theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main-doc-content" class="skip-link">Skip to main content</a>
+
+    <DocHeader />
+
+    <div class="layout-container">
+      <DocSidebar currentPath={currentPath} />
+
+      <main id="main-doc-content" class="main-content" tabindex="-1">
+        <article class="doc-article">
+          <header class="doc-header">
+            {category && <div class="doc-category-badge">{category}</div>}
+            <h1 class="doc-title">{title || siteData.identity.name}</h1>
+            {description && <p class="doc-lede">{description}</p>}
+          </header>
+
+          <div class="doc-body">
+            <slot />
+          </div>
+
+          <footer class="doc-pagination" aria-label="Document pagination">
+            {pagination.previous ? (
+              <a href={pagination.previous.href} class="pagination-link prev">
+                <span class="pagination-sub">Previous</span>
+                <span class="pagination-title">← {pagination.previous.title}</span>
+              </a>
+            ) : <div />}
+
+            {pagination.next ? (
+              <a href={pagination.next.href} class="pagination-link next">
+                <span class="pagination-sub">Next</span>
+                <span class="pagination-title">{pagination.next.title} →</span>
+              </a>
+            ) : <div />}
+          </footer>
+        </article>
+      </main>
+
+      <TableOfContents headings={headings} />
+    </div>
+
+    <SearchModal />
+  </body>
+</html>

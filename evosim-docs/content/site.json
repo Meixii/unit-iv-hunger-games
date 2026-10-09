@@ -1,0 +1,80 @@
+{
+  "identity": {
+    "name": "EvoSim Documentation",
+    "shortName": "EvoSim Docs",
+    "projectTitle": "Evolve or Perish: AI-Driven Animal Survival in a Neural Network Battle Royale",
+    "version": "1.0.0",
+    "date": "June 2026",
+    "institution": "University of Caloocan City",
+    "campus": "Congress Campus, Caloocan City",
+    "department": "College of Liberal Arts and Sciences",
+    "degree": "Bachelor of Science in Computer Science"
+  },
+  "seo": {
+    "canonicalUrl": "http://localhost:4321",
+    "titleTemplate": "%s | EvoSim Documentation",
+    "description": "Technical specification and research documentation for EvoSim: AI-Driven Animal Survival in a Neural Network Battle Royale."
+  },
+  "authors": [
+    { "name": "Ma. Catherine H. Bae", "role": "Author" },
+    { "name": "Emann Pabua", "role": "Author" },
+    { "name": "Irheil Mae S. Antang", "role": "Author" },
+    { "name": "Jhon Keneth Ryan B. Namias", "role": "Author" },
+    { "name": "Jin Harold A. Failana", "role": "Author" },
+    { "name": "Kevin A. Llanes", "role": "Author" },
+    { "name": "Ronan Renz T. Valencia", "role": "Author" }
+  ],
+  "navGroups": [
+    {
+      "title": "Overview",
+      "items": [
+        { "title": "Introduction", "href": "/", "description": "Project overview, monograph background, and author directory" },
+        { "title": "Project Objectives", "href": "/objectives", "description": "General and specific research goals" },
+        { "title": "Project Scope", "href": "/scope", "description": "Core boundaries and simulation components" },
+        { "title": "Project Limitations", "href": "/limitations", "description": "Technical constraints and deliberate design boundaries" }
+      ]
+    },
+    {
+      "title": "Core Concepts",
+      "items": [
+        { "title": "Terminologies", "href": "/terminologies", "description": "Comprehensive dictionary of simulation terms" },
+        { "title": "MLP & Evolutionary Algorithm", "href": "/mlp-evolution", "description": "Neural topology, sensory inputs, and genetic algorithm cycle" },
+        { "title": "Fitness Function", "href": "/fitness-function", "description": "Quantitative fitness formulas and generational milestones" }
+      ]
+    },
+    {
+      "title": "Game Mechanics",
+      "items": [
+        { "title": "Core Mechanics", "href": "/core-mechanics", "description": "Animal classifications, passives, and turn cycles" },
+        { "title": "Parameters & Variables", "href": "/parameters", "description": "Environmental and animal status thresholds" },
+        { "title": "Map & Objectives", "href": "/map-objectives", "description": "Grid map architecture, biomes, and spawn algorithms" },
+        { "title": "Events & Disasters", "href": "/events-disasters", "description": "Random events, weekly disasters, and triggered encounters" }
+      ]
+    },
+    {
+      "title": "Technical Details",
+      "items": [
+        { "title": "Quantitative Mechanics", "href": "/quantitative-mechanics", "description": "Action computations, damage formulas, and movement energy" },
+        { "title": "Code Implementation", "href": "/code-implementation", "description": "Python configuration constants and module architecture" },
+        { "title": "Formulas & Computations", "href": "/formulas", "description": "Unified catalog of mathematical models and equations" },
+        { "title": "Data Structure", "href": "/data-structure", "description": "Data models, entity schemas, and class relationships" }
+      ]
+    },
+    {
+      "title": "Development",
+      "items": [
+        { "title": "Task List", "href": "/development-tasks", "description": "Structured development task breakdown and tracking" },
+        { "title": "Implementation Phases", "href": "/phases", "description": "Five-phase development roadmap and milestones" },
+        { "title": "Simulation Dashboard", "href": "/dashboard", "description": "Real-time generational analytics and simulation status" }
+      ]
+    }
+  ],
+  "links": {
+    "github": "https://github.com/Meixii/unit-iv-hunger-games",
+    "docLink": "https://docs.google.com/document/d/1qrMfD3UcS5KcEVAf6wdcfgbe8y7ELfNu2IIqW7OwYTg/edit?tab=t.0#heading=h.10am4qwgcy2r"
+  },
+  "footer": {
+    "notice": "EvoSim Research Monograph. University of Caloocan City, 2026.",
+    "cmsLabel": "CMS Admin"
+  }
+}

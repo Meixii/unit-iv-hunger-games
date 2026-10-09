@@ -1,0 +1,78 @@
+{
+  "title": "Quantitative Mechanics & Computations",
+  "lede": "Mathematical models, balance equations, combat resolutions, and procedural checks governing physical reality in EvoSim.",
+  "statCalculations": [
+    {
+      "name": "Maximum Health",
+      "formula": "BASE_HEALTH + (animal.END * HEALTH_PER_ENDURANCE)",
+      "constants": "BASE_HEALTH = 100, HEALTH_PER_ENDURANCE = 10",
+      "example": "An animal with Endurance 8 has Max Health = 100 + (8 * 10) = 180 HP."
+    },
+    {
+      "name": "Maximum Energy",
+      "formula": "BASE_ENERGY + (animal.END * ENERGY_PER_ENDURANCE)",
+      "constants": "BASE_ENERGY = 100, ENERGY_PER_ENDURANCE = 5",
+      "example": "An animal with Endurance 6 has Max Energy = 100 + (6 * 5) = 130 Energy."
+    }
+  ],
+  "actionCombat": [
+    {
+      "name": "Movement Energy Cost",
+      "formula": "(MOVEMENT_BASE_COST * TERRAIN_MODIFIERS[terrain]) - (animal.AGI * MOVEMENT_AGILITY_MULTIPLIER)",
+      "constants": "MOVEMENT_BASE_COST = 10, MOVEMENT_AGILITY_MULTIPLIER = 0.5",
+      "example": "Moving into Forest (1.5x) with Agility 6 costs (10 * 1.5) - (6 * 0.5) = 15 - 3 = 12 Energy."
+    },
+    {
+      "name": "Melee Combat Damage",
+      "formula": "(attacker.STR * STRENGTH_DAMAGE_MULTIPLIER) - defender.AGI",
+      "constants": "STRENGTH_DAMAGE_MULTIPLIER = 2.0 (Minimum clamped at 5 damage)",
+      "example": "Attacker STR 8 strikes defender AGI 5: (8 * 2) - 5 = 11 Damage inflicted."
+    },
+    {
+      "name": "Evasion Probability",
+      "formula": "defender.AGI * AGILITY_EVASION_MULTIPLIER",
+      "constants": "AGILITY_EVASION_MULTIPLIER = 5.0 (Result in %)",
+      "example": "Defender with Agility 7 has a 7 * 5% = 35% probability of totally evading an incoming strike."
+    },
+    {
+      "name": "Time Complexity",
+      "formula": "O(1) per animal action",
+      "constants": "Bounded spatial lookup on fixed 25x25 matrix",
+      "example": "Single-step inference and state transition resolves in constant time."
+    }
+  ],
+  "passives": [
+    {
+      "name": "Ambush Predator Damage",
+      "formula": "Melee Combat Damage * AMBUSH_PREDATOR_MULTIPLIER",
+      "constants": "AMBUSH_PREDATOR_MULTIPLIER = 1.5 (Active from Cover / Stealth tiles)",
+      "example": "A base 12 damage strike becomes 12 * 1.5 = 18 lethal damage when ambushing."
+    },
+    {
+      "name": "Efficient Grazer Sustenance",
+      "formula": "PLANT_FOOD_GAIN * EFFICIENT_GRAZER_MULTIPLIER",
+      "constants": "EFFICIENT_GRAZER_MULTIPLIER = 1.25",
+      "example": "Foraging vegetation restores 40 * 1.25 = 50 Hunger points instead of 40."
+    }
+  ],
+  "eventChecks": [
+    {
+      "name": "General Trait Difficulty Check",
+      "formula": "roll(d10) + animal.Trait >= DC",
+      "constants": "d10 generates uniform random integer in [1, 10]",
+      "example": "Rolling 6 with Trait 8 equals 14, succeeding against DC 12."
+    },
+    {
+      "name": "Rockslide Escape Check",
+      "formula": "roll(d10) + animal.AGI >= 14",
+      "constants": "High difficulty dexterity test",
+      "example": "Failure inflicts 15 blunt damage."
+    },
+    {
+      "name": "Contamination Save Check",
+      "formula": "roll(d10) + animal.END >= 10",
+      "constants": "Physiological toxin resistance",
+      "example": "Failure applies 5 HP poison tick per turn for 3 turns."
+    }
+  ]
+}

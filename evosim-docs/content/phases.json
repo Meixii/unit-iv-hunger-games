@@ -1,0 +1,65 @@
+{
+  "title": "Implementation Phases Roadmap",
+  "lede": "Five sequential development phases structuring the evolutionary simulation from foundational grid physics to neuroevolutionary analytics.",
+  "phases": [
+    {
+      "number": 1,
+      "name": "Environment & Movement Mechanics",
+      "status": "completed",
+      "period": "Weeks 1 - 3",
+      "goals": [
+        "Construct 25x25 discrete Cartesian grid world model.",
+        "Implement procedural biome distributions: Plains (60%), Forest (25%), Water (10%), Mountains (5%).",
+        "Build neighbor-aware entity spawning avoiding turn-0 agent collisions.",
+        "Verify terrain movement cost penalties and directional pathing."
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Biological Needs & Species Archetypes",
+      "status": "completed",
+      "period": "Weeks 4 - 6",
+      "goals": [
+        "Implement status variables: Health, Hunger, Thirst, Energy, Instinct.",
+        "Model metabolic depletion: Hunger (-5/turn), Thirst (-8/turn), and Starvation damage.",
+        "Define Herbivore, Carnivore, and Omnivore species specializations.",
+        "Equip category passives: Ambush Predator (1.5x damage) and Efficient Grazer (1.25x plant gain)."
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Event System & Environmental Disasters",
+      "status": "completed",
+      "period": "Weeks 7 - 9",
+      "goals": [
+        "Deploy scheduled weekly natural disaster system (Wildfire, Blizzard, Flash Flood).",
+        "Implement stochastic difficulty check mechanics using d10 dice roll formulas.",
+        "Establish localized situational triggers (Rockslides, Contaminated Water, Ancient Relics).",
+        "Balance disaster survival odds across varied animal traits."
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Neuroevolution & Evolutionary Algorithm",
+      "status": "in_progress",
+      "period": "Weeks 10 - 13",
+      "goals": [
+        "Construct 41-16-12-8 Multi-Layer Perceptron neural network architecture.",
+        "Normalize 3x3 sensory grid perception inputs and internal vitals into neural vectors.",
+        "Implement multivariable Fitness Function rewarding survival time, food, kills, and exploration.",
+        "Execute generational breeding: Elitism (top 10%), crossover, and Gaussian weight mutation."
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Visualization, GUI & Scientific Analytics",
+      "status": "in_progress",
+      "period": "Weeks 14 - 16",
+      "goals": [
+        "Build real-time Pygame graphical interface displaying grid tiles, entities, and vitals.",
+        "Implement generational telemetry logging tracking average fitness, lifespan, and kill rates.",
+        "Deliver interactive documentation monograph and simulation control dashboard."
+      ]
+    }
+  ]
+}

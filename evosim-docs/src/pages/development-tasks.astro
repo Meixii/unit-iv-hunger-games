@@ -1,0 +1,183 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { tasksData } from "../lib/content";
+
+const completedCount = tasksData.tasks.filter((t) => t.status === "completed").length;
+const inProgressCount = tasksData.tasks.filter((t) => t.status === "in_progress").length;
+const plannedCount = tasksData.tasks.filter((t) => t.status === "planned").length;
+
+const headings = [
+  { id: "task-list", text: "Engineering Deliverables" },
+];
+---
+
+<BaseLayout
+  title={tasksData.title}
+  description={tasksData.lede}
+  category="Development"
+  headings={headings}
+>
+  <div class="task-filter-bar card">
+    <div class="filter-buttons" id="task-filter-buttons">
+      <button class="t-filter-btn active" data-status="all" type="button">
+        All Tasks ({tasksData.tasks.length})
+      </button>
+      <button class="t-filter-btn" data-status="completed" type="button">
+        Completed ({completedCount})
+      </button>
+      <button class="t-filter-btn" data-status="in_progress" type="button">
+        In Progress ({inProgressCount})
+      </button>
+      <button class="t-filter-btn" data-status="planned" type="button">
+        Planned ({plannedCount})
+      </button>
+    </div>
+  </div>
+
+  <h2 id="task-list">Engineering Deliverables</h2>
+  <div class="tasks-container" id="tasks-container">
+    {tasksData.tasks.map((task) => (
+      <div class="card task-card" data-status={task.status}>
+        <div class="task-top">
+          <div class="task-meta-left">
+            <span class="task-id">{task.id}</span>
+            <span class={`status-badge status-${task.status}`}>{task.status.replace("_", " ")}</span>
+            <span class="priority-badge">Priority: {task.priority}</span>
+          </div>
+          <span class="task-phase">{task.phase}</span>
+        </div>
+        <h3 class="task-title">{task.title}</h3>
+        <p class="task-desc">{task.description}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .task-filter-bar {
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .t-filter-btn {
+    background: var(--bg-surface-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    min-height: 38px;
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+  .t-filter-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--border-highlight);
+  }
+  .t-filter-btn.active {
+    background: var(--accent-bio-subtle);
+    border-color: var(--accent-bio-border);
+    color: var(--accent-bio);
+    font-weight: 600;
+  }
+
+  .tasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .task-card {
+    margin-bottom: 0;
+  }
+  .task-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .task-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .task-id {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .status-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-xs);
+  }
+  .status-completed {
+    color: var(--accent-bio);
+    background: var(--accent-bio-subtle);
+  }
+  .status-in_progress {
+    color: var(--accent-neural);
+    background: var(--accent-neural-subtle);
+  }
+  .status-planned {
+    color: var(--text-muted);
+    background: var(--bg-surface-raised);
+  }
+  .priority-badge {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+  }
+  .task-phase {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .task-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.35rem 0;
+  }
+  .task-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+</style>
+
+<script>
+  function setupTaskFilter() {
+    const buttons = document.querySelectorAll(".t-filter-btn");
+    const cards = document.querySelectorAll(".task-card");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        buttons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const status = (btn as HTMLElement).dataset.status;
+
+        cards.forEach((card) => {
+          const c = card as HTMLElement;
+          if (status === "all" || c.dataset.status === status) {
+            c.style.display = "";
+          } else {
+            c.style.display = "none";
+          }
+        });
+      });
+    });
+  }
+
+  setupTaskFilter();
+  document.addEventListener("astro:page-load", setupTaskFilter);
+</script>

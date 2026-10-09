@@ -1,0 +1,41 @@
+{
+  "title": "Code Implementation & Constants Reference",
+  "lede": "Centralized Python constants, modular code architecture, and software design guidelines for the EvoSim simulation engine.",
+  "pythonConstants": "# =====================================================================\n# EvoSim Simulation Constants (config.py)\n# =====================================================================\n\n# World Generation\nGRID_WIDTH = 25\nGRID_HEIGHT = 25\nTERRAIN_DISTRIBUTION = {\n    'Plains': 0.60,\n    'Forest': 0.25,\n    'Water': 0.10,\n    'Mountains': 0.05\n}\nFOOD_SPAWN_CHANCE = 0.15\nWATER_SPAWN_CHANCE = 0.05\nTERRAIN_MOVEMENT_MODIFIERS = {\n    'Plains': 1.0,\n    'Forest': 1.5,\n    'Jungle': 2.0,\n    'Swamp': 1.8\n}\nSWAMP_SICKNESS_CHANCE = 0.10\n\n# Animal Parameters\nSTANDARD_TRAIT_MIN = 4\nSTANDARD_TRAIT_MAX = 6\nPRIMARY_TRAIT_MIN = 7\nPRIMARY_TRAIT_MAX = 9\nBASE_HEALTH = 100\nHEALTH_PER_ENDURANCE = 10\nBASE_ENERGY = 100\nENERGY_PER_ENDURANCE = 5\nINITIAL_TRAINING_POINTS = 5\n\n# Status Dynamics\nHUNGER_DEPLETION_RATE = 5\nTHIRST_DEPLETION_RATE = 8\nPASSIVE_ENERGY_REGEN = 10\nSTARVATION_DAMAGE = 5\nDEHYDRATION_DAMAGE = 10\n\n# Action Costs & Gains\nMOVEMENT_BASE_COST = 10\nMOVEMENT_AGILITY_MULTIPLIER = 0.5\nREST_ENERGY_GAIN = 40\nPLANT_FOOD_GAIN = 40\nPREY_FOOD_GAIN = 50\nDRINKING_THIRST_GAIN = 40\n\n# Combat & Evasion\nSTRENGTH_DAMAGE_MULTIPLIER = 2.0\nAGILITY_EVASION_MULTIPLIER = 5.0\n\n# Passives & Status Effects\nAMBUSH_PREDATOR_MULTIPLIER = 1.5\nEFFICIENT_GRAZER_MULTIPLIER = 1.25\nIRON_STOMACH_RESISTANCE_CHANCE = 0.50\nDEFAULT_BUFF_DURATION = 3\nDEFAULT_DEBUFF_DURATION = 5\nPOISON_DAMAGE_PER_TURN = 5\n\n# Environmental Disasters & Events\nRESOURCE_SCARCITY_GAIN = 10\nROCKSLIDE_ESCAPE_DC = 14\nROCKSLIDE_HIDE_DC = 12\nROCKSLIDE_DAMAGE = 15\nCURIOUS_OBJECT_DC = 13\nMIGRATION_ENERGY_BONUS = 15\nRESOURCE_BLOOM_MULTIPLIER = 1.5\nDROUGHT_WATER_REDUCTION = 0.50\nWILDFIRE_DAMAGE = 20\nCONTAMINATION_SAVE_DC = 10\nFLOOD_DAMAGE = 15\nEARTHQUAKE_INJURY_CHANCE = 0.25\nWINTER_DEPLETION_MULTIPLIER = 2.0\n\n# Fitness Score Weight Vectors\nFITNESS_WEIGHTS = {\n    'Time': 1.0,\n    'Resource': 5.0,\n    'Kill': 50.0,\n    'Distance': 0.2,\n    'Event': 10.0\n}",
+  "modules": [
+    {
+      "name": "simulation.py",
+      "role": "Master simulation loop, turn orchestrator, weekly event trigger, and termination evaluator."
+    },
+    {
+      "name": "world.py",
+      "role": "Manages 25x25 2D Tile matrix, terrain generation, resource spawning, and spatial neighbor queries."
+    },
+    {
+      "name": "animal.py",
+      "role": "Encapsulates status vitals (Health, Hunger, Thirst, Energy, Instinct), traits, inventory, and action execution."
+    },
+    {
+      "name": "neural_net.py",
+      "role": "Implements the 41-16-12-8 Multi-Layer Perceptron forward propagation, weight flattening, and mutation routines."
+    },
+    {
+      "name": "genetic_algorithm.py",
+      "role": "Handles population fitness scoring, elitism extraction, tournament selection, crossover recombination, and generational replacement."
+    },
+    {
+      "name": "events.py",
+      "role": "Generates localized hazards, scheduled weekly disasters (Wildfire, Blizzard, Flood), and manages dice check resolution."
+    },
+    {
+      "name": "gui.py",
+      "role": "Pygame/Tkinter visualization rendering the live 25x25 grid, animal positions, health bars, and generational telemetry."
+    }
+  ],
+  "guidelines": [
+    "All magic numbers must strictly reference constants from config.py to maintain mathematical consistency.",
+    "Decisions made by the MLP must be completely deterministic given identical weight matrices and sensory inputs.",
+    "State modifications to animal vitals must be bounded using clamping functions (e.g. min 0, max MaxHealth).",
+    "Combat checks resolve in constant time O(1) with zero circular dependency between rival agents."
+  ]
+}

@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+import { codeImplementationData } from "../lib/content";
+
+const headings = [
+  { id: "python-constants", text: "Python Constants Configuration (config.py)" },
+  { id: "module-architecture", text: "Modular Software Architecture" },
+  { id: "engineering-guidelines", text: "Implementation Guidelines" },
+];
+---
+
+<BaseLayout
+  title={codeImplementationData.title}
+  description={codeImplementationData.lede}
+  category="Technical Details"
+  headings={headings}
+>
+  <h2 id="python-constants">Python Constants Configuration (config.py)</h2>
+  <p>
+    All magic numbers, probabilities, metabolic rates, and mathematical multipliers are consolidated into a centralized configuration module:
+  </p>
+  <CodeBlock code={codeImplementationData.pythonConstants} language="python" filename="config.py" />
+
+  <h2 id="module-architecture">Modular Software Architecture</h2>
+  <div class="grid-cards">
+    {codeImplementationData.modules.map((m) => (
+      <div class="card module-card">
+        <h3 class="module-title"><code>{m.name}</code></h3>
+        <p class="module-role">{m.role}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="engineering-guidelines">Implementation Guidelines</h2>
+  <div class="card">
+    <ul class="guidelines-list">
+      {codeImplementationData.guidelines.map((g) => (
+        <li>• {g}</li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .module-card {
+    margin-bottom: 0;
+    border-left: 3px solid var(--accent-neural);
+  }
+  .module-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .module-role {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0 !important;
+  }
+  .guidelines-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+  }
+</style>

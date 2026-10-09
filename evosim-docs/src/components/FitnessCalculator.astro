@@ -1,0 +1,249 @@
+---
+// Interactive Fitness Score Calculator
+---
+
+<div class="calculator-card card">
+  <div class="calc-header">
+    <div>
+      <h3 class="calc-title">Interactive Fitness Function Sandbox</h3>
+      <p class="calc-desc">Adjust survival parameters to evaluate real-time fitness scores computed by the evolutionary algorithm.</p>
+    </div>
+    <div class="score-display">
+      <div class="score-sub">Total Fitness Score</div>
+      <div id="calc-total-score" class="score-value">0.0</div>
+    </div>
+  </div>
+
+  <div class="sliders-grid">
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <label for="calc-time">Time Survived (Turns)</label>
+        <span id="val-time" class="slider-value">45</span>
+      </div>
+      <input id="calc-time" type="range" min="0" max="200" value="45" />
+      <span class="weight-tag">Weight: W_Time = 1.0</span>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <label for="calc-resources">Resources Gathered (Pts)</label>
+        <span id="val-resources" class="slider-value">120</span>
+      </div>
+      <input id="calc-resources" type="range" min="0" max="600" step="10" value="120" />
+      <span class="weight-tag">Weight: (Res / 40) × 5.0</span>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <label for="calc-kills">Predatory Kills (Defeated Rivals)</label>
+        <span id="val-kills" class="slider-value">2</span>
+      </div>
+      <input id="calc-kills" type="range" min="0" max="10" value="2" />
+      <span class="weight-tag">Weight: W_Kill = 50.0</span>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <label for="calc-distance">Distance Traveled (Tiles)</label>
+        <span id="val-distance" class="slider-value">60</span>
+      </div>
+      <input id="calc-distance" type="range" min="0" max="300" step="5" value="60" />
+      <span class="weight-tag">Weight: W_Distance = 0.2</span>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label-row">
+        <label for="calc-events">Disasters / Events Survived</label>
+        <span id="val-events" class="slider-value">3</span>
+      </div>
+      <input id="calc-events" type="range" min="0" max="15" value="3" />
+      <span class="weight-tag">Weight: W_Event = 10.0</span>
+    </div>
+  </div>
+
+  <div class="breakdown-strip">
+    <div class="breakdown-item"><span class="breakdown-label">Time:</span> <span id="sub-time">45.0</span></div>
+    <div class="breakdown-item"><span class="breakdown-label">Resources:</span> <span id="sub-res">15.0</span></div>
+    <div class="breakdown-item"><span class="breakdown-label">Kills:</span> <span id="sub-kills">100.0</span></div>
+    <div class="breakdown-item"><span class="breakdown-label">Distance:</span> <span id="sub-dist">12.0</span></div>
+    <div class="breakdown-item"><span class="breakdown-label">Events:</span> <span id="sub-events">30.0</span></div>
+  </div>
+</div>
+
+<style>
+  .calculator-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .calc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .calc-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .calc-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+  }
+  .score-display {
+    background: var(--bg-surface-raised);
+    border: 1px solid var(--accent-bio-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1.25rem;
+    text-align: right;
+    min-width: 140px;
+  }
+  .score-sub {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  .score-value {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-bio);
+    margin-top: 0.15rem;
+  }
+
+  .sliders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .slider-group {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .slider-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .slider-label-row label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .slider-value {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--accent-neural);
+  }
+  .slider-group input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-bio);
+    cursor: pointer;
+    min-height: 24px;
+  }
+  .weight-tag {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .breakdown-strip {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    background: var(--bg-surface-raised);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    font-size: 0.8125rem;
+  }
+  .breakdown-label {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .breakdown-item span:last-child {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+</style>
+
+<script>
+  function setupCalculator() {
+    const timeInput = document.getElementById("calc-time") as HTMLInputElement | null;
+    const resInput = document.getElementById("calc-resources") as HTMLInputElement | null;
+    const killsInput = document.getElementById("calc-kills") as HTMLInputElement | null;
+    const distInput = document.getElementById("calc-distance") as HTMLInputElement | null;
+    const eventsInput = document.getElementById("calc-events") as HTMLInputElement | null;
+
+    if (!timeInput || !resInput || !killsInput || !distInput || !eventsInput) return;
+
+    function recalculate() {
+      const time = Number(timeInput?.value || 0);
+      const res = Number(resInput?.value || 0);
+      const kills = Number(killsInput?.value || 0);
+      const dist = Number(distInput?.value || 0);
+      const events = Number(eventsInput?.value || 0);
+
+      const subTime = time * 1.0;
+      const subRes = (res / 40.0) * 5.0;
+      const subKills = kills * 50.0;
+      const subDist = dist * 0.2;
+      const subEvents = events * 10.0;
+
+      const total = subTime + subRes + subKills + subDist + subEvents;
+
+      const totalEl = document.getElementById("calc-total-score");
+      if (totalEl) totalEl.textContent = total.toFixed(1);
+
+      const valTime = document.getElementById("val-time");
+      if (valTime) valTime.textContent = String(time);
+      const valRes = document.getElementById("val-resources");
+      if (valRes) valRes.textContent = String(res);
+      const valKills = document.getElementById("val-kills");
+      if (valKills) valKills.textContent = String(kills);
+      const valDist = document.getElementById("val-distance");
+      if (valDist) valDist.textContent = String(dist);
+      const valEvents = document.getElementById("val-events");
+      if (valEvents) valEvents.textContent = String(events);
+
+      const sTime = document.getElementById("sub-time");
+      if (sTime) sTime.textContent = subTime.toFixed(1);
+      const sRes = document.getElementById("sub-res");
+      if (sRes) sRes.textContent = subRes.toFixed(1);
+      const sKills = document.getElementById("sub-kills");
+      if (sKills) sKills.textContent = subKills.toFixed(1);
+      const sDist = document.getElementById("sub-dist");
+      if (sDist) sDist.textContent = subDist.toFixed(1);
+      const sEvents = document.getElementById("sub-events");
+      if (sEvents) sEvents.textContent = subEvents.toFixed(1);
+    }
+
+    [timeInput, resInput, killsInput, distInput, eventsInput].forEach((input) => {
+      input.addEventListener("input", recalculate);
+    });
+
+    recalculate();
+  }
+
+  setupCalculator();
+  document.addEventListener("astro:page-load", setupCalculator);
+</script>

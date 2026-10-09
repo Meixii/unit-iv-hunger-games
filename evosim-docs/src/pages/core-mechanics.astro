@@ -1,0 +1,169 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { coreMechanicsData } from "../lib/content";
+
+const headings = [
+  { id: "archetypes", text: "Species Archetypes & Passives" },
+  { id: "traits", text: "Biological Traits & Attributes" },
+  { id: "status-vitals", text: "Dynamic Status Vitals" },
+  { id: "turn-cycle", text: "Turn Resolution Loop" },
+];
+---
+
+<BaseLayout
+  title={coreMechanicsData.title}
+  description={coreMechanicsData.lede}
+  category="Game Mechanics"
+  headings={headings}
+>
+  <h2 id="archetypes">Species Archetypes & Passives</h2>
+  <div class="grid-cards">
+    {coreMechanicsData.categories.map((cat) => (
+      <div class="card species-card">
+        <div class="species-header">
+          <h3 class="card-title">{cat.name}</h3>
+          <span class="diet-tag">{cat.diet}</span>
+        </div>
+        <div class="species-meta">
+          <div><span class="meta-label">Primary Trait:</span> {cat.primaryTrait}</div>
+          <div class="passive-box">
+            <span class="passive-label">Passive:</span>
+            <span class="passive-text">{cat.passive}</span>
+          </div>
+        </div>
+        <p class="species-desc">{cat.description}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="traits">Biological Traits & Attributes</h2>
+  <div class="traits-grid">
+    {coreMechanicsData.traits.map((trait) => (
+      <div class="card trait-card">
+        <h3 class="trait-name">{trait.name}</h3>
+        <p class="trait-role">{trait.role}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="status-vitals">Dynamic Status Vitals</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Vital Variable</th>
+          <th>Range</th>
+          <th>Depletion & Hazard Mechanics</th>
+        </tr>
+      </thead>
+      <tbody>
+        {coreMechanicsData.statusVariables.map((v) => (
+          <tr>
+            <td><strong>{v.name}</strong></td>
+            <td><code>{v.range}</code></td>
+            <td>{v.decay}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="turn-cycle">Turn Resolution Loop</h2>
+  <div class="turn-steps">
+    {coreMechanicsData.turnCycle.map((step) => (
+      <div class="card turn-card">
+        <h3 class="turn-phase-title">{step.phase}</h3>
+        <p class="turn-phase-detail">{step.detail}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .species-card {
+    margin-bottom: 0;
+  }
+  .species-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .diet-tag {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--accent-bio);
+    background: var(--accent-bio-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+  .species-meta {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+  .meta-label {
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .passive-box {
+    margin-top: 0.35rem;
+    padding: 0.5rem;
+    background: var(--bg-surface-raised);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--accent-bio);
+  }
+  .passive-label {
+    font-weight: 700;
+    color: var(--accent-bio);
+    margin-right: 0.35rem;
+  }
+  .species-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+
+  .traits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .trait-card {
+    margin-bottom: 0;
+    border-left: 3px solid var(--accent-neural);
+  }
+  .trait-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+  }
+  .trait-role {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+
+  .turn-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .turn-card {
+    margin-bottom: 0;
+  }
+  .turn-phase-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+  .turn-phase-detail {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+</style>

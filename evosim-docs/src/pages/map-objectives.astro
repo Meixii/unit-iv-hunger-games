@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { mapObjectivesData } from "../lib/content";
+
+const headings = [
+  { id: "grid-specs", text: "Spatial Arena Dimensions" },
+  { id: "biomes", text: "Terrain Biomes & Movement Modifiers" },
+  { id: "spawning", text: "Neighbor-Aware Spawning Rules" },
+  { id: "objectives", text: "Map Survival Objectives" },
+];
+---
+
+<BaseLayout
+  title={mapObjectivesData.title}
+  description={mapObjectivesData.lede}
+  category="Game Mechanics"
+  headings={headings}
+>
+  <h2 id="grid-specs">Spatial Arena Dimensions</h2>
+  <div class="grid-cards">
+    <div class="card">
+      <h3 class="card-title">Grid Dimensions</h3>
+      <p class="grid-val">{mapObjectivesData.grid.dimensions}</p>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Coordinate System</h3>
+      <p class="grid-val">{mapObjectivesData.grid.coordinateSystem}</p>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Neighborhood Model</h3>
+      <p class="grid-val">{mapObjectivesData.grid.neighborhoodModel}</p>
+    </div>
+  </div>
+
+  <h2 id="biomes">Terrain Biomes & Movement Modifiers</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Terrain Type</th>
+          <th>Movement Cost Multiplier</th>
+          <th>Cover Level</th>
+          <th>Ecological Role & Properties</th>
+        </tr>
+      </thead>
+      <tbody>
+        {mapObjectivesData.terrains.map((t) => (
+          <tr>
+            <td><strong>{t.name}</strong></td>
+            <td><code>{t.moveCost}</code></td>
+            <td>{t.cover}</td>
+            <td>{t.description}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="spawning">Neighbor-Aware Spawning Rules</h2>
+  <div class="card">
+    <h3 class="card-title">{mapObjectivesData.spawning.algorithm}</h3>
+    <ul class="principles-list">
+      {mapObjectivesData.spawning.principles.map((p) => (
+        <li>• {p}</li>
+      ))}
+    </ul>
+  </div>
+
+  <h2 id="objectives">Map Survival Objectives</h2>
+  <div class="grid-cards">
+    {mapObjectivesData.mapObjectives.map((obj) => (
+      <div class="card obj-card">
+        <h3 class="card-title">{obj.name}</h3>
+        <p class="obj-desc">{obj.target}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .grid-val {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+  .principles-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+  }
+  .obj-card {
+    margin-bottom: 0;
+  }
+  .obj-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+</style>

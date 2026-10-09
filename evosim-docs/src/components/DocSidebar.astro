@@ -1,0 +1,36 @@
+---
+import { siteData } from "../lib/content";
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+const normalizedPath = currentPath === "" ? "/" : currentPath.replace(/\/$/, "") || "/";
+---
+
+<aside class="sidebar-container" aria-label="Documentation Sidebar">
+  <nav class="sidebar-nav">
+    {siteData.navGroups.map((group) => (
+      <div class="nav-group">
+        <div class="nav-group-title">{group.title}</div>
+        <ul class="nav-links">
+          {group.items.map((item) => {
+            const isActive = item.href === normalizedPath;
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  class={`nav-link ${isActive ? "active" : ""}`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  <span>{item.title}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </nav>
+</aside>

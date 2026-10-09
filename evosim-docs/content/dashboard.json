@@ -1,0 +1,23 @@
+{
+  "title": "Simulation Telemetry & Metrics",
+  "lede": "Real-time summary statistics, benchmark telemetry, and generational evolutionary performance.",
+  "metrics": [
+    { "label": "Arena Grid Size", "value": "25 x 25", "subtext": "625 total discrete tiles" },
+    { "label": "Sensory Input Nodes", "value": "41 Nodes", "subtext": "5 internal + 36 Moore perception" },
+    { "label": "Motor Action Outputs", "value": "8 Actions", "subtext": "Move, Eat, Drink, Rest, Attack" },
+    { "label": "Generational Population", "value": "50 Animals", "subtext": "Fixed starting cohort" },
+    { "label": "Elitism Retention", "value": "10%", "subtext": "Top 5 fittest survive intact" },
+    { "label": "Mutation Rate", "value": "5.0%", "subtext": "Per-synapse Gaussian perturbation" }
+  ],
+  "speciesRatios": [
+    { "species": "Herbivore", "share": "50%", "role": "Primary grazers, high agility prey" },
+    { "species": "Omnivore", "share": "30%", "role": "Opportunistic foragers, resilient adapters" },
+    { "species": "Carnivore", "share": "20%", "role": "Apex predators, high strength hunters" }
+  ],
+  "benchmarkMilestones": [
+    { "generation": "Gen 1", "avgLifespan": "12.4 turns", "peakFitness": "38.2", "dominantBehavior": "Random wandering, frequent starvation" },
+    { "generation": "Gen 10", "avgLifespan": "28.7 turns", "peakFitness": "86.5", "dominantBehavior": "Directed navigation toward visible food tiles" },
+    { "generation": "Gen 25", "avgLifespan": "51.2 turns", "peakFitness": "164.0", "dominantBehavior": "Metabolic pacing, resting when energy is low" },
+    { "generation": "Gen 50", "avgLifespan": "89.6 turns", "peakFitness": "312.4", "dominantBehavior": "Active threat evasion, perimeter grazing, pack hunting" }
+  ]
+}

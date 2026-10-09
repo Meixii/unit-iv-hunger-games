@@ -1,0 +1,26 @@
+# EvoSim Documentation on Home Server: One container = Static Site + CMS.
+# The CMS serves the Astro built site (SERVE_DIST=true) on port 4000 inside the
+# container, published on host port 8092.
+services:
+  evosim-docs:
+    build: .
+    image: evosim-docs:latest
+    container_name: evosim-docs
+    restart: unless-stopped
+    ports:
+      - "8092:4000"
+    environment:
+      SERVE_DIST: "true"
+      PORT: "4000"
+      NODE_ENV: production
+    volumes:
+      - ./content:/app/content
+      - ./public/uploads:/app/public/uploads
+      - ./cms/.env:/app/cms/.env:ro
+      - ../.git:/app/.git
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:4000/admin >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

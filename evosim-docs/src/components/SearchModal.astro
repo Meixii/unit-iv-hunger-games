@@ -1,0 +1,120 @@
+---
+import { buildSearchIndex } from "../lib/content";
+
+const searchEntries = buildSearchIndex();
+---
+
+<dialog id="search-modal" class="search-dialog" aria-label="Search Documentation">
+  <div class="search-input-wrap">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input
+      id="search-input"
+      type="search"
+      placeholder="Search terms, formulas, mechanics, or parameters..."
+      autocomplete="off"
+    />
+    <button id="search-close" class="btn btn-ghost btn-mini" type="button">Esc</button>
+  </div>
+  <div id="search-results-list" class="search-results">
+    <!-- Populated by client script -->
+  </div>
+</dialog>
+
+<!-- Pass search items via json script -->
+<script id="search-data" type="application/json" set:html={JSON.stringify(searchEntries)} />
+
+<script>
+  function setupSearchModal() {
+    const dialog = document.getElementById("search-modal") as HTMLDialogElement | null;
+    const input = document.getElementById("search-input") as HTMLInputElement | null;
+    const closeBtn = document.getElementById("search-close");
+    const resultsContainer = document.getElementById("search-results-list");
+    const trigger = document.getElementById("search-modal-trigger");
+    const dataScript = document.getElementById("search-data");
+
+    if (!dialog || !input || !resultsContainer || !dataScript) return;
+
+    let searchData: any[] = [];
+    try {
+      searchData = JSON.parse(dataScript.textContent || "[]");
+    } catch (e) {}
+
+    function openModal() {
+      dialog?.showModal();
+      input?.focus();
+      renderResults("");
+    }
+
+    function closeModal() {
+      dialog?.close();
+    }
+
+    trigger?.addEventListener("click", openModal);
+    closeBtn?.addEventListener("click", closeModal);
+
+    dialog.addEventListener("click", (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const inDialog =
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width;
+      if (!inDialog) closeModal();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (dialog.open) closeModal();
+        else openModal();
+      }
+    });
+
+    function renderResults(query: string) {
+      if (!resultsContainer) return;
+      const q = query.trim().toLowerCase();
+      resultsContainer.innerHTML = "";
+
+      const filtered = q
+        ? searchData.filter(
+            (item) =>
+              item.title.toLowerCase().includes(q) ||
+              item.snippet.toLowerCase().includes(q) ||
+              item.category.toLowerCase().includes(q)
+          ).slice(0, 15)
+        : searchData.slice(0, 8);
+
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = `
+          <div style="padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+            No documentation results found matching "${query}".
+          </div>
+        `;
+        return;
+      }
+
+      for (const item of filtered) {
+        const a = document.createElement("a");
+        a.className = "search-result-item";
+        a.href = item.url;
+        a.innerHTML = `
+          <div class="search-result-cat">${item.category}</div>
+          <div class="search-result-title">${item.title}</div>
+          <div class="search-result-desc">${item.snippet}</div>
+        `;
+        a.onclick = () => closeModal();
+        resultsContainer.appendChild(a);
+      }
+    }
+
+    input.addEventListener("input", (e) => {
+      renderResults((e.target as HTMLInputElement).value);
+    });
+  }
+
+  setupSearchModal();
+  document.addEventListener("astro:page-load", setupSearchModal);
+</script>

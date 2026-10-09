@@ -1,0 +1,50 @@
+{
+  "title": "Data Structures & Entity Schema",
+  "lede": "Architectural schemas, class definitions, and object relationships powering the EvoSim simulation engine.",
+  "entities": [
+    {
+      "name": "Animal",
+      "description": "Represents an individual autonomous biological agent navigating the arena.",
+      "fields": [
+        { "name": "id", "type": "String / UUID", "description": "Unique generational entity identifier" },
+        { "name": "category", "type": "Enum", "description": "'Herbivore', 'Carnivore', or 'Omnivore'" },
+        { "name": "position", "type": "Tuple[int, int]", "description": "Current Cartesian coordinates (x, y)" },
+        { "name": "health", "type": "Float", "description": "Current health points (0.0 to MaxHP)" },
+        { "name": "hunger", "type": "Float", "description": "Current caloric satiety (0.0 to 100.0)" },
+        { "name": "thirst", "type": "Float", "description": "Current hydration status (0.0 to 100.0)" },
+        { "name": "energy", "type": "Float", "description": "Current stamina capacity (0.0 to MaxEP)" },
+        { "name": "instinct", "type": "Integer (0 or 1)", "description": "Arousal state (0 = Calm, 1 = Alert)" },
+        { "name": "traits", "type": "Dict[str, int]", "description": "{'STR': int, 'AGI': int, 'END': int, 'INT': int}" },
+        { "name": "brain", "type": "MLPNeuralNetwork", "description": "Multi-Layer Perceptron containing weights and biases" },
+        { "name": "effects", "type": "List[StatusEffect]", "description": "Active temporary buffs and debuffs" },
+        { "name": "fitness_metrics", "type": "FitnessStats", "description": "Telemetry tracking survival turns, kills, and resources gathered" }
+      ]
+    },
+    {
+      "name": "Tile",
+      "description": "A discrete grid unit within the 25x25 spatial environment.",
+      "fields": [
+        { "name": "x, y", "type": "int, int", "description": "Discrete grid coordinate indices [0..24, 0..24]" },
+        { "name": "terrain", "type": "Enum", "description": "'Plains', 'Forest', 'Jungle', 'Swamp', 'Water', or 'Mountains'" },
+        { "name": "resource", "type": "Optional[Resource]", "description": "Edible plant flora or freshwater pool located in cell" },
+        { "name": "occupant", "type": "Optional[Animal]", "description": "Pointer to the current animal inhabiting the tile" },
+        { "name": "hazard", "type": "Optional[HazardEffect]", "description": "Active hazard such as fire, flood, or toxic gas" }
+      ]
+    },
+    {
+      "name": "Resource",
+      "description": "Consumable environmental node providing sustenance or hydration.",
+      "fields": [
+        { "name": "type", "type": "String", "description": "'Plant', 'Prey_Carcass', or 'Freshwater'" },
+        { "name": "quantity", "type": "Integer", "description": "Points restored to hunger or thirst upon consumption (typically 40-50)" },
+        { "name": "uses_left", "type": "Integer", "description": "Remaining bites before exhaustion and tile despawn" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "source": "Simulation", "relation": "contains", "target": "World (Grid) and List[Animal]" },
+    { "source": "World", "relation": "maintains", "target": "25x25 Array[Tile]" },
+    { "source": "Tile", "relation": "hosts", "target": "Animal (0 or 1) and Resource (0 or 1)" },
+    { "source": "Animal", "relation": "possesses", "target": "MLP Neural Network and List[StatusEffect]" }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "title": "Development Task List",
+  "lede": "Systematic breakdown of engineering deliverables, algorithmic components, and implementation progress across all simulation subsystems.",
+  "tasks": [
+    {
+      "id": "TASK-01",
+      "phase": "Phase 1: Environment & Movement",
+      "title": "25x25 Grid Matrix World Model",
+      "priority": "High",
+      "status": "completed",
+      "description": "Construct discrete 2D Tile matrix with coordinate indexing and Moore neighborhood boundary checks."
+    },
+    {
+      "id": "TASK-02",
+      "phase": "Phase 1: Environment & Movement",
+      "title": "Terrain Biome Generator",
+      "priority": "High",
+      "status": "completed",
+      "description": "Implement procedural terrain generator matching distribution ratios: Plains 60%, Forest 25%, Water 10%, Mountains 5%."
+    },
+    {
+      "id": "TASK-03",
+      "phase": "Phase 1: Environment & Movement",
+      "title": "Neighbor-Aware Spawning System",
+      "priority": "High",
+      "status": "completed",
+      "description": "Distribute animals and resource clusters with non-adjacent spawn spacing."
+    },
+    {
+      "id": "TASK-04",
+      "phase": "Phase 2: Biological Needs & Passives",
+      "title": "Metabolic Status Decay Dynamics",
+      "priority": "High",
+      "status": "completed",
+      "description": "Establish turn-by-turn hunger (-5) and thirst (-8) decay with starvation and dehydration damage triggers."
+    },
+    {
+      "id": "TASK-05",
+      "phase": "Phase 2: Biological Needs & Passives",
+      "title": "Species Archetypes & Passive Traits",
+      "priority": "High",
+      "status": "completed",
+      "description": "Define Herbivore, Carnivore, and Omnivore species classes with Ambush Predator and Efficient Grazer passives."
+    },
+    {
+      "id": "TASK-06",
+      "phase": "Phase 2: Biological Needs & Passives",
+      "title": "Combat Resolution Engine",
+      "priority": "Medium",
+      "status": "completed",
+      "description": "Implement STR-based damage calculation and AGI-based evasion check algorithms."
+    },
+    {
+      "id": "TASK-07",
+      "phase": "Phase 3: Events & Disasters",
+      "title": "Weekly Natural Disaster Scheduler",
+      "priority": "High",
+      "status": "completed",
+      "description": "Trigger scheduled environmental disasters (Wildfire, Blizzard, Flash Flood) on 7-turn intervals."
+    },
+    {
+      "id": "TASK-08",
+      "phase": "Phase 3: Events & Disasters",
+      "title": "Stochastic Event Checks (d10 System)",
+      "priority": "Medium",
+      "status": "completed",
+      "description": "Build d10 dice roll check engine for Rockslides and Contamination saves."
+    },
+    {
+      "id": "TASK-09",
+      "phase": "Phase 4: Neuroevolution & Training",
+      "title": "41-16-12-8 MLP Neural Network",
+      "priority": "High",
+      "status": "in_progress",
+      "description": "Implement feedforward forward pass with dual ReLU hidden layers and sensory grid flattening."
+    },
+    {
+      "id": "TASK-10",
+      "phase": "Phase 4: Neuroevolution & Training",
+      "title": "Composite Fitness Evaluator",
+      "priority": "High",
+      "status": "in_progress",
+      "description": "Calculate multivariable fitness score based on survival time, gathered forage, kills, distance, and disasters survived."
+    },
+    {
+      "id": "TASK-11",
+      "phase": "Phase 4: Neuroevolution & Training",
+      "title": "Genetic Operator Pipeline",
+      "priority": "High",
+      "status": "in_progress",
+      "description": "Implement Elitism (top 10%), tournament selection, single-point crossover, and Gaussian weight mutation."
+    },
+    {
+      "id": "TASK-12",
+      "phase": "Phase 5: GUI & Analytics",
+      "title": "Pygame Interactive Simulation Viewer",
+      "priority": "Medium",
+      "status": "in_progress",
+      "description": "Render 25x25 spatial grid with live sprite icons, health bars, and event notifications."
+    },
+    {
+      "id": "TASK-13",
+      "phase": "Phase 5: GUI & Analytics",
+      "title": "Generational Analytics Exporter",
+      "priority": "Low",
+      "status": "planned",
+      "description": "Export CSV/JSON generational survival metrics, trait divergence charts, and fitness trends."
+    }
+  ]
+}

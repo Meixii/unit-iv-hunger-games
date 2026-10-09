@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { dataStructureData } from "../lib/content";
+
+const headings = [
+  ...dataStructureData.entities.map((e) => ({
+    id: `entity-${e.name.toLowerCase()}`,
+    text: `Entity: ${e.name}`,
+  })),
+  { id: "class-relationships", text: "Class Relationships" },
+];
+---
+
+<BaseLayout
+  title={dataStructureData.title}
+  description={dataStructureData.lede}
+  category="Technical Details"
+  headings={headings}
+>
+  {dataStructureData.entities.map((entity) => (
+    <section id={`entity-${entity.name.toLowerCase()}`} class="entity-section">
+      <h2>Entity: {entity.name}</h2>
+      <p>{entity.description}</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Field / Property</th>
+              <th>Data Type</th>
+              <th>Description & Constraints</th>
+            </tr>
+          </thead>
+          <tbody>
+            {entity.fields.map((f) => (
+              <tr>
+                <td><code>{f.name}</code></td>
+                <td><span class="type-badge">{f.type}</span></td>
+                <td>{f.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+
+  <section id="class-relationships" class="entity-section">
+    <h2>Class Relationships</h2>
+    <div class="grid-cards">
+      {dataStructureData.relationships.map((rel) => (
+        <div class="card rel-card">
+          <div class="rel-source"><strong>{rel.source}</strong></div>
+          <div class="rel-verb">{rel.relation}</div>
+          <div class="rel-target"><code>{rel.target}</code></div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .entity-section {
+    margin-bottom: 2.5rem;
+  }
+  .type-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-neural);
+  }
+  .rel-card {
+    margin-bottom: 0;
+    text-align: center;
+    padding: 1.25rem;
+  }
+  .rel-source {
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+  .rel-verb {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--accent-bio);
+    margin: 0.25rem 0;
+  }
+  .rel-target code {
+    font-size: 0.8125rem;
+  }
+</style>

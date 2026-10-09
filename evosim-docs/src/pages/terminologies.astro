@@ -1,0 +1,181 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { terminologiesData } from "../lib/content";
+
+const categories = Array.from(new Set(terminologiesData.terms.map((t) => t.category)));
+
+const headings = [
+  { id: "dictionary", text: "Glossary of Defined Terms" },
+];
+---
+
+<BaseLayout
+  title={terminologiesData.title}
+  description={terminologiesData.lede}
+  category="Core Concepts"
+  headings={headings}
+>
+  <div class="terms-controls card">
+    <div class="search-box">
+      <input id="term-search-input" type="search" placeholder="Filter terms or concepts..." aria-label="Filter terms" />
+    </div>
+    <div class="category-filters" id="cat-filters">
+      <button class="cat-btn active" data-cat="all" type="button">All Categories ({terminologiesData.terms.length})</button>
+      {categories.map((cat) => {
+        const count = terminologiesData.terms.filter((t) => t.category === cat).length;
+        return (
+          <button class="cat-btn" data-cat={cat} type="button">{cat} ({count})</button>
+        );
+      })}
+    </div>
+  </div>
+
+  <h2 id="dictionary">Glossary of Defined Terms</h2>
+  <div class="terms-grid" id="terms-list">
+    {terminologiesData.terms.map((t) => {
+      const slug = `term-${t.term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+      return (
+        <div class="card term-card" id={slug} data-category={t.category} data-term={t.term.toLowerCase()}>
+          <div class="term-header">
+            <h3 class="term-name">{t.term}</h3>
+            <span class="term-cat-badge">{t.category}</span>
+          </div>
+          <p class="term-def">{t.definition}</p>
+        </div>
+      );
+    })}
+  </div>
+</BaseLayout>
+
+<style>
+  .terms-controls {
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+    outline: none;
+    margin-bottom: 1rem;
+  }
+  .search-box input:focus {
+    border-color: var(--accent-bio);
+  }
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .cat-btn {
+    background: var(--bg-surface-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    min-height: 36px;
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+  .cat-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--border-highlight);
+  }
+  .cat-btn.active {
+    background: var(--accent-bio-subtle);
+    border-color: var(--accent-bio-border);
+    color: var(--accent-bio);
+    font-weight: 600;
+  }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+  .term-card {
+    margin-bottom: 0;
+    scroll-margin-top: calc(var(--header-height) + 1.5rem);
+  }
+  .term-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .term-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .term-cat-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--accent-neural);
+    background: var(--accent-neural-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+    white-space: nowrap;
+  }
+  .term-def {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+</style>
+
+<script>
+  function setupTermFilter() {
+    const searchInput = document.getElementById("term-search-input") as HTMLInputElement | null;
+    const catButtons = document.querySelectorAll(".cat-btn");
+    const termCards = document.querySelectorAll(".term-card");
+
+    let currentCat = "all";
+    let searchQuery = "";
+
+    function filter() {
+      termCards.forEach((card) => {
+        const c = card as HTMLElement;
+        const cat = c.dataset.category;
+        const text = c.textContent?.toLowerCase() || "";
+
+        const matchCat = currentCat === "all" || cat === currentCat;
+        const matchSearch = !searchQuery || text.includes(searchQuery);
+
+        if (matchCat && matchSearch) {
+          c.style.display = "";
+        } else {
+          c.style.display = "none";
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.oninput = (e) => {
+        searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
+        filter();
+      };
+    }
+
+    catButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        catButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentCat = (btn as HTMLElement).dataset.cat || "all";
+        filter();
+      });
+    });
+  }
+
+  setupTermFilter();
+  document.addEventListener("astro:page-load", setupTermFilter);
+</script>

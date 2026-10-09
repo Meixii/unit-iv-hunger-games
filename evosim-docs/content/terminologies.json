@@ -1,0 +1,91 @@
+{
+  "title": "Terminologies",
+  "lede": "A dictionary of key concepts, evolutionary operators, status variables, and mechanical entities used throughout the EvoSim project.",
+  "terms": [
+    {
+      "term": "Crossover",
+      "category": "Evolutionary Algorithm",
+      "definition": "A genetic operator where the synaptic MLP weights of two parent animals are combined at designated crossover points to create the neural network for a new offspring agent."
+    },
+    {
+      "term": "Disaster",
+      "category": "Environment",
+      "definition": "A catastrophic environmental event that affects a large zone of the grid map or the entire simulation for a specified duration, such as a Wildfire or Harsh Winter."
+    },
+    {
+      "term": "Effect (Buff / Debuff)",
+      "category": "Status Dynamics",
+      "definition": "A temporary modifier applied to an animal that alters its base traits or status depletion rates for a limited duration, such as Poisoned, Well-Fed, or Exhausted."
+    },
+    {
+      "term": "Elitism",
+      "category": "Evolutionary Algorithm",
+      "definition": "A selection guarantee where a top tier percentage of the highest-performing animals from one generation are carried over directly to the subsequent generation without mutation."
+    },
+    {
+      "term": "Evolutionary Algorithm (EA)",
+      "category": "Evolutionary Algorithm",
+      "definition": "The optimization methodology used to train the MLP. It replicates natural selection by generating a population, scoring survival performance via the Fitness Function, and breeding top agents."
+    },
+    {
+      "term": "Fitness Function",
+      "category": "Evolutionary Algorithm",
+      "definition": "The mathematical formula that evaluates an animal's overall survival success at the conclusion of a round. This score determines parental probability in the selection pool."
+    },
+    {
+      "term": "Generation",
+      "category": "Simulation",
+      "definition": "A complete lifecycle iteration of the simulation arena. A cohort of animals lives, competes, and dies, and the fittest individuals seed the next generation."
+    },
+    {
+      "term": "Movement Event",
+      "category": "Simulation",
+      "definition": "The primary turn-by-turn phase where each animal's neural network consumes sensory inputs and emits an intentional action: translating across tiles, foraging, or resting."
+    },
+    {
+      "term": "Multi-Layer Perceptron (MLP)",
+      "category": "Neural Network",
+      "definition": "A feedforward artificial neural network acting as the decision-making brain for each animal, processing status vectors and sensory grid arrays into discrete actions."
+    },
+    {
+      "term": "Mutation",
+      "category": "Evolutionary Algorithm",
+      "definition": "A genetic operator that applies small stochastic disturbances to an offspring's synaptic weights, introducing novel behavioral variations and preventing local minima stagnation."
+    },
+    {
+      "term": "Neuroevolution",
+      "category": "Neural Network",
+      "definition": "The computer science domain of using evolutionary search algorithms to optimize artificial neural network parameters instead of gradient descent."
+    },
+    {
+      "term": "Passive",
+      "category": "Mechanics",
+      "definition": "An innate, category-specific biological trait that remains perpetually active for an animal, such as a Carnivore's Ambush Predator bonus or a Herbivore's Grazing efficiency."
+    },
+    {
+      "term": "Random Event",
+      "category": "Environment",
+      "definition": "A simulation-wide condition that alters environmental availability and status modifiers for a one-week cycle, such as a Drought or Resource Bloom."
+    },
+    {
+      "term": "Selection",
+      "category": "Evolutionary Algorithm",
+      "definition": "The probabilistic mechanism within the EA that chooses breeding pairs from the population based on fitness score rankings."
+    },
+    {
+      "term": "Status",
+      "category": "Status Dynamics",
+      "definition": "A dynamic, real-time physiological variable reflecting an animal's immediate condition: Health, Hunger, Thirst, Energy, and Instinct."
+    },
+    {
+      "term": "Trait",
+      "category": "Mechanics",
+      "definition": "A core, semi-permanent genetic attribute of an animal (Strength, Agility, Endurance, Intelligence) that influences physical performance and success check rolls."
+    },
+    {
+      "term": "Triggered Event",
+      "category": "Environment",
+      "definition": "A localized contextual encounter initiated when specific spatial or state thresholds are breached, presenting a challenge such as an Animal Conflict or Sudden Hazard."
+    }
+  ]
+}

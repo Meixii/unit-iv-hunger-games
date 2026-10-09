@@ -1,0 +1,120 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { dashboardData } from "../lib/content";
+
+const headings = [
+  { id: "key-metrics", text: "Key Simulation Architecture Telemetry" },
+  { id: "ecological-pyramid", text: "Species Distribution Pyramid" },
+  { id: "benchmarks", text: "Generational Adaptation Benchmarks" },
+];
+---
+
+<BaseLayout
+  title={dashboardData.title}
+  description={dashboardData.lede}
+  category="Development"
+  headings={headings}
+>
+  <h2 id="key-metrics">Key Simulation Architecture Telemetry</h2>
+  <div class="metrics-grid">
+    {dashboardData.metrics.map((m) => (
+      <div class="card metric-card">
+        <div class="metric-label">{m.label}</div>
+        <div class="metric-value">{m.value}</div>
+        <div class="metric-sub">{m.subtext}</div>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="ecological-pyramid">Species Distribution Pyramid</h2>
+  <div class="grid-cards">
+    {dashboardData.speciesRatios.map((s) => (
+      <div class="card">
+        <div class="species-top">
+          <h3 class="card-title">{s.species}</h3>
+          <span class="share-tag">{s.share}</span>
+        </div>
+        <p class="species-role-text">{s.role}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="benchmarks">Generational Adaptation Benchmarks</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Generation Epoch</th>
+          <th>Mean Lifespan</th>
+          <th>Peak Fitness</th>
+          <th>Dominant Emergent Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        {dashboardData.benchmarkMilestones.map((b) => (
+          <tr>
+            <td><strong>{b.generation}</strong></td>
+            <td><code>{b.avgLifespan}</code></td>
+            <td><strong class="fit-score">{b.peakFitness}</strong></td>
+            <td>{b.dominantBehavior}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</BaseLayout>
+
+<style>
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .metric-card {
+    margin-bottom: 0;
+    padding: 1.25rem;
+    background: var(--bg-surface-raised);
+    border-left: 3px solid var(--accent-bio);
+  }
+  .metric-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  .metric-value {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-bio);
+    margin: 0.25rem 0;
+  }
+  .metric-sub {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+  }
+
+  .species-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .share-tag {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--accent-neural);
+  }
+  .species-role-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+
+  .fit-score {
+    color: var(--accent-bio);
+  }
+</style>

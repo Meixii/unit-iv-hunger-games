@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { parametersData } from "../lib/content";
+
+const headings = parametersData.sections.map((sec) => ({
+  id: sec.category.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+  text: sec.category,
+}));
+---
+
+<BaseLayout
+  title={parametersData.title}
+  description={parametersData.lede}
+  category="Game Mechanics"
+  headings={headings}
+>
+  {parametersData.sections.map((sec) => {
+    const slug = sec.category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    return (
+      <section id={slug} class="param-section">
+        <h2>{sec.category}</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Constant Name</th>
+                <th>Configured Value</th>
+                <th>Unit / Scale</th>
+                <th>System Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sec.parameters.map((p) => {
+                const paramId = `param-${p.name.toLowerCase()}`;
+                return (
+                  <tr id={paramId}>
+                    <td><code>{p.name}</code></td>
+                    <td><strong>{p.value}</strong></td>
+                    <td><span class="unit-tag">{p.unit}</span></td>
+                    <td>{p.description}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    );
+  })}
+</BaseLayout>
+
+<style>
+  .param-section {
+    margin-bottom: 2.5rem;
+  }
+  .unit-tag {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+</style>

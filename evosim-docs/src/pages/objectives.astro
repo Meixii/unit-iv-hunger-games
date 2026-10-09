@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { objectivesData } from "../lib/content";
+
+const headings = [
+  { id: "general-objective", text: "General Objective" },
+  { id: "specific-objectives", text: "Specific Technical Objectives" },
+];
+---
+
+<BaseLayout
+  title={objectivesData.title}
+  description={objectivesData.lede}
+  category="Overview"
+  headings={headings}
+>
+  <h2 id="general-objective">{objectivesData.general.title}</h2>
+  <div class="card general-card">
+    <p class="general-text">{objectivesData.general.description}</p>
+  </div>
+
+  <h2 id="specific-objectives">Specific Technical Objectives</h2>
+  <div class="objectives-list">
+    {objectivesData.specific.map((obj, index) => (
+      <div class="card objective-card">
+        <div class="obj-header">
+          <span class="obj-badge">Objective 0{index + 1}</span>
+          <h3 class="obj-title">{obj.title}</h3>
+        </div>
+        <p class="obj-detail">{obj.detail}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .general-card {
+    background: var(--bg-surface-raised);
+    border-left: 3px solid var(--accent-bio);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .general-text {
+    font-size: 1.0625rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+  .objectives-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .objective-card {
+    margin-bottom: 0;
+  }
+  .obj-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .obj-badge {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--accent-bio);
+    background: var(--accent-bio-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+  .obj-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .obj-detail {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+</style>

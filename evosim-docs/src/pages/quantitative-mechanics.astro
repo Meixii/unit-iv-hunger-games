@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { quantitativeMechanicsData } from "../lib/content";
+
+const headings = [
+  { id: "stat-computations", text: "Animal Stat Calculations" },
+  { id: "combat-calculations", text: "Action & Combat Calculations" },
+  { id: "passive-modifiers", text: "Passive Ability Modifiers" },
+  { id: "event-checks", text: "Stochastic Event Checks (d10 System)" },
+];
+---
+
+<BaseLayout
+  title={quantitativeMechanicsData.title}
+  description={quantitativeMechanicsData.lede}
+  category="Technical Details"
+  headings={headings}
+>
+  <h2 id="stat-computations">Animal Stat Calculations</h2>
+  <div class="grid-cards">
+    {quantitativeMechanicsData.statCalculations.map((calc) => (
+      <div class="card formula-card">
+        <h3 class="card-title">{calc.name}</h3>
+        <div class="formula-display">{calc.formula}</div>
+        <p class="formula-constants"><strong>Constants:</strong> {calc.constants}</p>
+        <p class="formula-example"><strong>Example:</strong> {calc.example}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="combat-calculations">Action & Combat Calculations</h2>
+  <div class="grid-cards">
+    {quantitativeMechanicsData.actionCombat.map((calc) => (
+      <div class="card formula-card">
+        <h3 class="card-title">{calc.name}</h3>
+        <div class="formula-display">{calc.formula}</div>
+        <p class="formula-constants"><strong>Constants:</strong> {calc.constants}</p>
+        <p class="formula-example"><strong>Example:</strong> {calc.example}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="passive-modifiers">Passive Ability Modifiers</h2>
+  <div class="grid-cards">
+    {quantitativeMechanicsData.passives.map((calc) => (
+      <div class="card formula-card">
+        <h3 class="card-title">{calc.name}</h3>
+        <div class="formula-display">{calc.formula}</div>
+        <p class="formula-constants"><strong>Constants:</strong> {calc.constants}</p>
+        <p class="formula-example"><strong>Example:</strong> {calc.example}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="event-checks">Stochastic Event Checks (d10 System)</h2>
+  <div class="grid-cards">
+    {quantitativeMechanicsData.eventChecks.map((calc) => (
+      <div class="card formula-card">
+        <h3 class="card-title">{calc.name}</h3>
+        <div class="formula-display">{calc.formula}</div>
+        <p class="formula-constants"><strong>Constants:</strong> {calc.constants}</p>
+        <p class="formula-example"><strong>Example:</strong> {calc.example}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .formula-card {
+    margin-bottom: 0;
+  }
+  .formula-constants {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0.5rem 0 0.25rem 0 !important;
+  }
+  .formula-example {
+    font-size: 0.8125rem;
+    color: var(--accent-bio);
+    margin: 0 !important;
+  }
+</style>

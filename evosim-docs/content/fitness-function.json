@@ -1,0 +1,61 @@
+{
+  "title": "Fitness Function & Generational Goals",
+  "lede": "The mathematical foundation that quantifies evolutionary success, rewards beneficial behaviors, and steers generational adaptation.",
+  "formula": "Fitness Score = (Time Survived * W_Time) + ((Resources Gathered / 40) * W_Resource) + (Kills * W_Kills) + (Distance Traveled * W_Distance) + (Events Survived * W_Events)",
+  "weights": [
+    { "name": "W_Time", "value": 1, "description": "Primary survival baseline. Every turn survived grants consistent reward." },
+    { "name": "W_Resource", "value": 5, "description": "Normalized resource consumption (per 40 points of hunger/thirst quenched)." },
+    { "name": "W_Kills", "value": 50, "description": "Significant predatory payoff rewarding carnivore competitive dominance." },
+    { "name": "W_Distance", "value": 0.2, "description": "Exploration incentive discouraging static camping on safe tiles." },
+    { "name": "W_Events", "value": 10, "description": "Resilience bonus for enduring environmental disasters and local hazards." }
+  ],
+  "components": [
+    {
+      "name": "Time Survived",
+      "metric": "Turns (Integer)",
+      "rationale": "The foundational survival metric. Animals that balance metabolic drain against replenishment live longer and establish a high baseline score."
+    },
+    {
+      "name": "Resources Gathered",
+      "metric": "Food / Water Points",
+      "rationale": "Normalized by 40 (the quantity restored by one feeding or drinking action), directly rewarding proactive foraging over passive starvation."
+    },
+    {
+      "name": "Predatory Kills",
+      "metric": "Defeated Rivals",
+      "rationale": "Crucial for carnivores and aggressive omnivores. A heavy 50-point weight balances the severe physical risks of active combat."
+    },
+    {
+      "name": "Distance Traveled",
+      "metric": "Unique Tiles Traversed",
+      "rationale": "Penalizes motionless turtling. A modest 0.2 weight encourages map exploration without incentivizing erratic pacing."
+    },
+    {
+      "name": "Events Survived",
+      "metric": "Disasters Endured",
+      "rationale": "Rewards evasive and adaptive reflexes when environmental crises strike, promoting resilient gene lines."
+    }
+  ],
+  "generationalMilestones": [
+    {
+      "epoch": "Generation 1 - 10",
+      "behavior": "Random Walk to Basic Foraging",
+      "description": "Initial elimination of suicidal movement patterns. Animals learn to correlate positive food/water sensor activations with eat/drink motor actions."
+    },
+    {
+      "epoch": "Generation 11 - 30",
+      "behavior": "Metabolic Homeostasis",
+      "description": "Animals prioritize nourishment only when hunger or thirst drops below critical thresholds, conserving vital energy."
+    },
+    {
+      "epoch": "Generation 31 - 70",
+      "behavior": "Hazard Avoidance & Tactical Flight",
+      "description": "Organisms actively identify environmental threats (fire, floods) in their Moore neighborhood and execute evasion maneuvers."
+    },
+    {
+      "epoch": "Generation 70+",
+      "behavior": "Predatory Specialization & Ambush Tactics",
+      "description": "Carnivores stalk herbivore trails; herbivores master evasion loops and defensive terrain positioning."
+    }
+  ]
+}

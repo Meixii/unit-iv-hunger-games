@@ -1,0 +1,120 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { phasesData } from "../lib/content";
+
+const headings = phasesData.phases.map((p) => ({
+  id: `phase-${p.number}`,
+  text: `Phase ${p.number}: ${p.name}`,
+}));
+---
+
+<BaseLayout
+  title={phasesData.title}
+  description={phasesData.lede}
+  category="Development"
+  headings={headings}
+>
+  <div class="phases-timeline">
+    {phasesData.phases.map((p) => (
+      <section id={`phase-${p.number}`} class="card phase-card">
+        <div class="phase-header">
+          <div class="phase-badge-wrap">
+            <span class="phase-num">Phase 0{p.number}</span>
+            <span class={`phase-status-tag status-${p.status}`}>{p.status.replace("_", " ")}</span>
+          </div>
+          <span class="phase-period">{p.period}</span>
+        </div>
+        <h2 class="phase-name">{p.name}</h2>
+        <div class="phase-goals-wrap">
+          <span class="goals-label">Milestone Objectives:</span>
+          <ul class="goals-list">
+            {p.goals.map((g) => (
+              <li>• {g}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .phases-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .phase-card {
+    margin-bottom: 0;
+    border-left: 3px solid var(--accent-bio);
+  }
+  .phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .phase-badge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .phase-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-bio);
+    background: var(--accent-bio-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+  .phase-status-tag {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-xs);
+  }
+  .status-completed {
+    color: var(--accent-bio);
+    background: var(--accent-bio-subtle);
+  }
+  .status-in_progress {
+    color: var(--accent-neural);
+    background: var(--accent-neural-subtle);
+  }
+  .phase-period {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .phase-name {
+    font-size: 1.25rem !important;
+    font-weight: 700;
+    margin: 0 0 1rem 0 !important;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+  }
+  .phase-goals-wrap {
+    background: var(--bg-surface-raised);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+  }
+  .goals-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .goals-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+</style>

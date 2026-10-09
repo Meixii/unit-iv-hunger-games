@@ -1,41 +1,26 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# Dependencies
+node_modules/
+.pnp
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
-# testing
-/coverage
+# Astro build & generated files
+dist/
+.astro/
 
-# next.js
-/.next/
-/out/
+# CMS runtime and local environment
+cms/.env
+!cms/.env.example
+cms/data/
+public/uploads/
 
-# production
-/build
+# Environment files
+.env
+.env.production
+.env.local
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs and misc
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+.DS_Store
+*.pem

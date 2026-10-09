@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FitnessCalculator from "../components/FitnessCalculator.astro";
+import { fitnessFunctionData } from "../lib/content";
+
+const headings = [
+  { id: "fitness-equation", text: "Mathematical Formulation" },
+  { id: "interactive-sandbox", text: "Interactive Fitness Sandbox" },
+  { id: "weight-breakdown", text: "Component Weights & Rationale" },
+  { id: "generational-milestones", text: "Generational Adaptation Milestones" },
+];
+---
+
+<BaseLayout
+  title={fitnessFunctionData.title}
+  description={fitnessFunctionData.lede}
+  category="Core Concepts"
+  headings={headings}
+>
+  <h2 id="fitness-equation">Mathematical Formulation</h2>
+  <div class="formula-box">
+    <div class="formula-title">Composite Fitness Score Equation</div>
+    <div class="formula-display">
+      Fitness = (Time * W_Time) + ((Resources / 40) * W_Resource) + (Kills * W_Kills) + (Distance * W_Distance) + (Events * W_Events)
+    </div>
+    <div class="formula-legend">
+      <span>• <strong>Time:</strong> Total discrete turns survived</span>
+      <span>• <strong>Resources:</strong> Raw food and water points consumed (normalized by single-action gain of 40)</span>
+      <span>• <strong>Kills:</strong> Count of defeated rival organisms</span>
+      <span>• <strong>Distance:</strong> Total unique grid tiles traversed</span>
+      <span>• <strong>Events:</strong> Scheduled disasters and hazardous situational encounters survived</span>
+    </div>
+  </div>
+
+  <h2 id="interactive-sandbox">Interactive Fitness Sandbox</h2>
+  <FitnessCalculator />
+
+  <h2 id="weight-breakdown">Component Weights & Rationale</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Weight Symbol</th>
+          <th>Multiplier</th>
+          <th>Component</th>
+          <th>Algorithmic Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        {fitnessFunctionData.weights.map((w, index) => {
+          const comp = fitnessFunctionData.components[index];
+          return (
+            <tr>
+              <td><code>{w.name}</code></td>
+              <td><strong>{w.value}</strong></td>
+              <td>{comp ? comp.name : "-"}</td>
+              <td>{w.description}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="generational-milestones">Generational Adaptation Milestones</h2>
+  <div class="milestones-grid">
+    {fitnessFunctionData.generationalMilestones.map((m) => (
+      <div class="card milestone-card">
+        <div class="milestone-epoch">{m.epoch}</div>
+        <h3 class="milestone-behavior">{m.behavior}</h3>
+        <p class="milestone-desc">{m.description}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .formula-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  .milestones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+  .milestone-card {
+    margin-bottom: 0;
+    border-top: 2px solid var(--accent-bio);
+  }
+  .milestone-epoch {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-bio);
+    margin-bottom: 0.5rem;
+  }
+  .milestone-behavior {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+  .milestone-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+</style>

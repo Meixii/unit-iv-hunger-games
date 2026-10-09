@@ -1,0 +1,30 @@
+{
+  "title": "Project Scope",
+  "lede": "Defined boundaries and core feature components included in the EvoSim simulation system.",
+  "items": [
+    {
+      "title": "Multi-Layer Perceptron Architecture",
+      "summary": "Implementation of artificial neural networks equipped with sensory input vectors (environmental perceptions and internal vitals), dual hidden layers with ReLU activations, and discrete action output nodes for autonomous decision-making."
+    },
+    {
+      "title": "Evolutionary Training System",
+      "summary": "Genetic algorithm infrastructure that tunes MLP synaptic weights and biases across generations using elitism, roulette/tournament selection, single-point crossover, and Gaussian weight mutation."
+    },
+    {
+      "title": "Competitive Hunger Games Arena",
+      "summary": "A discrete 2D survival battle royale where competing organisms vie for finite nourishment and freshwater while evading predators and surviving starvation."
+    },
+    {
+      "title": "Dynamic Event & Disaster Engine",
+      "summary": "Structured multi-tier events including sudden local hazards (meteors, rockslides), simulation-wide periodic disruptions (wildfires, harsh winters, flash floods), and triggered territorial conflicts."
+    },
+    {
+      "title": "Grid Map Navigation System",
+      "summary": "Discrete coordinate grid navigation allowing animals to perceive local 3x3 Moore neighborhoods, compute path costs, and navigate heterogeneous terrain."
+    },
+    {
+      "title": "Spatial Neighbor-Aware Spawning",
+      "summary": "Algorithmic generation of map entities that distributes flora, water pools, and competing animal categories with balanced density and fair initial conditions."
+    }
+  ]
+}

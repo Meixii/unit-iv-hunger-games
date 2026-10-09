@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { scopeData } from "../lib/content";
+
+const headings = [
+  { id: "core-scope", text: "Scope Boundaries & Capabilities" },
+];
+---
+
+<BaseLayout
+  title={scopeData.title}
+  description={scopeData.lede}
+  category="Overview"
+  headings={headings}
+>
+  <h2 id="core-scope">Scope Boundaries & Capabilities</h2>
+  <div class="grid-cards">
+    {scopeData.items.map((item, index) => (
+      <div class="card">
+        <div class="scope-header">
+          <span class="scope-number">0{index + 1}</span>
+          <h3 class="card-title">{item.title}</h3>
+        </div>
+        <p class="scope-desc">{item.summary}</p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .scope-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .scope-number {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-neural);
+    background: var(--accent-neural-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+  .scope-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { eventsDisastersData } from "../lib/content";
+
+const headings = [
+  { id: "natural-disasters", text: "Weekly Natural Disasters" },
+  { id: "random-events", text: "Simulation-Wide Random Events" },
+  { id: "triggered-events", text: "Triggered Local Encounters" },
+];
+---
+
+<BaseLayout
+  title={eventsDisastersData.title}
+  description={eventsDisastersData.lede}
+  category="Game Mechanics"
+  headings={headings}
+>
+  <h2 id="natural-disasters">Weekly Natural Disasters</h2>
+  <div class="disasters-grid">
+    {eventsDisastersData.disasters.map((d) => (
+      <div class="card disaster-card">
+        <div class="disaster-header">
+          <h3 class="disaster-name">{d.name}</h3>
+          <span class="disaster-badge">{d.duration}</span>
+        </div>
+        <div class="disaster-meta">
+          <div><span class="meta-label">Scope:</span> {d.scope}</div>
+          <div><span class="meta-label">Impact:</span> {d.impact}</div>
+        </div>
+        <div class="counterplay-box">
+          <span class="counterplay-label">Evolutionary Counterplay:</span>
+          <span class="counterplay-text">{d.counterplay}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="random-events">Simulation-Wide Random Events</h2>
+  <div class="grid-cards">
+    {eventsDisastersData.randomEvents.map((r) => (
+      <div class="card">
+        <h3 class="card-title">{r.name}</h3>
+        <p class="event-desc">{r.effect}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="triggered-events">Triggered Local Encounters</h2>
+  <div class="grid-cards">
+    {eventsDisastersData.triggeredEvents.map((t) => (
+      <div class="card">
+        <h3 class="card-title">{t.name}</h3>
+        <p class="event-meta"><strong>Trigger Condition:</strong> {t.trigger}</p>
+        <p class="event-desc"><strong>Dice Roll Checks:</strong> <code>{t.checks}</code></p>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .disasters-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .disaster-card {
+    margin-bottom: 0;
+    border-left: 3px solid var(--accent-hazard);
+  }
+  .disaster-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .disaster-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .disaster-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-hazard);
+    background: var(--accent-hazard-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+  .disaster-meta {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+  .meta-label {
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .counterplay-box {
+    background: var(--bg-surface-raised);
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+  }
+  .counterplay-label {
+    font-weight: 700;
+    color: var(--accent-bio);
+    margin-right: 0.35rem;
+  }
+  .counterplay-text {
+    color: var(--text-secondary);
+  }
+
+  .event-meta {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem !important;
+  }
+  .event-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 !important;
+  }
+</style>

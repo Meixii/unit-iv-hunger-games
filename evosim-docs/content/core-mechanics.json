@@ -1,0 +1,47 @@
+{
+  "title": "Core Mechanics & Animal Classifications",
+  "lede": "The systemic rules governing animal biology, classification archetypes, passive advantages, and turn-by-turn resolution loops.",
+  "categories": [
+    {
+      "name": "Herbivore",
+      "diet": "Strictly Flora (Plants, Berries, Foliage)",
+      "primaryTrait": "Agility (Base 7-9)",
+      "passive": "Efficient Grazer: Receives 25% extra nourishment when consuming vegetation. Superior fleeing speed.",
+      "description": "High agility prey specialists relying on evasion, wide sensory detection, and rapid grazing to outlast predators."
+    },
+    {
+      "name": "Carnivore",
+      "diet": "Strictly Meat (Killed Rivals, Prey Carcasses)",
+      "primaryTrait": "Strength (Base 7-9)",
+      "passive": "Ambush Predator: Deals 50% bonus damage when attacking an unsuspecting target from dense vegetation or stealth tiles.",
+      "description": "Powerful apex predators requiring high caloric intake from successful hunts, balanced by severe starvation penalties."
+    },
+    {
+      "name": "Omnivore",
+      "diet": "Universal (Flora, Meat, Scavenged Forage)",
+      "primaryTrait": "Endurance / Intelligence (Balanced 5-8)",
+      "passive": "Iron Stomach: 50% resistance against toxic and spoiled food sources, enabling opportunistic survival in barren zones.",
+      "description": "Adaptable generalists capable of shifting nutritional strategies based on seasonal food availability and disaster conditions."
+    }
+  ],
+  "traits": [
+    { "name": "Strength (STR)", "role": "Determines raw melee combat damage and intimidation checks against rivals." },
+    { "name": "Agility (AGI)", "role": "Governs movement energy discounts, evasion odds (5% per point), and initiative order." },
+    { "name": "Endurance (END)", "role": "Expands maximum Health (+10 per point) and maximum Energy pool (+5 per point)." },
+    { "name": "Intelligence (INT)", "role": "Increases success rates on complex environmental events and puzzle objects." }
+  ],
+  "statusVariables": [
+    { "name": "Health (HP)", "range": "0 - 100+", "decay": "Takes damage when starving, dehydrated, poisoned, or attacked." },
+    { "name": "Hunger", "range": "0 - 100", "decay": "Depletes at 5 points per turn. Triggers starvation damage at 0." },
+    { "name": "Thirst", "range": "0 - 100", "decay": "Depletes at 8 points per turn. Triggers severe dehydration damage at 0." },
+    { "name": "Energy", "range": "0 - 100+", "decay": "Expended by movement and combat. Regenerates passively or via Resting." },
+    { "name": "Instinct", "range": "0 (Calm) or 1 (Alert)", "decay": "Flips to Alert when hostile entities or hazards enter Moore neighborhood." }
+  ],
+  "turnCycle": [
+    { "phase": "1. Sensory Ingestion", "detail": "The environment compiles the animal's local 3x3 perception matrix and internal status vector into a 41-element normalized array." },
+    { "phase": "2. Neural Inference", "detail": "The MLP performs forward propagation across its dual ReLU hidden layers, computing activation scores across 8 output action nodes." },
+    { "phase": "3. Action Execution", "detail": "The simulation executes the winning action (movement, foraging, drinking, fighting, resting), updating grid coordinates and tile contents." },
+    { "phase": "4. Status Depletion", "detail": "Metabolic counters drop: hunger (-5), thirst (-8). Energy drains according to terrain cost; passive regeneration is applied if resting." },
+    { "phase": "5. Hazard & Vitals Resolution", "detail": "Active environmental hazards (fire, poison, weather) tick damage. Animals reaching 0 Health expire and become food resources." }
+  ]
+}

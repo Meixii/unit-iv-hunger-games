@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page Not Found (404)"
+  description="The requested documentation article could not be located."
+  category="Status"
+>
+  <div class="card not-found-card">
+    <div class="code-404">404</div>
+    <h2>Article or Section Not Found</h2>
+    <p>
+      The documentation page or section coordinate you requested does not exist in the EvoSim specification database.
+    </p>
+    <div class="action-row">
+      <a href="/" class="btn btn-primary">Return to Introduction</a>
+      <a href="/terminologies" class="btn btn-ghost">Browse Terminologies</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found-card {
+    text-align: center;
+    padding: 3rem 2rem;
+    margin-top: 2rem;
+  }
+  .code-404 {
+    font-family: var(--font-mono);
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--accent-perish);
+    margin-bottom: 0.5rem;
+  }
+  .action-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+</style>

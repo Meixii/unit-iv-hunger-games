@@ -1,0 +1,36 @@
+{
+  "title": "Project Limitations",
+  "lede": "Deliberate architectural boundaries, computational constraints, and out-of-scope factors identified in the research design.",
+  "items": [
+    {
+      "title": "2D Discrete Grid Representation",
+      "category": "Spatial",
+      "detail": "The simulation operates on a discrete 25x25 tile grid rather than continuous physical vector space. Spatial orientation is restricted to cardinal directions (North, South, East, West)."
+    },
+    {
+      "title": "Turn-Based Synchronous Execution",
+      "category": "Temporal",
+      "detail": "Simulations advance through discrete steps and weekly phases rather than real-time continuous physics simulation. Actions are resolved in strict turn order based on agility and initiative."
+    },
+    {
+      "title": "Fixed Network Topology",
+      "category": "Neural Architecture",
+      "detail": "The MLP uses a static layer structure (41 inputs, 16 hidden, 12 hidden, 8 outputs). Neuroevolution modifies synaptic weights and biases only; topological mutation (NEAT) is outside project scope."
+    },
+    {
+      "title": "Static Population Bounds",
+      "category": "Population",
+      "detail": "Generations maintain fixed starting population sizes. Intra-generational mating does not spawn immediate active agents; reproduction is handled globally at generation boundaries."
+    },
+    {
+      "title": "Local Sensory Horizon",
+      "category": "Perception",
+      "detail": "Animal perception is strictly bounded to the immediate 3x3 grid around its coordinate position. Organisms lack global map knowledge unless navigated to previously visited coordinates."
+    },
+    {
+      "title": "Deterministic Physical Bounds",
+      "category": "Ecology",
+      "detail": "Biomes and terrain properties adhere to discrete lookup tables for movement costs and sickness probabilities rather than complex micro-climate simulation models."
+    }
+  ]
+}

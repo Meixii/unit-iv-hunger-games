@@ -1,0 +1,61 @@
+{
+  "title": "Map Architecture & Objectives",
+  "lede": "Spatial geography, terrain traversal mechanics, dynamic resource placement, and map objectives.",
+  "grid": {
+    "dimensions": "25 x 25 tiles (625 total coordinates)",
+    "coordinateSystem": "Cartesian (x, y) where (0,0) is North-West and (24,24) is South-East",
+    "neighborhoodModel": "Moore Neighborhood (3x3 grid centered on agent, 8 neighbors + center)"
+  },
+  "terrains": [
+    {
+      "name": "Plains / Savanna",
+      "moveCost": "1.0x (Standard)",
+      "cover": "None",
+      "description": "Open expanse allowing swift unimpeded locomotion but zero concealment from predators."
+    },
+    {
+      "name": "Temperate Forest",
+      "moveCost": "1.5x (Moderate)",
+      "cover": "Medium",
+      "description": "Dense foliage providing cover for ambushes and shelter from harsh winter conditions."
+    },
+    {
+      "name": "Dense Jungle",
+      "moveCost": "2.0x (Heavy)",
+      "cover": "Maximum",
+      "description": "Thick tropical canopy rich in plant forage but demanding severe energy expenditure to traverse."
+    },
+    {
+      "name": "Swamp / Marsh",
+      "moveCost": "1.8x (Heavy)",
+      "cover": "Medium",
+      "description": "Muddy wetlands posing a 10% risk of waterborne sickness per turn if traversed."
+    },
+    {
+      "name": "Freshwater Lake",
+      "moveCost": "Adjacent Interaction Only",
+      "cover": "None",
+      "description": "Vital hydration stations. Drinking restores 40 Thirst points."
+    },
+    {
+      "name": "Rocky Mountains",
+      "moveCost": "Impassable Barrier",
+      "cover": "High Elevation",
+      "description": "Natural geographic boundaries that funnel migration and block linear pathing."
+    }
+  ],
+  "spawning": {
+    "algorithm": "Neighbor-Aware Grid Spawning",
+    "principles": [
+      "No two animal agents spawn in adjacent tiles on turn 0, preventing instant turn-1 death.",
+      "Water nodes are clustered into natural lakes with a minimum 4-tile distance between separate water bodies.",
+      "Flora nodes distribute evenly across Plains, Forest, and Jungle with an initial 15% coverage.",
+      "Carnivores, Herbivores, and Omnivores spawn at fixed species ratios (50% herbivores, 30% omnivores, 20% carnivores) to maintain an ecologically viable food pyramid."
+    ]
+  },
+  "mapObjectives": [
+    { "name": "Territorial Scouting", "target": "Visit all 4 quadrants of the arena to maximize exploration fitness bonuses." },
+    { "name": "Resource Control", "target": "Secure and defend access to perennial freshwater sources against rival packs." },
+    { "name": "Disaster Evacuation", "target": "Migrate out of flagged disaster epicenter zones before countdown timers expire." }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "title": "Project Objectives",
+  "lede": "Research and development goals guiding the EvoSim artificial life simulation, defining both the broad scientific target and specific technical deliverables.",
+  "general": {
+    "title": "General Objective",
+    "description": "To design and develop a competitive survival simulation where a Multi-Layer Perceptron (MLP), trained by an evolutionary algorithm, learns to effectively control animal behavior. The project demonstrates how evolutionary processes can optimize a neural network's decision-making capabilities for survival within a dynamic, resource-limited, and hazardous environment."
+  },
+  "specific": [
+    {
+      "id": "obj-1",
+      "title": "Animal Classification",
+      "detail": "Classify animals into three distinct categories (herbivore, carnivore, omnivore) with unique survival skills, baseline stats, and passive behaviors."
+    },
+    {
+      "id": "obj-2",
+      "title": "Evolutionary Training Pipeline",
+      "detail": "Create a training system driven by evolutionary algorithms where animals iteratively improve survival behaviors by facing diverse survival challenges across generations."
+    },
+    {
+      "id": "obj-3",
+      "title": "Multi-Layered Event Architecture",
+      "detail": "Design and implement a multi-layered event system featuring AI-driven Movement Events, player-interactive Quick Events, simulation-wide Random Events, and hazardous Disasters occurring on structured weekly cycles."
+    },
+    {
+      "id": "obj-4",
+      "title": "Competitive Survival Environment",
+      "detail": "Develop a competitive survival arena where AI-driven animals governed by MLPs experience generational selection within an unpredictable, resource-constrained ecosystem."
+    },
+    {
+      "id": "obj-5",
+      "title": "Status-Driven Decision Making",
+      "detail": "Enable the MLP to select basic actions (moving, hunting, foraging, drinking, resting) based on the animal's real-time internal Status inputs: Health, Hunger, Thirst, Energy, and Instinct."
+    },
+    {
+      "id": "obj-6",
+      "title": "Behavioral Event Simulation",
+      "detail": "Simulate diverse behavioral encounters including predatory hunting, seasonal migration, and contested resource gathering."
+    },
+    {
+      "id": "obj-7",
+      "title": "Heterogeneous Terrain Ecology",
+      "detail": "Construct an interactive environment featuring diverse terrain biomes including plains, forest, jungle, lake, and mountains with variable traversal penalties."
+    },
+    {
+      "id": "obj-8",
+      "title": "Real-Time Stat & Skill Visualization",
+      "detail": "Display animal survival metrics and evolutionary adaptations dynamically based on live status telemetry."
+    }
+  ]
+}

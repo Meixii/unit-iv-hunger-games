@@ -1,0 +1,199 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteData } from "../lib/content";
+
+const headings = [
+  { id: "research-paper", text: "Research Monograph" },
+  { id: "executive-summary", text: "Executive Summary" },
+  { id: "author-directory", text: "Authors & Academic Affiliation" },
+  { id: "core-pillars", text: "Core Architectural Pillars" },
+];
+---
+
+<BaseLayout
+  title={siteData.identity.shortName}
+  description={siteData.identity.projectTitle}
+  category="Overview"
+  headings={headings}
+>
+  <div class="card research-monograph-card" id="research-paper">
+    <div class="card-eyebrow">Academic Research Paper</div>
+    <h2 class="monograph-title">{siteData.identity.projectTitle}</h2>
+    <p class="monograph-sub">
+      Presented to the Faculty of {siteData.identity.department}<br />
+      {siteData.identity.institution}, {siteData.identity.campus}<br />
+      In Partial Fulfillment of the Requirements for the Degree {siteData.identity.degree}
+    </p>
+
+    <div class="meta-strip">
+      <div class="meta-item">
+        <span class="meta-label">Date:</span>
+        <span class="meta-value">{siteData.identity.date}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Version:</span>
+        <span class="meta-value">v{siteData.identity.version}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Domain:</span>
+        <span class="meta-value">Neuroevolution & Artificial Life</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="executive-summary">Executive Summary</h2>
+  <p>
+    <strong>EvoSim</strong> is an artificial life survival simulation exploring how neuroevolutionary algorithms can optimize autonomous decision-making in competitive, resource-scarce environments. Competing organisms governed by a custom Multi-Layer Perceptron (MLP) neural network navigate a discrete 25x25 grid, seeking sustenance and water, evading predators, enduring scheduled natural disasters, and competing in an ecological battle royale.
+  </p>
+  <p>
+    Unlike conventional reinforcement learning that requires continuous gradient updates, EvoSim leverages genetic algorithms across generational epochs. Organisms that balance metabolic constraints, hazard evasion, and proactive foraging achieve higher fitness scores, ensuring their synaptic weights are selected, recombined through crossover, and propagated into future generations.
+  </p>
+
+  <h2 id="author-directory">Authors & Academic Affiliation</h2>
+  <p>Research team at the University of Caloocan City (Batch 2026):</p>
+  <div class="authors-grid">
+    {siteData.authors.map((author) => (
+      <div class="author-card">
+        <div class="author-dot"></div>
+        <div class="author-info">
+          <div class="author-name">{author.name}</div>
+          <div class="author-role">{author.role}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <h2 id="core-pillars">Core Architectural Pillars</h2>
+  <div class="grid-cards">
+    <div class="card">
+      <h3 class="card-title">1. Neuroevolution Engine</h3>
+      <p class="card-desc">
+        A 41-16-12-8 feedforward neural network consuming 5 internal vitals and 36 Moore-neighborhood spatial sensors to select from 8 discrete motor actions.
+      </p>
+      <a href="/mlp-evolution" class="card-link">Explore MLP Architecture →</a>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">2. Multivariable Fitness Evaluation</h3>
+      <p class="card-desc">
+        A rigorous fitness formula balancing lifespan, nutritional points gathered, combat victories, map exploration distance, and environmental disasters endured.
+      </p>
+      <a href="/fitness-function" class="card-link">Explore Fitness Formulation →</a>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">3. Dynamic Catastrophe Scheduler</h3>
+      <p class="card-desc">
+        Simulation-wide events including wildfires, blizzards, flash floods, and toxic hazards that test evolutionary resilience on scheduled weekly intervals.
+      </p>
+      <a href="/events-disasters" class="card-link">Review Event Mechanics →</a>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">4. Species Specialization & Passives</h3>
+      <p class="card-desc">
+        Herbivore, Carnivore, and Omnivore species archetypes endowed with unique dietary constraints and passive adaptations (Ambush Predator, Efficient Grazer).
+      </p>
+      <a href="/core-mechanics" class="card-link">Review Species Mechanics →</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .research-monograph-card {
+    background: var(--bg-surface-raised);
+    border: 1px solid var(--border-highlight);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .card-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-bio);
+    margin-bottom: 0.5rem;
+  }
+  .monograph-title {
+    font-size: 1.5rem !important;
+    font-weight: 700;
+    line-height: 1.3;
+    border-bottom: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--text-primary);
+  }
+  .monograph-sub {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1.25rem !important;
+  }
+  .meta-strip {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .meta-item {
+    font-size: 0.8125rem;
+  }
+  .meta-label {
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-right: 0.35rem;
+  }
+  .meta-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  .authors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+    margin: 1.25rem 0 2rem 0;
+  }
+  .author-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+  }
+  .author-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-neural);
+  }
+  .author-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+  }
+  .author-role {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem !important;
+  }
+  .card-link {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent-bio);
+    text-decoration: none;
+  }
+  .card-link:hover {
+    text-decoration: underline;
+  }
+</style>

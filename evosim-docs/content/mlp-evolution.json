@@ -1,0 +1,90 @@
+{
+  "title": "MLP Architecture & Evolutionary Algorithm",
+  "lede": "Technical specification of the neural network decision engine and the generational neuroevolution pipeline.",
+  "mlp": {
+    "summary": "Each animal is driven by a Multi-Layer Perceptron acting as its biological nervous system. Synaptic weights and bias arrays comprise the evolvable chromosome.",
+    "layers": [
+      {
+        "name": "Input Layer",
+        "nodes": 41,
+        "activation": "Normalized Vector (0.0 to 1.0)",
+        "description": "5 Internal Status nodes + 36 Sensory Perception nodes (9 tiles in a 3x3 Moore neighborhood with 4 features per tile).",
+        "breakdown": [
+          { "category": "Internal Status (5 nodes)", "details": "Health (%), Hunger (%), Thirst (%), Energy (%), Instinct (0 for Calm, 1 for Alert)" },
+          { "category": "Sensory Tile Threats (9 nodes)", "details": "Active hazard detected on tile (Fire, Flood, Toxic Cloud)" },
+          { "category": "Sensory Tile Food (9 nodes)", "details": "Edible sustenance present on tile (Flora or Prey)" },
+          { "category": "Sensory Tile Water (9 nodes)", "details": "Freshwater node present on tile" },
+          { "category": "Sensory Tile Animals (9 nodes)", "details": "Other animal agent located on tile" }
+        ]
+      },
+      {
+        "name": "Hidden Layer 1",
+        "nodes": 16,
+        "activation": "ReLU (Rectified Linear Unit)",
+        "description": "Primary feature synthesis layer, distilling sensory-internal correlation patterns."
+      },
+      {
+        "name": "Hidden Layer 2",
+        "nodes": 12,
+        "activation": "ReLU (Rectified Linear Unit)",
+        "description": "Behavioral arbitration layer, resolving conflicting drives (hunger vs threat evasion)."
+      },
+      {
+        "name": "Output Layer",
+        "nodes": 8,
+        "activation": "Argmax / Softmax Selection",
+        "description": "Discrete motor action nodes. The node with highest activation determines the action for that turn.",
+        "actions": [
+          "Move North",
+          "Move East",
+          "Move South",
+          "Move West",
+          "Eat / Forage",
+          "Drink Water",
+          "Rest / Conserve Energy",
+          "Attack / Defend"
+        ]
+      }
+    ]
+  },
+  "evolution": {
+    "summary": "A continuous generational loop mimicking natural selection, translating individual survival into population-wide adaptation.",
+    "steps": [
+      {
+        "step": 1,
+        "name": "Population Initialization",
+        "detail": "Generate an initial cohort of N animals with uniformly randomized synaptic weights sampled from a normal distribution with mean 0 and standard deviation 0.5."
+      },
+      {
+        "step": 2,
+        "name": "Generational Simulation",
+        "detail": "Release the population into the 25x25 grid arena for a fixed duration of turns (or until total extinction). Animals act autonomously according to MLP forward passes."
+      },
+      {
+        "step": 3,
+        "name": "Fitness Evaluation",
+        "detail": "Compute the quantitative Fitness Score for each animal upon death or simulation conclusion using the designated multivariable formula."
+      },
+      {
+        "step": 4,
+        "name": "Elitism Retention",
+        "detail": "Directly copy the top 5% to 10% highest-scoring individuals (elites) into the next generational pool without mutation, preventing loss of peak adaptations."
+      },
+      {
+        "step": 5,
+        "name": "Parent Selection",
+        "detail": "Select breeding pairs using fitness-proportionate selection (roulette wheel) or tournament selection, ensuring higher fitness equates to higher reproductive probability."
+      },
+      {
+        "step": 6,
+        "name": "Crossover (Recombination)",
+        "detail": "Combine flattened weight matrices from two selected parents using single-point or uniform crossover to generate offspring chromosomes."
+      },
+      {
+        "step": 7,
+        "name": "Mutation (Genetic Drift)",
+        "detail": "Apply stochastic perturbation to offspring weights at a controlled mutation rate (typically 5% per gene), adding Gaussian noise (N(0, 0.1)) to prevent stagnation."
+      }
+    ]
+  }
+}

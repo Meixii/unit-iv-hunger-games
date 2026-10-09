@@ -1,0 +1,67 @@
+---
+interface HeadingItem {
+  id: string;
+  text: string;
+}
+
+interface Props {
+  headings?: HeadingItem[];
+}
+
+const { headings = [] } = Astro.props;
+---
+
+{headings.length > 0 && (
+  <aside class="toc-container" aria-label="Table of contents">
+    <div class="toc-title">On this page</div>
+    <ul class="toc-list" id="toc-list">
+      {headings.map((h) => (
+        <li class="toc-item">
+          <a href={`#${h.id}`}>{h.text}</a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<script>
+  function setupTocScrollSpy() {
+    const tocLinks = document.querySelectorAll(".toc-list a");
+    if (!tocLinks.length) return;
+
+    const headingElements: HTMLElement[] = [];
+    tocLinks.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        const el = document.getElementById(href.slice(1));
+        if (el) headingElements.push(el);
+      }
+    });
+
+    if (!headingElements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            tocLinks.forEach((link) => {
+              const parent = link.parentElement;
+              if (link.getAttribute("href") === `#${id}`) {
+                parent?.classList.add("active");
+              } else {
+                parent?.classList.remove("active");
+              }
+            });
+          }
+        });
+      },
+      { rootMargin: "0px 0px -60% 0px", threshold: 0.1 }
+    );
+
+    headingElements.forEach((h) => observer.observe(h));
+  }
+
+  setupTocScrollSpy();
+  document.addEventListener("astro:page-load", setupTocScrollSpy);
+</script>
