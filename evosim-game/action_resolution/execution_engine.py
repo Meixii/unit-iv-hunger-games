@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data_structures import Animal, Simulation, ActionType, AnimalCategory, TerrainType
 from .action_data import AnimalAction
 from fitness import add_distance, add_resource_units, add_kill
+import constants
 
 
 class ExecutionEngine:
@@ -288,57 +289,85 @@ class ExecutionEngine:
         self.logger.debug(f"Animal {animal.animal_id} drank water: +{thirst_restored} thirst")
         return True
     
+    def _find_attack_target(self, animal: Animal, target_location: Optional[Tuple[int, int]] = None) -> Optional[Animal]:
+        """Find an enemy animal to attack either at target_location or on an adjacent tile."""
+        if not self.simulation.world or not animal.location:
+            return None
+        
+        # 1. If target_location given and has another occupant:
+        if target_location:
+            tx, ty = target_location
+            tile = self.simulation.world.get_tile(tx, ty)
+            if tile and tile.occupant and tile.occupant != animal and tile.occupant.is_alive():
+                return tile.occupant
+        
+        # 2. Check adjacent cardinal tiles (N, E, S, W)
+        ax, ay = animal.location
+        for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
+            nx, ny = ax + dx, ay + dy
+            if 0 <= nx < self.simulation.world.dimensions[0] and 0 <= ny < self.simulation.world.dimensions[1]:
+                tile = self.simulation.world.get_tile(nx, ny)
+                if tile and tile.occupant and tile.occupant != animal and tile.occupant.is_alive():
+                    return tile.occupant
+        return None
+
+    def _calculate_combat_damage(self, attacker: Animal, defender: Animal, is_first_strike: bool = False) -> Tuple[int, bool]:
+        """
+        Calculate combat damage and whether the attack was evaded.
+        Returns:
+            Tuple of (damage, evaded)
+        """
+        defender_agi = defender.get_effective_trait('AGI')
+        evasion_chance = max(0.05, min(0.75, (defender_agi * constants.AGILITY_EVASION_MULTIPLIER) / 100.0))
+        
+        if is_first_strike:
+            evaded = False
+        else:
+            evaded = random.random() < evasion_chance
+            
+        if evaded:
+            return 0, True
+            
+        attacker_str = attacker.get_effective_trait('STR')
+        raw_damage = (attacker_str * constants.STRENGTH_DAMAGE_MULTIPLIER) - (0 if is_first_strike else defender_agi)
+        damage = max(1, raw_damage)
+        
+        if attacker.category == AnimalCategory.CARNIVORE or attacker.passive == "Ambush Predator":
+            damage = int(damage * constants.AMBUSH_PREDATOR_MULTIPLIER)
+            
+        return max(1, damage), False
+
     def _execute_attack_action(self, action: AnimalAction) -> bool:
         """Execute attack action - combat with another animal."""
         animal = action.animal
         
-        # Find target animal at current location
-        if not animal.location or not self.simulation.world:
+        target = self._find_attack_target(animal, action.target_location)
+        if not target:
             action.success = False
-            action.result_message = "No valid location to attack"
+            action.result_message = "No target animal within attack range"
             return False
-        
-        x, y = animal.location
-        tile = self.simulation.world.get_tile(x, y)
-        if not tile or not tile.occupant or tile.occupant == animal:
-            action.success = False
-            action.result_message = "No target to attack"
-            return False
-        
-        target = tile.occupant
-        
+            
         # Consume energy for attack
         animal.status['Energy'] = max(0, animal.status.get('Energy', 100) - action.energy_cost)
         
-        # Calculate damage based on strength
-        attacker_strength = animal.traits.get('Strength', 50)
-        target_agility = target.traits.get('Agility', 50)
-        
-        # Simple combat calculation
-        hit_chance = 0.6 + (attacker_strength - target_agility) / 200
-        hit_chance = max(0.1, min(0.9, hit_chance))  # Clamp between 10% and 90%
-        
-        if random.random() < hit_chance:
-            damage = random.randint(15, 25) + (attacker_strength - 50) // 10
-            target.status['Health'] = max(0, target.status.get('Health', 100) - damage)
-            
+        damage, evaded = self._calculate_combat_damage(animal, target)
+        if evaded:
             action.success = True
-            action.result_message = f"Attack hit for {damage} damage"
+            action.result_message = f"Attack on {target.animal_id} missed (evaded)"
+            self.logger.debug(f"Animal {animal.animal_id} missed attack on {target.animal_id} (evaded)")
+        else:
+            target.status['Health'] = max(0.0, target.status.get('Health', 100.0) - damage)
+            action.success = True
+            action.result_message = f"Attack hit {target.animal_id} for {damage} damage"
+            self.logger.info(f"Animal {animal.animal_id} attacked {target.animal_id} for {damage} damage")
             
             # Check if target died
-            if target.status['Health'] <= 0:
+            if target.status['Health'] <= 0.0:
                 self.logger.info(f"Animal {target.animal_id} killed by {animal.animal_id}")
                 self.simulation.remove_animal(target)
-                tile.occupant = animal  # Attacker takes the tile
-                # Fitness: kill credit
                 add_kill(animal, 1)
-            
-            self.logger.debug(f"Animal {animal.animal_id} attacked {target.animal_id} for {damage} damage")
-        else:
-            action.success = True
-            action.result_message = "Attack missed"
-            self.logger.debug(f"Animal {animal.animal_id} missed attack on {target.animal_id}")
-        
+                action.result_message += f" (killed {target.animal_id})"
+                
         return True
     
     def _execute_movement_actions_with_conflicts(self, movement_actions: List[AnimalAction]) -> Dict[str, Any]:
@@ -460,7 +489,9 @@ class ExecutionEngine:
                 encounter_result = self._handle_animal_encounter(animal, target_tile.occupant)
                 action.success = encounter_result['success']
                 action.result_message = encounter_result['message']
-                return encounter_result['success']
+                if not encounter_result['success']:
+                    return False
+                # If encounter was won and occupying animal removed, proceed to occupy tile
             
             # Execute movement
             # Consume energy
@@ -489,26 +520,82 @@ class ExecutionEngine:
             return False
     
     def _handle_animal_encounter(self, moving_animal: Animal, occupying_animal: Animal) -> Dict[str, Any]:
-        """Handle encounter when an animal moves into an occupied tile."""
-        # Simple encounter logic - this can be expanded
-        # For now, treat it as a conflict that prevents movement
-        
+        """
+        Handle encounter when an animal moves into an occupied tile.
+        Implements combat initiation and resolution per Section IV.D and Section X.
+        """
         self.logger.info(f"Animal encounter: {moving_animal.animal_id} vs {occupying_animal.animal_id}")
         
-        # Compare strength to determine outcome
-        mover_strength = moving_animal.traits.get('Strength', 50)
-        occupier_strength = occupying_animal.traits.get('Strength', 50)
+        mover_str = moving_animal.get_effective_trait('STR')
+        occupier_str = occupying_animal.get_effective_trait('STR')
         
-        if mover_strength > occupier_strength + 10:  # Significant strength advantage
-            # Moving animal displaces occupying animal
-            # This is a simplified version - full combat would be more complex
-            return {
-                'success': False,  # For now, prevent movement to avoid complexity
-                'message': f"Encounter with {occupying_animal.animal_id} - movement blocked"
-            }
-        else:
-            # Movement blocked
+        # Carnivores or physically dominant animals initiate attacks
+        mover_attacks = (
+            moving_animal.category == AnimalCategory.CARNIVORE or
+            mover_str >= occupier_str
+        )
+        occupier_attacks = (
+            occupying_animal.category == AnimalCategory.CARNIVORE or
+            occupier_str > mover_str
+        )
+        
+        if mover_attacks and not occupier_attacks:
+            # Mover strikes; occupier attempting to flee/defend -> first strike advantage
+            damage, _ = self._calculate_combat_damage(moving_animal, occupying_animal, is_first_strike=True)
+            occupying_animal.status['Health'] = max(0.0, occupying_animal.status.get('Health', 100.0) - damage)
+            
+            if occupying_animal.status['Health'] <= 0.0:
+                self.logger.info(f"Animal {occupying_animal.animal_id} defeated in encounter by {moving_animal.animal_id}")
+                self.simulation.remove_animal(occupying_animal)
+                add_kill(moving_animal, 1)
+                return {
+                    'success': True,
+                    'message': f"Encounter: {moving_animal.animal_id} defeated {occupying_animal.animal_id} ({damage} dmg)"
+                }
             return {
                 'success': False,
-                'message': f"Encounter with {occupying_animal.animal_id} - movement blocked"
+                'message': f"Encounter: {moving_animal.animal_id} struck {occupying_animal.animal_id} ({damage} dmg), movement contested"
+            }
+        elif mover_attacks and occupier_attacks:
+            # Mutual combat exchange
+            dmg_to_occupier, _ = self._calculate_combat_damage(moving_animal, occupying_animal)
+            dmg_to_mover, _ = self._calculate_combat_damage(occupying_animal, moving_animal)
+            
+            occupying_animal.status['Health'] = max(0.0, occupying_animal.status.get('Health', 100.0) - dmg_to_occupier)
+            moving_animal.status['Health'] = max(0.0, moving_animal.status.get('Health', 100.0) - dmg_to_mover)
+            
+            if occupying_animal.status['Health'] <= 0.0 and moving_animal.status['Health'] <= 0.0:
+                self.simulation.remove_animal(occupying_animal)
+                self.simulation.remove_animal(moving_animal)
+                add_kill(moving_animal, 1)
+                add_kill(occupying_animal, 1)
+                return {
+                    'success': False,
+                    'message': f"Encounter: Mutual kill between {moving_animal.animal_id} and {occupying_animal.animal_id}"
+                }
+            elif occupying_animal.status['Health'] <= 0.0:
+                self.logger.info(f"Animal {occupying_animal.animal_id} defeated in encounter by {moving_animal.animal_id}")
+                self.simulation.remove_animal(occupying_animal)
+                add_kill(moving_animal, 1)
+                return {
+                    'success': True,
+                    'message': f"Encounter: {moving_animal.animal_id} defeated {occupying_animal.animal_id} in mutual combat"
+                }
+            elif moving_animal.status['Health'] <= 0.0:
+                self.logger.info(f"Animal {moving_animal.animal_id} fell in encounter against {occupying_animal.animal_id}")
+                self.simulation.remove_animal(moving_animal)
+                add_kill(occupying_animal, 1)
+                return {
+                    'success': False,
+                    'message': f"Encounter: {moving_animal.animal_id} was defeated by {occupying_animal.animal_id}"
+                }
+            return {
+                'success': False,
+                'message': f"Encounter: Both animals fought ({dmg_to_occupier} vs {dmg_to_mover} dmg), movement blocked"
+            }
+        else:
+            # Both animals avoid conflict
+            return {
+                'success': False,
+                'message': f"Encounter with {occupying_animal.animal_id} - both avoided conflict, movement blocked"
             }

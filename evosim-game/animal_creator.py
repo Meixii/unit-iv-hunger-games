@@ -666,8 +666,8 @@ class AnimalCustomizer:
 def create_animal_with_questions(animal_id: str, category: AnimalCategory) -> Tuple[Animal, List[TrainingQuestionData]]:
     """Interactive function to create an animal with training questions.
     
-    Creates an animal using random training choices and returns both the animal
-    and the list of questions. In a real implementation, this would be interactive.
+    Creates an animal using training choices and returns both the animal
+    and the list of questions.
     
     Args:
         animal_id: Unique identifier for the animal
@@ -680,27 +680,119 @@ def create_animal_with_questions(animal_id: str, category: AnimalCategory) -> Tu
     """
     creator = AnimalCreator()
     questions = creator.get_training_questions()
-    
-    # For now, return random choices (in a real implementation, this would be interactive)
     training_choices = [random.randint(0, 3) for _ in range(len(TrainingQuestion))]
     animal = creator.create_animal_with_training(animal_id, category, training_choices)
-    
     question_list = [questions[q] for q in TrainingQuestion]
     return animal, question_list
 
 
-if __name__ == "__main__":
-    # Test the animal creator
-    print("🧪 Testing Animal Creator...")
+def run_training_cli(
+    interactive: bool = True,
+    preset_category: Optional[AnimalCategory] = None,
+    preset_choices: Optional[List[int]] = None,
+    animal_id: str = "player_champion"
+) -> Animal:
+    """
+    Interactive text interface for animal creation and trait assignment (Task 4.1).
+    Walks user through animal classification and the 5 training questions.
     
-    creator = AnimalCreator(seed=42)
+    Args:
+        interactive: If True, prompts the user via terminal stdin.
+        preset_category: Preset AnimalCategory if non-interactive.
+        preset_choices: List of 5 0-indexed choice indices if non-interactive.
+        animal_id: Identifier for the created animal.
+        
+    Returns:
+        The fully configured and customized Animal entity.
+    """
+    print("\n" + "=" * 60)
+    print("      EVOSIM: ANIMAL CREATION & PREPARATION STAGE")
+    print("=" * 60)
+    print("Define your organism and train its initial survival instincts.\n")
     
-    # Test basic creation
-    animal = creator.create_animal_with_training("test_001", AnimalCategory.HERBIVORE, [0, 1, 2, 3, 4])
-    print(f"Created {animal.category.value} with traits: {animal.traits}")
+    categories = [AnimalCategory.HERBIVORE, AnimalCategory.CARNIVORE, AnimalCategory.OMNIVORE]
+    category = preset_category
     
-    # Test analysis
+    if interactive and category is None:
+        print("Choose Animal Category:")
+        for idx, cat in enumerate(categories, 1):
+            passive = {
+                AnimalCategory.HERBIVORE: "Efficient Grazer (+25% Plant food gain)",
+                AnimalCategory.CARNIVORE: "Ambush Predator (+50% first-strike damage)",
+                AnimalCategory.OMNIVORE: "Iron Stomach (Scavenger disease resistance)"
+            }[cat]
+            print(f"  [{idx}] {cat.value:10} - Passive: {passive}")
+            
+        while True:
+            choice = input("\nEnter category [1-3] (default 1): ").strip()
+            if not choice:
+                category = AnimalCategory.HERBIVORE
+                break
+            if choice in ['1', '2', '3']:
+                category = categories[int(choice) - 1]
+                break
+            print("Invalid selection. Please choose 1, 2, or 3.")
+    elif category is None:
+        category = AnimalCategory.HERBIVORE
+        
+    print(f"\n>> Selected Archetype: {category.value.upper()}")
+    
+    creator = AnimalCreator()
+    question_keys = list(TrainingQuestion)
+    questions = creator.get_training_questions()
+    choices: List[int] = []
+    
+    for q_idx, q_key in enumerate(question_keys):
+        q_data = questions[q_key]
+        print(f"\n[Training Stage {q_idx + 1}/5] {q_data.question}")
+        for opt_idx, opt in enumerate(q_data.options, 1):
+            print(f"  [{opt_idx}] {opt.text:32} (+1 {opt.trait_bonus}) - {opt.description}")
+            
+        if interactive and (preset_choices is None or len(preset_choices) <= q_idx):
+            while True:
+                sel = input("Choose option [1-4] (default 1): ").strip()
+                if not sel:
+                    choices.append(0)
+                    break
+                if sel in ['1', '2', '3', '4']:
+                    choices.append(int(sel) - 1)
+                    break
+                print("Invalid choice. Please select 1, 2, 3, or 4.")
+        else:
+            choice_val = preset_choices[q_idx] if preset_choices and q_idx < len(preset_choices) else 0
+            choices.append(choice_val)
+            chosen_opt = q_data.options[choice_val]
+            print(f">> Selected: [{choice_val + 1}] {chosen_opt.text} (+1 {chosen_opt.trait_bonus})")
+            
+    animal = creator.create_animal_with_training(animal_id, category, choices)
     analysis = creator.analyze_animal_traits(animal)
-    print(f"Analysis: {analysis}")
     
-    print("✅ Animal Creator test completed!")
+    print("\n" + "-" * 60)
+    print("           TRAINING COMPLETE: ANIMAL CHARACTER SHEET")
+    print("-" * 60)
+    print(f"Identifier:    {animal.animal_id}")
+    print(f"Archetype:     {animal.category.value} (Passive: {animal.passive})")
+    print(f"Vitality:      Health={animal.status['Health']:.0f} / Energy={animal.status['Energy']:.0f}")
+    print("Traits:")
+    for trait_name in constants.TRAIT_NAMES:
+        bonus_mark = " (Primary)" if trait_name == constants.CATEGORY_PRIMARY_TRAITS[category.value] else ""
+        print(f"  • {trait_name:4}: {animal.traits[trait_name]}{bonus_mark}")
+    print(f"Specialization: {analysis.get('specialization', 'Balanced')} ({analysis['primary_trait']})")
+    print("=" * 60 + "\n")
+    
+    return animal
+
+
+if __name__ == "__main__":
+    import sys
+    if "--test" in sys.argv:
+        print("🧪 Testing Animal Creator...")
+        creator = AnimalCreator(seed=42)
+        animal = creator.create_animal_with_training("test_001", AnimalCategory.HERBIVORE, [0, 1, 2, 3, 4])
+        print(f"Created {animal.category.value} with traits: {animal.traits}")
+        analysis = creator.analyze_animal_traits(animal)
+        print(f"Analysis: {analysis}")
+        print("✅ Animal Creator test completed!")
+    else:
+        # Run interactive CLI
+        run_training_cli(interactive=True)

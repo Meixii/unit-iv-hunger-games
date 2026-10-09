@@ -39,8 +39,8 @@ def check_dependencies():
     
     try:
         # Check if evosim-game modules are available
-        from evosim_game.simulation_controller import SimulationController
-        from evosim_game.data_structures import Animal, World
+        from simulation_controller import SimulationController
+        from data_structures import Animal, World
     except ImportError as e:
         print(f"Warning: Could not import evosim-game modules: {e}")
         print("Make sure the evosim-game directory exists and contains the required modules.")

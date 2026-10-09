@@ -118,6 +118,11 @@ class EvoSimGUI:
                                      command=self.start_simulation,
                                      style='Success.TButton')
         
+        self.step_button = ttk.Button(self.control_frame,
+                                     text="Next Week",
+                                     command=self.step_week,
+                                     style='Control.TButton')
+
         self.pause_button = ttk.Button(self.control_frame,
                                      text="Pause",
                                      command=self.pause_simulation,
@@ -134,11 +139,26 @@ class EvoSimGUI:
                                      text="Reset",
                                      command=self.reset_simulation,
                                      style='Control.TButton')
+
+        self.evolve_button = ttk.Button(self.control_frame,
+                                       text="Evolve Gen",
+                                       command=self.evolve_generation,
+                                       style='Control.TButton')
         
         self.analyze_button = ttk.Button(self.control_frame,
                                        text="Analyze",
                                        command=self.analyze_animal_population,
                                        style='Control.TButton')
+        
+        self.speed_label = ttk.Label(self.control_frame, text="Speed:")
+        self.speed_delay = 0.2
+        self.speed_scale = ttk.Scale(self.control_frame,
+                                     from_=0.02,
+                                     to=0.8,
+                                     value=0.2,
+                                     orient=tk.HORIZONTAL,
+                                     length=70,
+                                     command=self._on_speed_change)
         
         # Configuration panel
         self.config_frame = ttk.LabelFrame(self.main_frame,
@@ -306,11 +326,15 @@ class EvoSimGUI:
         
         # Control panel
         self.control_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5))
-        self.start_button.pack(side=tk.LEFT, padx=5)
-        self.pause_button.pack(side=tk.LEFT, padx=5)
-        self.stop_button.pack(side=tk.LEFT, padx=5)
-        self.reset_button.pack(side=tk.LEFT, padx=5)
-        self.analyze_button.pack(side=tk.LEFT, padx=5)
+        self.start_button.pack(side=tk.LEFT, padx=3)
+        self.step_button.pack(side=tk.LEFT, padx=3)
+        self.pause_button.pack(side=tk.LEFT, padx=3)
+        self.stop_button.pack(side=tk.LEFT, padx=3)
+        self.reset_button.pack(side=tk.LEFT, padx=3)
+        self.evolve_button.pack(side=tk.LEFT, padx=3)
+        self.analyze_button.pack(side=tk.LEFT, padx=3)
+        self.speed_label.pack(side=tk.LEFT, padx=(5, 2))
+        self.speed_scale.pack(side=tk.LEFT, padx=(0, 3))
         
         # Configuration panel
         self.config_frame.pack(side=tk.RIGHT, fill=tk.X, padx=(5, 0))
@@ -494,34 +518,111 @@ class EvoSimGUI:
         self.update_status("Ready")
         self.log_message("Simulation reset")
     
+    def _on_speed_change(self, val):
+        """Update loop speed delay from slider."""
+        try:
+            self.speed_delay = float(val)
+        except Exception:
+            pass
+
+    def ensure_controller_initialized(self):
+        """Ensure simulation controller and world are initialized."""
+        if self.simulation_controller is None:
+            population_size = int(self.population_var.get())
+            max_generations = int(self.generations_var.get())
+            max_weeks = int(self.weeks_var.get())
+            random_seed = int(self.seed_var.get()) if self.seed_var.get() else None
+            
+            world_config = GenerationConfig(
+                width=25,
+                height=25,
+                mountain_border=True
+            )
+            config = SimulationConfig(
+                max_weeks=max_weeks,
+                max_generations=max_generations,
+                population_size=population_size,
+                enable_logging=True,
+                log_level="INFO",
+                random_seed=random_seed,
+                world_config=world_config
+            )
+            self.simulation_controller = SimulationController(config)
+            world = self.simulation_controller.initialize_world()
+            animals = self.simulation_controller.initialize_population()
+            self.log_world_info(world)
+            self.log_animal_info(animals)
+            self.update_world_visualization()
+            self.update_statistics()
+
+    def step_week(self):
+        """Advance the simulation by exactly one weekly cycle and update display."""
+        try:
+            self.ensure_controller_initialized()
+            sim = self.simulation_controller.simulation
+            next_week = sim.current_week + 1
+            max_weeks = self.simulation_controller.config.max_weeks
+            living = self.simulation_controller.simulation.get_living_animals()
+            
+            if next_week <= max_weeks and len(living) > 1:
+                self.simulation_controller._run_weekly_cycle(next_week)
+                sim.current_week = next_week
+                self.update_simulation_state()
+                self.log_message(f"Completed Week {next_week} ({len(self.simulation_controller.simulation.get_living_animals())} animals alive)")
+            else:
+                self.log_message(f"Generation {self.simulation_controller.current_generation} ended with {len(living)} survivors. Click 'Evolve Gen' to evolve.")
+        except Exception as e:
+            self.log_message(f"Step error: {e}")
+
+    def evolve_generation(self):
+        """Manually trigger evolution to next generation."""
+        try:
+            self.ensure_controller_initialized()
+            next_gen = self.simulation_controller.evolve_to_next_generation()
+            self.update_simulation_state()
+            self.log_message(f"Evolved to Generation {self.simulation_controller.current_generation} ({len(next_gen)} organisms spawned).")
+        except Exception as e:
+            self.log_message(f"Evolution error: {e}")
+
     def run_simulation(self):
         """Run the simulation in a separate thread."""
         try:
-            # Start the simulation
             self.simulation_controller.start_simulation()
             
             while self.is_running and self.simulation_controller:
                 if not self.is_paused:
-                    # Run one generation of simulation
-                    try:
-                        result = self.simulation_controller.run_generation()
-                        
-                        # Update GUI in main thread
+                    sim = self.simulation_controller.simulation
+                    next_week = sim.current_week + 1
+                    max_weeks = self.simulation_controller.config.max_weeks
+                    living = self.simulation_controller.simulation.get_living_animals()
+                    
+                    if next_week <= max_weeks and len(living) > 1:
+                        self.simulation_controller._run_weekly_cycle(next_week)
+                        sim.current_week = next_week
                         self.root.after(0, self.update_simulation_state)
+                    else:
+                        living_count = len(self.simulation_controller.simulation.get_living_animals())
+                        dead_count = len(self.simulation_controller.simulation.get_dead_animals())
+                        cur_gen = self.simulation_controller.current_generation
+                        max_gen = self.simulation_controller.config.max_generations
                         
-                        # Check if simulation should continue
-                        status = self.simulation_controller.get_simulation_status()
-                        if status.get('living_animals', 0) == 0:
+                        self.root.after(0, lambda: self.log_message(
+                            f"=== Gen {cur_gen} Complete: {living_count} survivors, {dead_count} casualties ==="
+                        ))
+                        
+                        if cur_gen < max_gen - 1:
+                            self.simulation_controller.evolve_to_next_generation()
+                            self.root.after(0, self.update_simulation_state)
+                            self.root.after(0, lambda: self.log_message(
+                                f"=== Evolved to Generation {self.simulation_controller.current_generation} ==="
+                            ))
+                        else:
                             self.is_running = False
                             self.root.after(0, self.simulation_complete)
                             break
                             
-                    except Exception as e:
-                        self.root.after(0, lambda: self.log_message(f"Generation error: {e}"))
-                        self.is_running = False
-                        break
-                
-                time.sleep(1.0)  # Small delay to prevent overwhelming the GUI
+                delay = getattr(self, 'speed_delay', 0.2)
+                time.sleep(delay)
                 
         except Exception as e:
             self.root.after(0, lambda: self.log_message(f"Simulation error: {e}"))

@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { coreMechanicsData } from "../lib/content";
 
 const headings = [
+  { id: "grid-view", text: "Spatial 25x25 World Environment" },
   { id: "archetypes", text: "Species Archetypes & Passives" },
   { id: "traits", text: "Biological Traits & Attributes" },
   { id: "status-vitals", text: "Dynamic Status Vitals" },
@@ -16,6 +17,23 @@ const headings = [
   category="Game Mechanics"
   headings={headings}
 >
+  <h2 id="grid-view">Spatial 25x25 World Environment</h2>
+  <p>
+    The simulated world operates across a discrete 25×25 Moore-neighborhood grid populated with procedural biomes (Plains 60%, Forest 25%, Water 10%, Mountains 5%), harvestable plant foliage, freshwater reservoirs, and living species.
+  </p>
+  <div class="figure-container">
+    <img 
+      src="/images/grid_simulation.png" 
+      alt="EvoSim 25x25 Grid Simulation with biomes, resources, and color-coded organisms"
+      class="figure-image"
+      loading="lazy"
+    />
+    <div class="figure-caption">
+      <span><strong>Figure 1.1:</strong> Live capture of the 25×25 simulation grid with biomes, forage clusters, and surviving organisms.</span>
+      <span class="badge">EvoSim Matrix</span>
+    </div>
+  </div>
+
   <h2 id="archetypes">Species Archetypes & Passives</h2>
   <div class="grid-cards">
     {coreMechanicsData.categories.map((cat) => (

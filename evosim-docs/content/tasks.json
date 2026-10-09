@@ -71,7 +71,7 @@
       "phase": "Phase 4: Neuroevolution & Training",
       "title": "41-16-12-8 MLP Neural Network",
       "priority": "High",
-      "status": "in_progress",
+      "status": "completed",
       "description": "Implement feedforward forward pass with dual ReLU hidden layers and sensory grid flattening."
     },
     {
@@ -79,7 +79,7 @@
       "phase": "Phase 4: Neuroevolution & Training",
       "title": "Composite Fitness Evaluator",
       "priority": "High",
-      "status": "in_progress",
+      "status": "completed",
       "description": "Calculate multivariable fitness score based on survival time, gathered forage, kills, distance, and disasters survived."
     },
     {
@@ -87,23 +87,23 @@
       "phase": "Phase 4: Neuroevolution & Training",
       "title": "Genetic Operator Pipeline",
       "priority": "High",
-      "status": "in_progress",
+      "status": "completed",
       "description": "Implement Elitism (top 10%), tournament selection, single-point crossover, and Gaussian weight mutation."
     },
     {
       "id": "TASK-12",
       "phase": "Phase 5: GUI & Analytics",
-      "title": "Pygame Interactive Simulation Viewer",
+      "title": "Tkinter Interactive Simulation Viewer",
       "priority": "Medium",
-      "status": "in_progress",
-      "description": "Render 25x25 spatial grid with live sprite icons, health bars, and event notifications."
+      "status": "completed",
+      "description": "Render 25x25 spatial grid with live organism glyphs, health bars, generation stepping, and event telemetry."
     },
     {
       "id": "TASK-13",
       "phase": "Phase 5: GUI & Analytics",
       "title": "Generational Analytics Exporter",
       "priority": "Low",
-      "status": "planned",
+      "status": "completed",
       "description": "Export CSV/JSON generational survival metrics, trait divergence charts, and fitness trends."
     }
   ]

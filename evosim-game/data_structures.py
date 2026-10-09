@@ -329,15 +329,25 @@ class Simulation:
         """Remove an animal from the population and add to graveyard."""
         if animal in self.population:
             self.population.remove(animal)
+        if animal not in self.graveyard:
             self.graveyard.append(animal)
+        if self.world and animal.location:
+            tile = self.world.get_tile(*animal.location)
+            if tile and tile.occupant == animal:
+                tile.occupant = None
     
     def get_living_animals(self) -> List[Animal]:
         """Get all living animals in the population."""
         return [animal for animal in self.population if animal.is_alive()]
     
     def get_dead_animals(self) -> List[Animal]:
-        """Get all dead animals in the population."""
-        return [animal for animal in self.population if not animal.is_alive()]
+        """Get all dead animals across graveyard and population."""
+        dead_in_pop = [animal for animal in self.population if not animal.is_alive()]
+        dead_all = list(self.graveyard)
+        for a in dead_in_pop:
+            if a not in dead_all:
+                dead_all.append(a)
+        return dead_all
     
     def advance_week(self) -> None:
         """Advance the simulation by one week."""

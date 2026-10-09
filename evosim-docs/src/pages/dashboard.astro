@@ -4,6 +4,7 @@ import { dashboardData } from "../lib/content";
 
 const headings = [
   { id: "key-metrics", text: "Key Simulation Architecture Telemetry" },
+  { id: "interactive-gui", text: "Interactive Desktop Dashboard" },
   { id: "ecological-pyramid", text: "Species Distribution Pyramid" },
   { id: "benchmarks", text: "Generational Adaptation Benchmarks" },
 ];
@@ -24,6 +25,23 @@ const headings = [
         <div class="metric-sub">{m.subtext}</div>
       </div>
     ))}
+  </div>
+
+  <h2 id="interactive-gui">Interactive Desktop Dashboard</h2>
+  <p>
+    The EvoSim desktop visualization suite provides real-time tracking of organism health, metabolic vitals, scheduled catastrophes, and live neural decisions on the 25×25 discrete grid.
+  </p>
+  <div class="figure-container">
+    <img 
+      src="/images/gui_dashboard.png" 
+      alt="EvoSim Desktop GUI Dashboard with live 25x25 grid, controls, and telemetry inspector"
+      class="figure-image"
+      loading="lazy"
+    />
+    <div class="figure-caption">
+      <span><strong>Figure 5.1:</strong> EvoSim desktop control interface featuring live canvas rendering, organism inspection card, and multi-generation stepping controls.</span>
+      <span class="badge">Desktop GUI</span>
+    </div>
   </div>
 
   <h2 id="ecological-pyramid">Species Distribution Pyramid</h2>

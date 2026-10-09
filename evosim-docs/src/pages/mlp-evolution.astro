@@ -23,6 +23,19 @@ const headings = [
 
   <NeuralNetVisualizer />
 
+  <div class="figure-container">
+    <img 
+      src="/images/neural_architecture_diagram.png" 
+      alt="41-16-12-8 Feedforward MLP Neuroevolution Architecture" 
+      class="figure-image"
+      loading="lazy"
+    />
+    <div class="figure-caption">
+      <span><strong>Figure 4.1:</strong> Complete 4-layer feedforward neural topology (41 Input → 16 Hidden L1 → 12 Hidden L2 → 8 Motor Softmax).</span>
+      <span class="badge">MLP Architecture</span>
+    </div>
+  </div>
+
   <h2 id="sensory-grid">Moore Neighborhood Perception Vector</h2>
   <p>
     The input vector comprises <strong>41 normalized floating-point values</strong> (scaled to [0.0, 1.0]). It combines 5 internal vitals with a 36-element sensory perception matrix representing the 3x3 grid centered on the agent:
@@ -115,6 +128,19 @@ const headings = [
         <p class="ea-step-detail">{step.detail}</p>
       </div>
     ))}
+  </div>
+
+  <div class="figure-container">
+    <img 
+      src="/images/fitness_evolution_chart.png" 
+      alt="EvoSim Multi-Generation Neuroevolution Convergence and Trait Adaptations" 
+      class="figure-image"
+      loading="lazy"
+    />
+    <div class="figure-caption">
+      <span><strong>Figure 4.2:</strong> Generational analytics showing elite vs mean fitness convergence, species demographic ratios, and morphological trait divergence across generations.</span>
+      <span class="badge">GA Telemetry</span>
+    </div>
   </div>
 </BaseLayout>
 

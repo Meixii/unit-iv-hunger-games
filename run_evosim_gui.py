@@ -17,27 +17,24 @@ def main():
     
     # Get the project root directory
     project_root = Path(__file__).parent.absolute()
-    gui_dir = project_root / "gui"
+    evosim_dir = project_root / "evosim-game"
+    gui_dir = evosim_dir / "gui"
     
-    # Check if gui directory exists
-    if not gui_dir.exists():
-        print(f"Error: GUI directory not found at {gui_dir}")
-        print("Make sure the gui folder exists in the project root.")
+    # Check if evosim-game directory exists
+    if not evosim_dir.exists():
+        print(f"Error: evosim-game directory not found at {evosim_dir}")
         return 1
     
-    # Add gui directory to Python path
+    # Add evosim-game and gui directory to Python path
+    if str(evosim_dir) not in sys.path:
+        sys.path.insert(0, str(evosim_dir))
     if str(gui_dir) not in sys.path:
         sys.path.insert(0, str(gui_dir))
-    
-    # Add evosim-game directory to path
-    evosim_dir = project_root / "evosim-game"
-    if evosim_dir.exists() and str(evosim_dir) not in sys.path:
-        sys.path.insert(0, str(evosim_dir))
     
     try:
         # Import and run the GUI
         print("Starting EvoSim GUI...")
-        from gui.main_gui import main as gui_main
+        from main_gui import main as gui_main
         gui_main()
         
     except ImportError as e:

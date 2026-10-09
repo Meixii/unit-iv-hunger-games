@@ -721,3 +721,36 @@ dialog.search-dialog::backdrop {
     display: none;
   }
 }
+
+/* Media & Figure Display */
+.figure-container {
+  margin: 2rem 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+}
+
+.figure-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.figure-caption {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  background: var(--bg-surface-raised);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.figure-caption strong {
+  color: var(--accent-bio);
+}
+
